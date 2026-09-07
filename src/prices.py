@@ -55,6 +55,17 @@ class CoinGeckoClient:
         first_ts, last_ts = prices[0][0], prices[-1][0]
         return int((last_ts - first_ts) / 86_400_000)
 
+    def coin_detail(self, gecko_id: str) -> dict:
+        """
+        Full /coins/{id} payload: market cap, `public_notice` (CoinGecko's
+        own flag for known hacks/delistings/warnings), and `tickers` with
+        per-market `trust_score` -- used by src/legitimacy.py to separate
+        real listings from wash-traded/no-liquidity ones.
+        """
+        return self._get(f"/coins/{gecko_id}", params={
+            "localization": "false", "community_data": "false", "developer_data": "false",
+        })
+
     def average_daily_volume(self, gecko_id: str, days: int = 90) -> float | None:
         chart = self.market_chart(gecko_id, days=str(days))
         volumes = [v for _, v in (chart.get("total_volumes") or [])]

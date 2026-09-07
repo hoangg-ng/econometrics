@@ -32,7 +32,9 @@ src/
   protocol_universe.py  DefiLlama -> candidate protocols with github + gecko_id
   prices.py             CoinGecko OHLCV, trading-history & volume checks
   events.py             Candidate event extraction for the 3 treatments (§2)
+  legitimacy.py          Scam/dead-project filters (market cap, exchange, activity)
 phase0_feasibility.py   Phase 0 orchestrator — the immediate next step
+enrich_legitimacy.py   Second pass: applies legitimacy filters to Phase 0 survivors
 output/                 phase0_candidates.csv and later run outputs (gitignored)
 ```
 
@@ -48,6 +50,34 @@ GitHub link, whether a repo/token pair survived the sample criteria (§4), and
 counts for each of the three event types (§2). The console summary is the
 number `new_design.md` §4/§8 gates on: if fewer than ~100 protocols with
 usable event counts survive, the design narrows to a single event type.
+
+### Filtering out scams and dead projects
+
+DefiLlama + CoinGecko's combined universe includes plenty of copy-pasted,
+abandoned, or wash-traded tokens that "has a repo and trades somewhere" alone
+doesn't screen out. Once Phase 0 has produced `output/phase0_candidates.csv`,
+run:
+
+```
+python3 enrich_legitimacy.py                                # defaults below
+python3 enrich_legitimacy.py --min-market-cap-usd 10000000 --exclude-forks
+```
+
+This only touches rows that already passed the base sample criteria (a small
+fraction of the full sweep), adding:
+
+| Check | Default | Targets |
+|---|---|---|
+| Market cap floor | ≥ $5M | micro-cap / wash-traded tokens |
+| Listed on a major exchange | required | real order-book liquidity, not a spoofed DEX pool — checked by exchange identifier, since CoinGecko's `trust_score` field is null on the free tier |
+| CoinGecko `public_notice` risk keywords | excluded | actual hacks/exploits/delistings — keyword-matched, not any notice (a benign rebrand notice would otherwise wrongly fail a real protocol) |
+| Contributors | ≥ 3 | solo/throwaway repos |
+| Days since last push | ≤ 180 | copy-pasted-and-abandoned repos |
+| Is a fork | recorded, not excluded by default | many legitimate protocols (L2s forking geth, DEXs forking Uniswap) build real value on a fork — pass `--exclude-forks` for a stricter run |
+
+Writes `output/phase0_candidates_legit.csv` with these columns plus a final
+`passes_legitimacy` flag, and prints how many protocols and events survive —
+the number that actually matters for the §4/§8 go/no-go gate.
 
 ### Known limitations (see `new_design.md` §9)
 

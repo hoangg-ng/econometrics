@@ -65,7 +65,20 @@ def security_fix_commits(client, owner: str, repo: str, max_commits: int = 500) 
     return events
 
 
-def maintainer_departures(client, owner: str, repo: str, top_n: int = 3) -> list[dict]:
+def list_contributors(client, owner: str, repo: str, max_pages: int = 2) -> list[dict]:
+    """
+    Human contributors, ranked by total commit count (GitHub already returns
+    /contributors sorted that way). Capped at max_pages*100 -- fine both for
+    picking a top-N and for a "how many contributors" legitimacy signal,
+    since anything past ~200 obviously clears a small-N floor.
+    """
+    contributors = client.get_all_pages(f"/repos/{owner}/{repo}/contributors", max_pages=max_pages)
+    contributors = [c for c in contributors if c.get("type") == "User"]
+    contributors.sort(key=lambda c: c.get("contributions", 0), reverse=True)
+    return contributors
+
+
+def maintainer_departures(client, owner: str, repo: str, top_n: int = 3, contributors: list[dict] | None = None) -> list[dict]:
     """
     t0 = last commit of a top-N contributor (by total commit count) who has
     then been absent 6+ months as of now. Ranking by *total* contributions is
@@ -73,12 +86,8 @@ def maintainer_departures(client, owner: str, repo: str, top_n: int = 3) -> list
     enough for a feasibility count; compute the pre-period share directly
     before using this for the actual study.
     """
-    # GitHub already returns /contributors sorted by contribution count
-    # descending, so one page comfortably covers top_n<=3 without needing
-    # to walk the whole contributor list.
-    contributors = client.get_all_pages(f"/repos/{owner}/{repo}/contributors", max_pages=2)
-    contributors = [c for c in contributors if c.get("type") == "User"]
-    contributors.sort(key=lambda c: c.get("contributions", 0), reverse=True)
+    if contributors is None:
+        contributors = list_contributors(client, owner, repo)
 
     events = []
     now = datetime.now(timezone.utc)
@@ -103,9 +112,9 @@ def maintainer_departures(client, owner: str, repo: str, top_n: int = 3) -> list
     return events
 
 
-def all_events(client, owner: str, repo: str) -> dict:
+def all_events(client, owner: str, repo: str, contributors: list[dict] | None = None) -> dict:
     return {
         "major_minor_release": major_minor_releases(client, owner, repo),
         "security_fix": security_fix_commits(client, owner, repo),
-        "maintainer_departure": maintainer_departures(client, owner, repo),
+        "maintainer_departure": maintainer_departures(client, owner, repo, contributors=contributors),
     }
