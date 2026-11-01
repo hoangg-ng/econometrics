@@ -1,0 +1,15 @@
+{
+  "seed": 20261102,
+  "bootstrap_reps": 399,
+  "skipped_sentinel_rows": 2,
+  "data_sha256": "4f55b9206a6cacfa713367aff11f58a2d7ba2358a2dd7abe86bf55980840575d",
+  "notes": [
+    "Merged PRs only; no active-review months are imputed as zero.",
+    "All BASE outcomes use the same rows, conditional on review and non-self author-reviewer links.",
+    "Bootstrap refits FE with matched-pair multiplicities, matching fixed; shared reviewers not clustered.",
+    "Historical roster selected h=-6,-5,-4; estimation pre h=-3,-2; ties in history leader excluded; monthly ties fractional.",
+    "Gini uses active reviewers, singleton Gini=0; HHI and top2=1 for singleton.",
+    "Untreated-only joint lead regression uses full pair-cluster covariance; short historical baseline has low power.",
+    "Uncapped means no 40-PR monthly cap; original upstream retrieval coverage is not proven exhaustive."
+  ]
+}

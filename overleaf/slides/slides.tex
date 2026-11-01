@@ -1,0 +1,40 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\setbeamertemplate{title page}[default][rounded=false,shadow=false]
+\useoutertheme{infolines}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{mathptmx}
+\renewcommand{\rmdefault}{lmss}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,booktabs,graphicx,csquotes}
+\graphicspath{{overleaf/figures/}{../figures/}}
+
+% Preserve the existing Madrid theme and navy palette.
+\definecolor{faeng_blue}{HTML}{09246F}
+\definecolor{cvut_navy}{HTML}{0065BD}
+\setbeamercolor*{palette primary}{bg=faeng_blue,fg=white}
+\setbeamercolor*{palette secondary}{bg=faeng_blue,fg=white}
+\setbeamercolor*{palette tertiary}{bg=faeng_blue,fg=white}
+\setbeamercolor{titlelike}{parent=palette primary}
+\setbeamercolor{frametitle}{parent=palette primary}
+\setbeamercolor{itemize item}{fg=cvut_navy}
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\renewcommand{\baselinestretch}{1.15}
+
+\title[Review Allocation and AI]{Who Reviews After AI Adoption?\\The Distribution and Continuity of Code Review Work}
+\author[Hoang]{Minh Hoang Nguyen}
+\institute[KAIST]{School of Business and Technology Management\\KAIST}
+\date{Working draft: November 1, 2026}
+
+\begin{document}
+\begin{frame}[plain]
+\maketitle
+\end{frame}
+\begin{frame}{Outline}
+\tableofcontents[hideallsubsections]
+\end{frame}
+\input{part1}
+\end{document}

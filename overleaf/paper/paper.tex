@@ -1,0 +1,309 @@
+\documentclass[mnsc]{informs4}
+\usepackage{eqndefns-left}
+\RequirePackage{tgtermes}
+\OneAndAHalfSpacedXII
+\usepackage{amsmath,amssymb,graphicx,booktabs,tabularx}
+\usepackage{natbib}
+\bibpunct[, ]{(}{)}{,}{a}{}{,}%
+\def\bibfont{\small}%
+\def\bibsep{\smallskipamount}%
+\def\bibhang{24pt}%
+\def\newblock{\ }%
+\def\BIBand{and}%
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue}
+\graphicspath{{overleaf/figures/}{../figures/}}
+\EquationsNumberedThrough
+\TheoremsNumberedThrough
+\ECRepeatTheorems
+\RUNAUTHOR{Nguyen}
+\RUNTITLE{Review Allocation and AI Adoption}
+\TITLE{Who Reviews After AI Adoption? The Distribution and Continuity of Code Review Work}
+\ARTICLEAUTHORS{%
+\AUTHOR{Minh Hoang Nguyen}
+\AFF{School of Business and Technology Management, KAIST,\
+\EMAIL{ngmhoang2306@gmail.com}}
+}
+\MANUSCRIPTNO{MNSC-0001-2026.00}
+\ABSTRACT{%
+Generative AI can change how software work is allocated, not only how quickly code is produced. We examine whether first observed AI-tool use in a GitHub repository is followed by changes in (i) the concentration of monthly review activity and (ii) the continuity of the pre-adoption leading reviewer. Using 1,771 matched treated--control pairs, we estimate repository-month event-study effects with an imputation estimator. Existing estimates show a 1.51-percentage-point increase in top-two review share and a 7.7-percentage-point decline in the probability that the pre-adoption leader remains the monthly leader. A reconstruction on 300 pairs supports the top-two pattern, while incumbent persistence is imprecise when historical selection and estimation windows are separated. Process outcomes vary across samples. The evidence is consistent with review reallocation, not with increased individual burden, expertise loss, or burnout: review shares measure relative allocation rather than effort or strain. We identify the measurement and inference checks needed for stronger causal claims.
+}
+% Keep the template's metadata panel blank until dates and publication details exist.
+\makeatletter
+\def\ABSfont{\EGT}
+\def\theARTICLEABSTRACT{%
+  \HOOKb
+  \vspace*{18pt}
+  \begin{minipage}[t]{.3\textwidth}\parindent1em\ABSfont\noindent\mbox{}\end{minipage}\hfill
+  \begin{minipage}[t]{.65\textwidth}\parindent1em
+    \ABSfont
+    \noindent\theABSTRACT\endgraf
+    \vskip5pt
+    \theFUNDING
+    \theKEYWORDS
+    \theSUBJECTCLASS
+    \theAREAOFREVIEW
+    \theMSCCLASS
+    \theORMSCLASS
+    \if@BLINDREV\else\theHISTORY\fi
+    \noindent\hrulefill
+  \end{minipage}%
+  \vspace*{0pt}
+}
+\makeatother
+\KEYWORDS{Generative AI, Code Review, Work Allocation, Open-Source Software}
+\begin{document}
+\maketitle
+\section{Introduction}
+
+Generative AI changes software production by changing the division of complementary work. A coding assistant can lower the cost of drafting a pull request, but the project still has to evaluate, explain, revise, and integrate that change. The central organizational question is therefore not whether an assistant makes one coding task faster. It is how a technology transition reallocates the interdependent tasks that make production possible. This question follows a broad lesson from the technology-and-work literature: new technology affects outcomes through changes in workplace organization, task assignment, and skill deployment, rather than through a mechanical substitution of machines for people \citep{bresnahan2002information,acemoglu2019automation}.
+
+Code review is a useful setting for studying this reallocation. It is a visible complementary task, performed by identifiable people, with repeated decisions recorded at the pull-request level. Review also combines production and coordination: it detects defects, transfers project knowledge, and helps establish shared understanding of a changing code base \citep{bacchelli2013expectations}. If AI increases the rate or volume of proposed changes, the resulting review work may be spread across more participants, concentrated among a smaller set of specialists, or reassigned away from the people who previously occupied the leading roles. These possibilities have different implications for coordination even when the project-level number of reviews is unchanged.
+
+Recent studies establish that AI can affect collaborative software work. \citet{song2026impact} report more code contributions and longer coordination time after Copilot adoption, with differences between core and peripheral contributors. In an enterprise setting, \citet{he2026aiwrites} document greater review load per reviewer and a shift toward automated review, while \citet{chen2026bottlenecks} show that review constraints can limit the translation of coding gains into final output. New large-scale open-source studies also examine human--AI review practices and review quality across technology generations \citep{gao2026autopilot,zhong2026generations}. These papers make review capacity, quality, and coordination important outcomes. They leave a narrower organizational question open: after AI adoption, who performs the human review work, and do the people who led that work remain in place?
+
+That question requires separating constructs that are often conflated. Aggregate review volume measures how much recorded activity a project has. A reviewer's share measures the distribution of that activity across people. The identity of the monthly leader measures continuity of a role. None of these measures is an individual burden measure. A share can rise because a reviewer's own count rises, because other reviewers do less, or because the project observes fewer participants. The same count can require different effort depending on change complexity, interruptions, and available capacity. Workload and strain therefore require additional measures; a concentration statistic alone cannot establish overload or burnout \citep{tarafdar2007technostress}. We use concentration to describe allocation and use burden only as a clearly stated limitation.
+
+We study public GitHub repositories because they provide a large, open, longitudinal record of pull requests, review events, identities, and project timing. GitHub is also the data source used by much of the recent empirical AI-and-software literature; our claim is correspondingly about open-source projects observed on that platform, not about every software organization. We identify the first observed evidence of AI-tool use from agent-authored pull requests, AI-associated commit messages, and configuration files. We match detected adopters to repositories without detected adoption and estimate repository-month effects with the imputation event-study estimator of \citet{borusyak2024revisiting}. The analysis contains 1,771 matched pairs and 20,188 repository-month rows before outcome-specific exclusions.
+
+Our research questions are:
+\begin{enumerate}
+\item \textbf{RQ1:} How does the distribution of human review activity change after first detected AI adoption?
+\item \textbf{RQ2:} How does the continuity of the pre-adoption leading reviewer change, and what do the data show about incumbent activity and succession?
+\item \textbf{RQ3:} What changes in elapsed review and merge times and recorded review submissions accompany these allocation patterns?
+\end{enumerate}
+
+The existing estimates provide a disciplined starting point. The monthly share of review activity held by the busiest two reviewers rises by about 1.5 percentage points in the original extraction. At the same time, the pre-adoption leader is less likely to remain the monthly leader. The joint pattern is consistent with review reallocation: concentration increases while the identity occupying the leading position becomes less persistent. The direction of the concentration result survives a no-observed-overlap sample, while its magnitude depends on the extraction cap and observation horizon. Process outcomes are mixed, and the clean identity sample is less precise. These checks are part of the result rather than after-the-fact support for a stronger claim.
+
+The paper contributes by bringing the distribution of a complementary task into AI-enabled production and by pairing rank-based concentration with fixed-identity persistence. The evidence supports a provisional account of review reallocation; workload and welfare consequences require additional measures.
+
+\section{Related Literature and Conceptual Framework}
+\label{sec:framework}
+\subsection{AI, coordination, and workload}
+
+The closest AI study is \citet{song2026impact}. Its review-activity results make clear that review provision is already part of the literature. Our proposed extension pairs within-repository reviewer shares with persistence of pre-adoption reviewer identities. It does not claim that earlier work ignored reviewers or organizational structure. The enterprise studies above address review capacity and production bottlenecks under different treatment definitions and institutional settings. Their findings motivate measuring downstream adaptation, but do not imply a common sign for review latency across all settings.
+
+A related line of work examines changes in task allocation. \citet{hoffmann2025generative} study how Copilot access changes developers' allocation between coding, management, and collaborative activities. That question concerns the mix of activities undertaken by workers. Our question concerns the distribution of one activity across workers and the continuity of its leading participants. These are complementary dimensions: a task can become less prominent in an individual's work while its provision becomes more concentrated within a project.
+The broader technology-and-work literature provides the framing for this distinction. Firm-level evidence links information technology to workplace reorganization and the deployment of skilled labor rather than to a single displacement channel \citep{bresnahan2002information}. The task-based view likewise distinguishes activities that technology displaces from tasks that it creates or reinstates \citep{acemoglu2019automation}. We bring that logic to a repeated project-level coordination task: the relevant outcome is who performs review and how stable that allocation is after adoption.
+
+\subsection{Expertise coordination and the allocation of review}
+
+\citet{faraj2000expertise} distinguish possessing expertise from coordinating its use. \citet{kudaravalli2017configural} further show why centralized and decentralized collaboration should not be evaluated through a single universal ordering. These perspectives motivate treating review allocation as an organizational outcome without assuming that more concentration is necessarily harmful.
+
+The software-review literature likewise already addresses distribution. \citet{hajari2023factoring} examine unequal review activity and tradeoffs among reviewer expertise, workload distribution, and knowledge retention. Their recommendation setting differs from our adoption setting, but it directly rules out a novelty claim based simply on measuring review inequality. Our question concerns how an observed technology transition relates to the distribution of review activity and the persistence of pre-existing leaders. We do not equate a high review count with expertise, a monthly leader with a maintainer, or leadership turnover with knowledge loss.
+
+\subsection{Four distinct constructs}
+
+Let $x_{rit}$ be the number of distinct merged pull requests reviewed by human reviewer $r$ in repository $i$ during month $t$. A reviewer contributes at most one incidence to each pull request, regardless of repeated submissions. Let $V_{it}=\sum_r x_{rit}$ and $s_{rit}=x_{rit}/V_{it}$ when $V_{it}>0$. The monthly top-two share is
+\begin{equation}
+ C^{(2)}_{it}=s_{(1)it}+s_{(2)it},
+\end{equation}
+where parentheses denote ranks determined anew each month. This describes concentration in the observed activity, not a fixed pair of people.
+
+Let $L_i$ be the person with the highest aggregate incidence count in the pre-adoption window. Incumbent persistence is
+\begin{equation}
+ P_{it}=\mathbf{1}\{\operatorname{leader}_{it}=L_i\}.
+\end{equation}
+A decline in $P_{it}$ means that the incumbent less often occupies the leading position.
+
+Absolute activity, $x_{rit}$, is a third construct. For example, a reviewer who continues to review 10 pull requests while the repository total falls from 20 to 15 has an increasing share with no increase in counted activity. Conversely, doubling every reviewer's count leaves all shares unchanged. Burden is a fourth construct: its assessment would require effort, difficulty, time pressure, or capacity measures beyond $x_{rit}$. Process latency is elapsed calendar time and is not a substitute for active work time.
+
+\subsection{Competing explanations}
+
+AI adoption could reinforce incumbent reviewers if project-specific knowledge becomes more valuable for evaluating unfamiliar contributions. It could instead be accompanied by changes in task mix, reviewer availability, or entry that shift the busiest role to another participant. Automation could reduce the demand for some human reviews, while expanded production could increase it elsewhere. These possibilities do not provide a unique directional prediction for concentration, incumbent persistence, or latency without additional assumptions.
+
+The three questions stated in the Introduction organize the analysis around concentration, reassignment, and process outcomes. Earlier project documents used different hypothesis numbering, and the analysis evolved through exploratory follow-ups; the current structure should not be interpreted as evidence of ex ante registration.
+
+\section{Data and Measurement}
+\label{sec:data}
+\subsection{Sample and detected adoption}
+
+The candidate pool spans Python, JavaScript, TypeScript, Go, Java, and Rust, stratified into four creation-year cohorts from 2018 through 2025. Discovery applies repository activity and quality filters, including a minimum of 10 stars and exclusion of forks. There are 8,972 candidates with the covariates required for matching. The analysis uses exact language and creation-cohort strata, then nearest-neighbor matching without replacement on standardized $\log(1+\mathrm{stars})$ and $\log(1+\mathrm{contributors})$. The main distance caliper is 0.25, yielding 2,320 pairs. The pipeline identifies 1,771 pairs with cache entries for both repositories. This eligibility rule does not guarantee usable observations at every horizon or for every outcome.
+
+Treatment timing is the earliest detected signal among agent-associated PR authorship or branch names, AI-associated commit trailers or footers, and configuration-file signals, including references in \texttt{.gitignore}. These signal types provide different strengths of evidence. Configuration intent is not equivalent to observed use, and first detection need not be the actual adoption date. Controls are repositories without detected adoption, not confirmed non-users. Tool-specific first-use dates were not retained separately, limiting interpretation of overlapping tool categories.
+
+The matching covariates are repository attributes observed during collection rather than a verified historical snapshot before treatment. Good balance on those attributes does not resolve selection into adoption and may involve post-treatment variables. A causal analysis should reconstruct pre-treatment covariates and reassess matching. The current draft reports estimates from the existing design without claiming that this concern has already been addressed.
+
+\subsection{Review shares, identities, and coverage}
+
+The original repository-month pipeline computes human review shares from reviewer--PR incidences. It caps extraction at 40 sampled merged PRs per repository-month, binding in about 11\% of the months examined in the cap diagnostic. A subsequent PR-level extraction is uncapped within its extraction scope. The expanded PR-level data cover 1,406 of the 1,771 eligible pairs in the project's coverage summary, although individual outcomes require further restrictions. The original matched-sample capped/uncapped comparison uses the earlier 802-treated-repository subsample and must not be described as a full-sample result.
+
+Reviewer-identity extraction also counts each human reviewer once per PR. It permits identifying an incumbent using months $h=-6,\ldots,-2$, then comparing that identity with the monthly leader. The shared-reviewer diagnostic has 309 usable matched pairs, of which 176 have no observed reviewer overlap between the control repository and any treated repository in the available identity data. Other identity analyses have different eligibility rules. Their effective sample sizes must be exported separately before final reporting.
+
+The PR-level \path{reviewer_event_counts} field, however, counts individual review submissions. Existing Gini, rank-by-rank, and cumulative analyses built from that field therefore concern event-weighted activity. They are not automatically replications of incidence-based shares. Gini is defined over a specified roster and weighting scheme:
+\begin{equation}
+ G_{it}=\frac{\sum_{r=1}^{n}\sum_{q=1}^{n}|x_{rit}-x_{qit}|}{2n\sum_{r=1}^{n}x_{rit}}.
+\end{equation}
+For a fixed finite roster, its maximum is $(n-1)/n$, not exactly one. Including only active reviewers differs substantively from including a fixed pre-adoption roster with later zeros. Neither choice measures team membership without additional information.
+
+\subsection{Process measures and interpretation}
+
+The stored first-review outcome uses the earliest submitted review timestamp regardless of reviewer type. We therefore label it \emph{time to first recorded review}, not time to first human review. The variable named \path{review_rounds} counts submitted review records, including bots. It does not reconstruct human review--response cycles or distinguish substantive feedback from approvals. We label it \emph{review submissions per PR}. Time to merge is elapsed time from creation to closure for merged PRs. These definitions follow the current extraction code and do not change the stored estimates.
+
+The dataset conditions on merged pull requests. Open and closed-unmerged PRs are outside the analysis, so changes in merge selection can affect the measured process. Repository-month means weight observed months equally, rather than weighting all PRs equally across the sample. Reviewers per PR measures participation on individual PRs. A null estimate for that outcome does not establish constant reviewer-pool size, constant membership, or equal oversight quality.
+
+\section{Empirical Strategy and Inferential Status}
+\label{sec:strategy}
+
+The study uses the imputation approach of \citet{borusyak2024revisiting}. We interpret the estimates as associations given unresolved adoption selection and measurement concerns. A repository and calendar-month fixed-effects model is fit to control observations and treated observations before detected adoption:
+\begin{equation}
+ Y_{it}(0)=\alpha_i+\lambda_t+\varepsilon_{it}.
+\end{equation}
+Predicted untreated outcomes are subtracted from treated post-adoption observations. The pooled estimate averages these residuals over usable treated repository-months, and event-time estimates average within each horizon. The intended window is $h=-6,\ldots,-2$ before adoption and $h=0,\ldots,11$ after adoption. Month $h=-1$ is excluded, and September 2026 is excluded as incomplete at collection. Matched controls receive their treated partner's event date.
+
+A causal interpretation requires appropriate untreated trends, no anticipatory outcome changes, adequate support for imputation, and assumptions about interference and adoption selection. Neither matching nor an insignificant pre-period diagnostic establishes these conditions. Detection errors, shared reviewers, evolving project activity, and contemporaneous governance changes are plausible threats.
+
+There are also implementation limits. The joint pre-trend diagnostic sums squared lead-specific $t$ statistics and compares the sum with a chi-squared distribution. It omits cross-lead covariance, and its pre-period residuals come from observations used to fit the model. The statistic is not a fully implemented covariance-aware BJS pre-trend test. The supplementary analyses instead estimate lead indicators in an untreated-only fixed-effects regression and use the full matched-pair-cluster covariance matrix for a joint test. This diagnostic assesses differential pre-period changes without establishing adoption exogeneity.
+
+The analytic ATT standard error is also an approximation: it uses the dispersion of repository-average residuals, whereas the pooled ATT averages repository-month residuals. The completed 1,000-replicate matched-pair bootstrap refits the imputation model and provides a more relevant uncertainty assessment for five pooled outcomes. Matching is held fixed. This does not address dependence across pairs connected by reviewers or validate uncertainty for every follow-up outcome.
+
+Table~\ref{tab:main} uses the completed 1,000-replicate bootstrap. Its p-values are normal-approximation calculations from the reported ATT and bootstrap standard error, rather than bootstrap-tail probabilities, and are therefore approximate. Identity and subgroup results retain their separately documented inference. We avoid significance stars across incompatible inference procedures and treat the many exploratory comparisons as exploratory because multiplicity-adjusted results are not available.
+
+\section{Results}
+\label{sec:results}
+\subsection{RQ1: Monthly concentration and its sensitivity}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Pooled estimates with completed 1,000-replicate pair-bootstrap standard errors}
+\label{tab:main}
+\begin{tabularx}{\textwidth}{Xrrr}
+\toprule
+Outcome & ATT & Bootstrap SE & Approx. $p$\\
+\midrule
+Top-one human review share & 0.0173 & 0.0087 & 0.047\\
+Top-two human review share & 0.0151 & 0.0055 & 0.006\\
+First recorded review (hours) & $-65.0128$ & 31.1447 & 0.037\\
+Merge time (hours) & $-62.8121$ & 27.5755 & 0.023\\
+Review submissions per PR & 0.1804 & 0.0821 & 0.028\\
+\bottomrule
+\end{tabularx}
+\par\smallskip{\footnotesize\noindent Source: Authors' calculations from the original capped extraction. Share outcomes count distinct human reviewer--PR incidences. Process outcomes follow the definitions in Section~\ref{sec:data}. Outcome-specific observation counts differ. \par}
+\end{table}
+
+The original extraction yields a 1.51-percentage-point increase in the top-two share. Reconstructing reviewer--PR incidences without the monthly cap and requiring usable pre- and post-adoption observations for both members of each pair yields 300 pairs. On identical observations across concentration measures, top-two share increases by 0.0243 (pair-bootstrap SE 0.0088; 95\% interval [0.0071, 0.0416]). Gini and HHI are less precise, so the evidence is strongest for the top-two measure rather than for every measure of inequality. Appendix~\ref{app:followup} details the construction. Top-one share is close to the conventional significance threshold: its approximate p-value changes from 0.052 in the earlier bootstrap to 0.047 in the completed 1,000-replicate run. This small change does not justify a stronger substantive claim. Tail share is the complement of top-two share and therefore adds no independent evidence. With identical observations, weights, and estimation, the two must have opposite ATTs and identical uncertainty.
+
+On the same 802-treated-repository subsample, removing the sampling cap changes top-two share from 0.0153 to 0.0082 and top-one share from 0.0141 to 0.0070. The uncapped top-two estimate has an analytic $t$ statistic of 2.47, but the existing notes also flag pre-period irregularities. These results show measurement sensitivity; the uncapped estimate is not a final benchmark.
+
+The common-horizon diagnostic likewise matters. Restricting to $h=0,\ldots,5$ changes the pooled top-two estimate from approximately 0.0151 to 0.0081. At longer horizons, fewer cohorts contribute. The full-window estimate therefore combines dynamics with changing cohort composition.
+
+\subsection{RQ2: Incumbent displacement and succession}
+
+The identity analysis reports an ATT of approximately $-0.077$ for the probability that the monthly leader is the pre-adoption lead, with an analytic standard error of 0.0151. In the 176-pair sample without observed cross-arm reviewer overlap, the estimate is approximately $-0.111$ with an analytic $t$ statistic of $-3.70$. This is consistent with reduced incumbent persistence; inference differs from Table~\ref{tab:main}.
+
+Selecting the incumbent as the pre-period maximum raises measured pre-period persistence by construction. Both treated and control repositories show a decline around the event boundary. Symmetric construction can remove a common component, but a similar visual decline does not establish equal selection bias. An independent-window analysis selects the leader in months $h=-6,-5,-4$ and uses $h=-3,-2$ as the estimation baseline. On 135 eligible pairs, persistence falls by 0.0725 (bootstrap SE 0.0427; 95\% interval [$-0.1562$, 0.0112]). The negative direction remains, but this check does not establish a statistically precise displacement effect.
+
+The evidence does not establish what arrangement follows displacement. The full-sample month-to-month leader-change estimate is negative, but it becomes approximately zero in the 176-pair restriction ($t=-0.02$). Pre-adoption top-two overlap also becomes statistically indistinguishable from zero there. Moreover, post-period top-two identity overlap across two six-month blocks does not differ detectably between treated and control repositories in the descriptive comparison. The data therefore do not identify a stable handover or increased rotation.
+
+The incumbent's absolute activity offers a direct check on interpretation. In the 309-pair displacement follow-up, the incumbent's review count has an ATT of $-0.265$ with bootstrap $p=0.703$. The incumbent-share estimate is also imprecise and fails the existing pre-period diagnostic. Descriptively, 43.6\% of replacement-leader observations in treated repositories involve the former second-ranked reviewer, compared with 31.5\% in controls. These are selected replacement months, not a causal comparison of successor types, and rank does not identify tenure or knowledge. The combination illustrates why a change in who ranks first need not mean that the former lead stops working.
+
+\subsection{RQ3: Process changes}
+
+Table~\ref{tab:main} shows shorter elapsed time to a first recorded review and to merge, alongside more review submissions. These are calendar and recorded-review measures; they include automation, queues, and author response time.
+
+Existing PR-size and volume adjustments leave the latency point estimates broadly similar in their respective subsamples, although significance varies by specification. Adjustment for post-adoption PR characteristics changes the estimand and is not a definitive mechanism test. On the 296-repository, complete-pre-history subsample, which is busier on average, the signs reverse: merge time increases by about 40.7 hours and review submissions decrease by about 0.146. The restriction selects a distinctive group. Without a direct, comparably estimated moderator test, this should be described as sample sensitivity rather than proof that volume causes the reversal.
+
+\subsection{Reviewer overlap and heterogeneous estimates}
+
+Of the 309 pairs in the reviewer-overlap diagnostic, 133 (43\%) have a control reviewer who also appears in a treated repository. This establishes observed cross-arm connectivity and a possible interference channel, not proof that spillovers occurred. The 176-pair restriction removes observed overlap within the available identity data, not all possible exposure.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Selected estimates in the 176-pair sample without observed reviewer overlap}
+\label{tab:clean}
+\begin{tabularx}{\textwidth}{Xrr}
+\toprule
+Outcome & ATT & Analytic $t$\\
+\midrule
+Top-two human review share & 0.0208 & 2.79\\
+Incumbent remains monthly leader & $-0.1106$ & $-3.70$\\
+Monthly leader changes & $-0.0006$ & $-0.02$\\
+First recorded review (hours) & $-89.7650$ & $-2.92$\\
+Merge time (hours) & $-56.1510$ & $-1.88$\\
+Review submissions per PR & 0.1756 & 1.82\\
+\bottomrule
+\end{tabularx}
+\par\smallskip{\footnotesize\noindent Source: Authors' calculations. Analytic inference is not directly comparable with Table~\ref{tab:main}'s bootstrap inference. The restriction also changes the population of repositories.\par}
+\end{table}
+
+Top-two share remains positive in this restriction. However, relative to all 309 identity-covered pairs, its point estimate falls from 0.0318 to 0.0208. Comparing the restricted estimate only with the full 1,771-pair estimate would obscure that difference. The restriction cannot distinguish interference, heterogeneity, and selection.
+
+Adoption-mode comparisons suggest a larger top-two-share change among human-assisted than agent-associated adopters in one bootstrap comparison ($p=0.037$). Tool-specific and adoption-era differences are generally imprecise, while several within-group estimates change sign across matching calipers. Tool buckets overlap and use a combined first-detection date. We therefore do not infer equivalent effects across tools or generations. Likewise, subgroup significance in one group and insignificance in another does not establish a difference between them.
+
+\subsection{Exploratory distributional and mechanism checks}
+
+Event-weighted cumulative analyses do not detect an increase in the top-two share over the entire observation window, although a cumulative Gini estimate is positive. The direct monthly--cumulative gap comparison is itself not significant. Consequently, a significant monthly estimate and an insignificant cumulative estimate do not establish increased rotation or a difference between the two effects.
+
+The rank-by-rank event-weighted analysis reports declining shares at ranks three and four. It conditions each rank on that rank being present, producing different samples across ranks. Adding the rank-one and rank-two ATTs therefore does not recover an ATT for top-two share. Differences from the main incidence-based estimate cannot be attributed solely to the cap. A common-roster, common-sample incidence analysis is needed before claiming that the middle of the reviewer distribution is being displaced.
+
+Other exploratory paths do not currently support mechanism claims. Episodic incumbent inactivity fails matching and bootstrap sensitivity. Permanent exit and incumbent authoring changes are not detected. Entrant-share and reciprocity constructions fail existing pre-period diagnostics. Leadership-tenure differences are entangled with pre-period concentration. These results limit interpretation but do not prove that exit, reallocation, entry, or network changes are absent.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The central empirical possibility is that AI adoption is accompanied by reallocation within the review process: a more concentrated monthly distribution can coexist with lower persistence of the previous lead. This combination is organizationally different from uniformly increasing every reviewer's task volume, or from a fixed individual absorbing an increasing workload. It is also compatible with several mechanisms. Another established reviewer could become more active; the incumbent's activity could remain flat while others change; the composition of merged contributions could shift; or review automation could affect the human work that remains.
+
+The theoretical implication is that technology can reorganize interdependent work without uniformly increasing every participant's activity. Distinguishing concentration from identity continuity helps identify that reorganization; testing its expertise and welfare consequences requires measures beyond review records. Managers should therefore treat concentration as a signal for capacity and knowledge-coverage analysis, not as a diagnosis of burden or quality.
+
+\section{Limitations and Next Tests}
+
+Several limitations are central to the interpretation. First, visible adoption signals are incomplete and heterogeneous, and collection-time matching covariates may be affected by adoption. Second, merged-only data condition on a potentially changing selection process. Third, capped sampling, event versus incidence weighting, and varying coverage make some apparently comparable estimates different estimands. Fourth, incumbent selection and tied ranks can mechanically affect persistence. Fifth, shared reviewers challenge independent-pair inference. Sixth, approximate pre-period tests and numerous exploratory comparisons preclude treating nominal significance as definitive causal validation.
+
+The most informative next steps follow directly from these limits. Reconstruct an uncapped incidence-based panel with explicit missing-data rules, and estimate concentration and identity outcomes on common samples. Extend the independent historical window and increase coverage of fixed follow-up cohorts. Account for dependence between pairs connected by shared reviewers. Recover pre-treatment matching variables and distinguish high-confidence observed-use signals from configuration intent. Human-only review timing and substantive review exchanges require re-extraction rather than relabeling current variables.
+
+A mechanism extension should compare pre-adoption expertise and availability across the full reviewer candidate pool, then examine who becomes a successor. A burden extension would need individual review counts, task complexity, active effort or time-pressure measures, and capacity information. Linking allocation to reverts, defects, retention, or knowledge coverage would establish whether the observed restructuring has beneficial or harmful consequences. These are proposed extensions, not outcomes established in the current dataset.
+
+\section{Conclusion}
+
+AI's organizational effects depend on how complementary work is allocated as well as how quickly code is produced. This study examines the distribution of human review activity and the continuity of pre-adoption review leaders around first detected AI adoption. The estimates support an increase in top-two review share. Reduced incumbent persistence is suggestive: its confidence interval includes zero when the incumbent is selected in a separate historical window. The evidence does not establish a succession mechanism or a general process improvement. The contribution is a focused investigation of review allocation under technological change. Establishing its causal magnitude, underlying mechanism, and consequences for workers requires the measurement and inference checks identified here.
+
+\bibliographystyle{informs2014}
+\bibliography{references}
+
+\begin{APPENDIX}{Supplementary Empirical Analyses}
+\label{app:followup}
+\renewcommand{\theHsection}{supplement.\arabic{section}}
+
+\section{Common-Sample Reconstruction and Inference}
+We reconstruct monthly reviewer counts from distinct reviewer identities on each merged PR. Repeated submissions by the same reviewer on a PR contribute one incidence. We exclude two empty extraction sentinel rows, validate repository identities and event dates against the matched pairs, exclude September 2026, and retain $h=-6,\ldots,-2$ and $h=0,\ldots,11$. Each retained pair must have an observed review month before and after adoption in both arms. Months without recorded reviews have undefined shares and are not assigned zero. The resulting concentration panel contains 300 pairs, 4,924 repository-month observations, and 1,571 treated post-adoption observations.
+
+All four concentration measures use exactly this panel. HHI is $\sum_r s_{rit}^2$; Gini is computed over active reviewers. A single-reviewer month has Gini zero and HHI one, reflecting the measures' different treatment of participation. The reconstruction removes the monthly 40-PR cap but cannot establish exhaustive upstream retrieval.
+
+We refit the repository and calendar-month effects in each of 1000 matched-pair bootstrap draws, holding matching fixed. Reported intervals are normal approximations using bootstrap standard deviations. The pre-period diagnostic estimates treated lead indicators using untreated observations, with the earliest observed pre-period month omitted, and tests them jointly using the full pair-cluster covariance matrix. These procedures do not account for reviewer dependence across pairs.
+
+\section{Task Allocation and Reviewer Relationships}
+Studies of technology and organization distinguish task assignment from aggregate productivity \citep{bloom2014distinct,hoffmann2025generative}. We therefore compare reviewer HHI with HHI over merged-PR authors in the same repository-month and directly estimate their difference. We also measure the share of review incidences supplied by individuals who author at least one merged PR that month. This is overlap between observed roles, not time allocation. Finally, we measure the share of author--reviewer incidences belonging to a pair observed together on at least two PRs in the month, excluding self-review links. Repeated links measure relationship reuse rather than review quality.
+
+Requiring valid author and reviewer distributions and at least one non-self author--reviewer link gives a common panel of 290 pairs and 4,701 months. We repeat this analysis on the 24 pairs observed in all six post-adoption months $h=0,\ldots,5$. A separate account-name sensitivity excludes names containing bot, assistant, copilot, coderabbit, gemini, devin, dependabot, or renovate. This deliberately broad filter is a sensitivity check, not validated account classification; it leaves 280 pairs. Top-two share remains positive under that filter (0.0219, SE 0.0095), whereas Gini is imprecise (0.0196, SE 0.0118). The six-month top-two estimate is 0.0400 (SE 0.0224); its small selected sample limits precision.
+
+\section{Independent Historical Selection}
+Research on ownership and expertise motivates distinguishing continuity from distribution \citep{bird2011ownership}; evidence of learning from AI also motivates examining established participant relationships \citep{brynjolfsson2025work}. We identify the incumbent, top-two reviewers, reviewer roster, and author--reviewer links using only observations from $h=-6,-5,-4$. We then estimate outcomes using $h=-3,-2$ and $h\geq0$, leaving historical selection observations out of estimation. Tied historical leaders are excluded. If several reviewers tie for first in a subsequent month, an incumbent among them receives persistence weight equal to the reciprocal of the number tied.
+
+The 135-pair panel contains 1,924 months and 736 treated post-adoption observations. Besides incumbent persistence, we estimate the share supplied by the historical top two, the share supplied by reviewers outside the historical roster, and the share of links belonging to historical author--reviewer pairs. The short historical window measures observed prior participation rather than expertise or true newcomer status. The two-month estimation baseline also limits the power of pre-period testing.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Selected supplementary estimates}
+\label{tab:followup}
+\begin{tabularx}{\textwidth}{Xrrr}
+\toprule
+Outcome & Pairs & Estimate & Bootstrap SE\\
+\midrule
+Top-two share, reconstructed incidence panel & 300 & 0.0243 & 0.0087\\
+Gini, same incidence panel & 300 & 0.0205 & 0.0110\\
+HHI, same incidence panel & 300 & 0.0098 & 0.0154\\
+Review HHI minus author HHI & 290 & 0.0104 & 0.0186\\
+Share supplied by concurrent PR authors & 290 & 0.0259 & 0.0233\\
+Repeated author--reviewer link share & 290 & 0.0199 & 0.0258\\
+Incumbent persistence, independent history & 135 & $-0.0725$ & 0.0432\\
+Historical top-two share & 135 & 0.0045 & 0.0331\\
+Outside historical roster share & 135 & $-0.0018$ & 0.0268\\
+Historical author--reviewer link share & 135 & $-0.0580$ & 0.0370\\
+\bottomrule
+\end{tabularx}
+\par\smallskip{\footnotesize\noindent Notes: Estimates are in outcome units; multiplying share outcomes by 100 gives percentage points. Standard errors use 1000 pair-bootstrap refits. Task-allocation and historical outcomes are exploratory. Holm adjustment across their 16 outcome--specification tests yields no rejection at 5\%.\par}
+\end{table}
+
+These analyses support the top-two concentration pattern but do not identify a change in the separation of coding and reviewing, relationship reuse, or participation by previously unobserved reviewers. The independent-window persistence estimate retains its negative direction with substantial uncertainty. Neither insignificant coefficients nor historical participation measures establish the absence of reorganization or the loss of expertise.
+\end{APPENDIX}
+\end{document}

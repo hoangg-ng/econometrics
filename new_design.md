@@ -1,167 +1,313 @@
-# Research Design — GitHub Development Events and Cryptocurrency Market Response
+# Research Design — Does AI Adoption Change Code Review Behavior?
 
-**Status:** Draft v0.1
-**Prior project:** AI coding agents and code review (GitHub extraction pipeline reusable; see `research_design.md` in that repo)
+**Status:** Draft v0.2 — narrowed to a single causal question, per project
+decision (the broader trend/ecosystem-diffusion angle explored earlier this
+session is dropped, not archived elsewhere — cut for focus, not because it
+was wrong).
+**Prior project:** AI coding agents and code review (matched treated/control
+DiD) — archived at `archive/prior_project_ai_code_review/`. This design is a
+direct re-test of that project's question, not a new one. That project's
+extracted data is gone (accidentally deleted, unrecoverable — see project
+history); its code, methodology, and hard-won lessons are not, and this
+design carries the relevant ones forward explicitly (§9).
+**Also abandoned this session:** a crypto-market event-study direction
+(`archive/explored_crypto_event_study/`) — dropped because the DefiLlama/
+CoinGecko universe is too noisy (scams, dead forks, wrong repo mappings) to
+trust without a much larger legitimacy-filtering effort than the question
+warranted.
 
 ---
 
 ## 1. Question
 
-Protocol code is public, but almost no investor reads it. Development events are therefore an information channel that exists but is expensive to monitor. The question is whether the market prices them, and if so, which ones and how fast.
+Does an individual repo's own AI-tool adoption trigger a change in its code
+review behavior? A direct re-test of the archived project's question, on
+fresh data, with a materially better-validated adoption signal (§2) than
+that project had (trailer-only, with contamination the archived README
+documents finding only after the fact).
 
-> **RQ.** Do observable development events in a crypto protocol's public repository produce measurable market responses in its token?
+> **H1 (review rate drop).** Does AI adoption trigger a drop in how much
+> review a repo's PRs get?
+>
+> **H2 (burden concentration).** Does AI adoption trigger review work
+> concentrating more heavily on one member of the team?
 
-**MIS framing.** Open source repositories as a transparency mechanism under information asymmetry. Code is fully disclosed, yet the disclosure is costly to process, so the market response reveals how much of that channel is actually being used — and by whom. This connects to the IS literature on voluntary disclosure and platform transparency, where the gap between *available* and *used* information is the object of study.
-
----
-
-## 2. Treatments
-
-Three event types, each with a distinct informational character. Run them as separate studies rather than pooling — the mechanisms differ and pooling would average across them.
-
-### A. Major releases
-
-`t0` = tag date of a release matching semantic-version major or minor increment.
-
-Anticipated to varying degrees. The interesting variation is between scheduled and unscheduled releases; see §5 on anticipation.
-
-### B. Security fixes
-
-`t0` = merge date of a commit or PR referencing a CVE, security advisory, or audit finding.
-
-Negative news partly revealed by the fix itself. Note the two-sided reading: a fix signals both that a vulnerability existed and that it is now closed.
-
-### C. Core maintainer departure
-
-`t0` = last commit of a top-3 contributor (by pre-period commit share) who is then absent for 6+ consecutive months.
-
-**Why C is the most valuable.** A and B often have announcements elsewhere — Discord, Twitter, release notes — so a market response may be pricing the announcement rather than the repository. C typically has no announcement anywhere. If the market responds to C, the repository itself is being monitored. This is the cleanest test of whether the channel is used at all.
+This has a clean single `t0` per repo (its own first-adoption date), which
+is exactly what makes a causal event-study design appropriate here — per
+§9's carried-forward lesson, a causal estimator (matching, DiD) should only
+be built when the question has one. It does; that's why this design is
+causal, unlike the broader ecosystem-diffusion framing explored earlier
+this session (no single date to build a `t0` around there, which is a
+different problem this design doesn't need to solve).
 
 ---
 
-## 3. Outcomes
+## 2. Adoption signal
 
-Standard event-study measures, daily frequency:
+**Decision: combine commit co-authorship trailer OR config-file presence —
+either one is sufficient to count a repo as adopted.** Implemented in
+`src/adoption_signal.py::is_ai_adopted()`, live-tested against real repos
+and validated this session against three independent published datasets
+(He & Miller, Robbes et al., Li et al./AIDev — see each paper's replication
+package for the exact numbers). This is a deliberate recall-over-precision
+choice, made explicitly aware of the trade-off below — not a reversal of
+the prior project's finding that trailer beats config-file *alone* (see
+archive README's 43%-mislabeling result). OR-combining the two is a
+different claim: config-file presence is kept as a *supplementary* net
+precisely because trailer-alone has a recall ceiling, and every signal is
+always reported separately (`layer_a_signal_types`, `layer_b_signal_types`,
+`config_files_present`, `config_gitignored`) so a precision-only read stays
+possible later without re-extracting anything.
 
-| Outcome | Windows |
-|---|---|
-| Abnormal return (AR) | `[−1,+1]`, `[0,+5]`, `[0,+10]` |
-| Cumulative abnormal return (CAR) | same |
-| Abnormal trading volume | same |
-| Realized volatility | `[0,+10]` |
+**Two layers, because they measure genuinely different populations** —
+confirmed empirically, not assumed: testing the trailer-only signal against
+Li et al.'s PR-level ground truth found it catches 75% of Claude Code PRs
+(same signal class) but 0% of Devin, 2.5% of Cursor, 5.1% of Copilot —
+because those three are typically used in an autonomous, agent-authors-the-
+PR mode, and a co-authorship trailer structurally cannot exist when the
+agent is the primary author, not a co-author.
 
-**Benchmark model.** Market model with BTC (and optionally ETH) as the market factor, estimated over `[−120, −20]` relative to `t0`.
+- **Layer A, autonomous** (`detect_agent_authored_prs`): the agent *is* the
+  PR's author — branch-name prefix (`codex/`, `copilot/`, `cursor/`,
+  `devin/`) or PR-author bot login/identity (`devin-ai-integration[bot]`,
+  `google-labs-jules[bot]`, `copilot` — confirmed live that Copilot's
+  coding-agent PR-author login is literally `"Copilot"`, no app name in it
+  at all; `author:app/copilot-swe-agent` is the only reliable way to
+  identify it otherwise).
+- **Layer B, assisted** (`detect_trailer_commits`): co-authorship trailers
+  and `"Generated with ..."` lines inside commits a human still authored.
+  Carried forward as-is from the prior project (`AGENT_TRAILER_PATTERNS`,
+  `AUTOFIX_IDENTITY_MARKERS`) — `copilot_trailer` excludes the `Copilot
+  Autofix` variant (an automated CodeQL bot, not a developer choosing AI
+  assistance; contamination confirmed twice at ~1/3 magnitude). `devin`/
+  `jules` patterns are plausible human first names, spot-checked at ~0-3%
+  false-positive rate — real but not dominant.
 
-Crypto returns are fat-tailed and heteroskedastic, so report both OLS and a robust alternative. State the estimation window explicitly — results are sensitive to it, and §6.3 tests that sensitivity directly.
+**Config-file signals** (`detect_config_files`, `detect_gitignored_config`),
+carried forward from the prior project (`discover_treated.py::CONFIG_
+SIGNALS`) and extended with patterns found missing against Robbes et al.'s
+ground truth this session: `.cursorrules`, `.cursor` (dir), `.claude` (dir),
+`.continue` (dir), `.cline` (dir), `.clinerules`, `.windsurfrules`,
+`cursor.json`, `.claude.json`, `.cline.json`, `.continue.json`, `CLAUDE.md`,
+`.github/copilot-instructions.md`, `AGENTS.md`, `.agents` (dir), `.roo`
+(dir), `GEMINI.md`, `.geminiignore`. Matched case-insensitively via one
+root-directory listing (not a case-sensitive GET per path — real repos vary
+case). `.gitignore` is scanned separately for the same keywords, catching
+adopters who deliberately exclude their config file from version control
+(weaker evidence than the file existing, reported separately).
+
+Checked via the Contents API against the current default-branch HEAD only
+— a file added and later removed won't be seen.
+
+**Known, accepted trade-off of the OR combination:** the prior project
+found 34/332 repos had a config file present with *zero* trailer evidence,
+and never verified whether that reflects real usage through a tool that
+doesn't leave a trailer, or a config file nobody actually used. Those
+repos will now be labeled "adopted" without that distinction resolved —
+accepted as a project decision, not an oversight.
+
+**Known ceiling, state explicitly regardless of which signals are in use:**
+all of the above only capture *attributed* AI usage. A developer using an
+assistant without a trailer/config/bot in the loop is invisible to this
+design. Report adoption as a lower bound, not a population estimate — no
+amount of combining public signals closes this; only GitHub-internal
+telemetry or a validated code classifier could.
+
+---
+
+## 3. Review-process outcomes
+
+Reused from the prior project's outcome families — these definitions were
+never the problem (the treatment/sampling side was); no reason to redesign
+them. Also the direct reason **network density and Freeman degree
+centralization were dropped and are not used here**: both have team size
+in the denominator (density: `N(N-1)/2`; centralization: normalized by
+`N`), so they move mechanically with team-size changes regardless of
+whether review behavior itself changed. Song et al. found AI adoption
+raises contributing-developer count ~5.4%; that alone predicts ~4%
+mechanical density decline with zero real effect. `top1_reviews` (a raw
+count) and `top1_share` (normalized by review volume, not team size) don't
+have this problem, matched on team size instead (§4) so it's controlled as
+a confounder rather than baked into the outcome's denominator.
+
+| Outcome | Definition | Family |
+|---|---|---|
+| `mean_reviewers` | mean distinct human reviewers per merged PR, per repo-month | H1, review contraction |
+| `zero_human_rate` | share of merged PRs with 0 human reviewers | H1, review contraction |
+| `single_reviewer_rate` | share with exactly 1 human reviewer | H1, review contraction |
+| `top1_reviews` | review count of the busiest reviewer that month | H2, burden concentration |
+| `top1_share`, `top2_share` | share of total reviews done by the busiest 1/2 reviewers | H2, burden concentration |
+| `zero_any_review_rate` | share with neither human nor agent review | required alongside every H1 outcome above — without it, a repo that adds an AI *reviewer* alongside an AI *coder* looks identical to one where review quietly stopped |
+| `agent_only_rate` | share reviewed only by an agent, no human | same reason |
+| `time_to_first_review`, `time_to_merge`, `review_rounds` | latency/iteration measures | supporting, never finished under the corrected trailer definition last time |
+
+**`top1_reviews` and `top1_share` must always be reported together — this
+is the analytical centerpiece, not a footnote.** Worked example from the
+archived project: a 10-person team where everyone reviews 5 PRs before
+adoption; after, the busiest handles 4 and the other nine handle 1 each.
+`top1_share` rises sharply — but `top1_reviews` shows the busiest reviewer
+doing *less* absolute work. Reporting either alone reproduces the exact
+ambiguity that made centralization measures useless here.
 
 ---
 
 ## 4. Sample
 
-Protocols meeting all of:
+Matched treated/control, same shape as the prior project's 332-repo pool —
+that part of the design was right; the treatment definition was the weak
+point, not the matching.
 
-- Public GitHub repository with identifiable primary development activity
-- Token traded on at least one major exchange with ≥12 months of price history before `t0`
-- Minimum daily volume threshold (state the number) so daily returns are meaningful
-
-### Feasibility check comes first
-
-Count how many protocols satisfy this, and how many events of each type they generate. Sources: CoinGecko and DefiLlama both carry repository links for many protocols.
-
-If fewer than ~100 protocols with usable event counts survive, narrow the design to a single event type.
-
-**Repository-to-token mapping needs manual verification.** Automated matching produces false links, and a wrong mapping silently corrupts the whole event. Budget real time for this — it is more work than it sounds.
-
----
-
-## 5. Identification
-
-Event study rather than DiD. The counterfactual is the market model's predicted return, not a control group.
-
-### Confound control is the central problem
-
-Crypto tokens react to many things. A release near an exchange listing, a partnership announcement, or a market-wide move will show an "effect" that has nothing to do with the repository.
-
-- Screen event windows against a news database; exclude events with other identifiable news in `[−3, +3]`
-- Report how many events this removes
-- Report results with and without the exclusion
-- Market-wide moves are absorbed by the market model, but check for events clustering on the same calendar dates — that breaks the independence assumption behind pooled test statistics
-
-### Anticipation
-
-Releases are often scheduled publicly. Split by whether a roadmap or milestone date existed beforehand. The unanticipated subsample carries the identification.
-
-### Selection in treatment C
-
-Maintainers may leave *because* a protocol is failing, making departure a symptom rather than a cause.
-
-Check pre-period abnormal returns for downward drift before `t0`. If one exists, the design cannot separate the two, and the estimate should be reported as an association rather than a causal effect.
+- **Treatment:** `is_ai_adopted()` fires (§2 — Layer A, Layer B, config
+  file, or `.gitignore`), `t0` = earliest date any signal is observed.
+- **Control:** repos with zero signal across their entire observed history.
+- **Matching:** CEM + propensity-score matching on pre-adoption covariates
+  — team size / active-developer count, stars, language, creation year,
+  and pre-period trend *slopes*, not just levels (archived
+  `research_design.md` §4.3's two-stage approach: level-covariate CEM+PSM
+  first, then a second stage matching on pre-period slopes once a panel
+  exists). Team size is matched on explicitly *because* §3's outcomes were
+  chosen to not need a team-size-normalized measure — matching controls
+  that confounder without baking it into the outcome's denominator.
+- **Availability gate:** ≥6 months pre-period, ≥3 months post-period
+  around `t0`, computed from actually-extracted data (§9 — this bit the
+  archived project's coverage numbers when assumed instead of measured).
+- **Quality bar:** ≥10 stars (same threshold He & Miller and Robbes et al.
+  both use for the same reason — Munaiah et al. found it achieves ~97%
+  precision for excluding toy/tutorial/homework repos), exclude forks,
+  require a minimum contributor count and recent push activity (reuse
+  `src/legitimacy.py`'s `is_fork`/`n_contributors`/`days_since_last_push`
+  logic directly).
 
 ---
 
-## 6. Checks
+## 5. Analysis approach
 
-Ordered by what they rule out. Run in this order.
+Event-study DiD, staggered adoption. Same estimator family the archived
+project settled on and He & Miller independently also used for the same
+class of problem: the **Borusyak et al. imputation estimator** (fits the
+counterfactual on untreated observations only, avoids the "forbidden
+comparisons" bias of naive two-way fixed effects under staggered adoption
+— see He & Miller's own appendix for a worked comparison against TWFE and
+Callaway–Sant'Anna).
 
-**6.1 Pre-event abnormal returns.** Should be indistinguishable from zero. Non-zero means either leakage or reverse causality, and the two are told apart by shape — leakage rises sharply just before `t0`; reverse causality drifts over a longer horizon.
-
-**6.2 Placebo dates.** Random dates drawn from the same protocols, same window structure. A non-zero effect at placebo dates means the model is manufacturing effects.
-
-**6.3 Estimation window sensitivity.** Re-estimate the market model over alternative windows. Crypto volatility regimes shift, and a result that depends on window choice is not a result.
-
-**6.4 Multiple testing.** Three event types × three windows × several outcomes. Pre-register one primary event type and one primary window; everything else is secondary with correction.
-
-**6.5 MDE.** Compute the smallest detectable CAR given the sample. Necessary for any null to be interpretable — without it, "no effect" and "cannot tell" are indistinguishable.
+- **H1:** `ATT` and horizon-average `ATT_h` on `mean_reviewers`,
+  `zero_human_rate`, `single_reviewer_rate` (§3).
+- **H2:** same estimator on `top1_reviews` and `top1_share`, **reported
+  together** (§3).
+- **Primary outcome, declared before estimating, per §9:** `mean_reviewers`
+  for H1, `top1_reviews` for H2. Everything else in the family is secondary
+  with Benjamini–Hochberg correction — direction matters, verify the
+  step-up runs largest-p-first (archived project flagged this as an easy
+  mistake and never actually wired the correction in; do it this time).
 
 ---
 
-## 7. Data
+## 6. Checks — the archived project's core identifying assumptions
+
+Re-verified as real assumption tests, not the informal stacked-diagnostics
+approach the archived project's early iterations used (see archive
+README's "Core identifying assumptions" correction):
+
+1. **Parallel trends** — the central one. A *joint* (omnibus) Wald test
+   that all pre-period event-time lead coefficients are zero, on the plain
+   untrended spec. Not eyeballing an event-study plot; not via any
+   detrending (§9 — detrending is what broke the archived project).
+2. **No anticipation** — exclude the immediate pre-`t0` lead from the
+   pre-trend test (developers may start using a tool before their first
+   commit trailer/config file appears).
+3. **SUTVA** — no interference across repos, treatment consistently
+   defined via §2's signal.
+4. **Exogenous treatment timing** — adoption isn't itself caused by the
+   outcome. Mean-reversion diagnostic: regress the change in each outcome
+   on its own pre-period baseline level, by treatment arm — a real,
+   structural check, not optional (§7's selection risk is exactly what
+   this tests for).
+5. **Time FE absorb common shocks** (GitHub UI/workflow changes, Actions-
+   driven auto-merge, Dependabot volume growth affecting all repos in a
+   given month).
+6. **Signal precision, before trusting any count at scale.** Re-run the
+   Autofix-contamination and name-collision spot checks (§2) on the fresh
+   sample — do not assume last session's fix still holds; CI bot naming
+   conventions change.
+7. **Multiple testing.** One primary outcome per family, declared before
+   looking at results (§5); everything else secondary with
+   Benjamini–Hochberg correction, step-up run largest-p-first.
+
+---
+
+## 7. Known risks
+
+- **Attribution ceiling (§2)** — this measures *visible* AI usage, not true
+  usage. A "control" repo may have real invisible usage, biasing the ATT
+  toward zero. State as a lower bound throughout.
+- **Selection into treatment.** Repos may adopt AI tools *because* they're
+  already struggling to keep up with review load, not the other way
+  around — making adoption a symptom of prior review strain rather than
+  its cause. The mean-reversion diagnostic (§6.4) is the direct test; if
+  it fires, report the result as association, not causation, exactly as
+  the archived project's own framework requires.
+- **This may simply replicate the prior null.** A real possible outcome,
+  not a failure — the archived project's null on these exact hypotheses,
+  with a weaker treatment signal, is itself evidence worth strengthening
+  with a better-measured repeat, not a reason to expect a different answer.
+- **Ecosystem/language skew** — GitHub's population skews toward certain
+  languages/company sizes; matching helps but doesn't eliminate this.
+
+---
+
+## 8. Data
 
 | Source | Use |
 |---|---|
-| GitHub (existing pipeline) | Releases, commits, contributor activity, restricted to crypto protocol repositories |
-| CoinGecko API (free tier) | Daily OHLCV; adequate for a first pass |
-| Exchange APIs | Higher frequency, if daily proves insufficient |
-| Crypto news aggregator | Confound screening (§5) |
+| GitHub REST/GraphQL (`src/github_client.py`) | Repo discovery, commits (Layer B), PRs (Layer A + outcomes), config files/`.gitignore` (config signal) |
+| No external market data | Not needed for this question |
 
 ---
 
-## 8. Sequencing
+## 9. Sequencing
 
-**Phase 0 — feasibility, before anything else.** Count protocols with both a usable repository and a traded token. Count events per type. If maintainer departures are rare across the sample, C cannot carry the paper.
+**Phase 0 — signal re-verification.** Confirm the adoption signal's known
+contamination fixes still hold on a small fresh pull (§6.6). Estimate API
+cost of the full matched-sample extraction.
 
-**Phase 1 — pilot on 20–30 protocols, one event type.** Does any event type show a response at all? If no at pilot scale for all three, stop here rather than in month two.
+**Phase 1 — build the matched pool.** Extract candidate treated/control
+repos, run CEM+PSM matching (§4), confirm the availability gate.
 
-**Phase 2 — full sample, primary event type, pre-registered.**
+**Phase 2 — extract outcomes, run the event-study.** Repo-month panel of
+§3's outcomes, Borusyak et al. estimator, checks (§6) *before* reading the
+ATT — go/no-go gate: if the joint pre-trend test fails, stop and report
+why rather than estimating anyway.
 
-**Phase 3 — remaining event types, heterogeneity, writing.**
-
----
-
-## 9. Known risks
-
-**The market may not watch repositories at all**, in which case all three event types come back null. That is a publishable finding — a transparency mechanism that exists but goes unused is a real IS result — but decide now whether that outcome is acceptable, given the prior project.
-
-**Repository-to-token mapping errors are silent** and corrupt everything downstream.
-
-**Crypto news coverage is fragmented**, so the confound screen will be imperfect. State its limitations rather than implying completeness.
+**Phase 3 — writing.**
 
 ---
 
 ## 10. Carried forward from the prior project
 
-Lessons that cost a month to learn and apply here unchanged:
-
-- Write the hypothesis and specification to a timestamped file **before** estimating
-- One primary outcome, declared in advance
-- Compute MDE before running, so a null is interpretable
-- If two reasonable specifications disagree, one is wrong — do not report the preferred one
-- If the gap between specifications grows with horizon, that is extrapolation error, not an effect
-- Verify treatment definition validity and quantify false positive / negative rates
-- A go/no-go gate at pilot scale, with the stopping rule written down beforehand
+- Commit-trailer beats config-file presence as an adoption signal alone —
+  measured, not assumed (43% mislabeling under the old definition) — which
+  is exactly why §2 combines both rather than picking one.
+- Watch for bot-contamination inside a trailer pattern that looks clean
+  (Copilot Autofix hiding inside `copilot_trailer`) — verify commit-by-
+  commit on a sample before trusting a pattern at scale.
+- An availability/coverage gate (enough observed history around `t0`) has
+  to be computed from *actually extracted* data, not assumed from the
+  nominal extraction window.
+- Do not build a causal estimator (matching, detrending, DiD) unless the
+  question actually has a clean single treatment date. This design does
+  (§1); a diffusion-style question wouldn't, and retrofitting one onto
+  such a question is what produced the prior project's one outright-wrong
+  result (the detrending extrapolation artifact) — don't repeat that if
+  this design is ever extended toward an ecosystem-level question later.
+- Persist raw extracted data immediately and durably (this session's data
+  loss was exactly the failure mode "write the hypothesis/spec before
+  estimating" was supposed to prevent, just one step earlier in the
+  pipeline — land it somewhere durable the moment it's pulled).
 
 ---
 
 ## Next step
 
-The Phase 0 count. Everything in this design is contingent on there being enough protocols and enough events, and that question takes a day to answer.
+Phase 0: pull a small fresh sample, re-verify the adoption signal's known
+contamination fixes still hold, and get a real API-cost estimate for the
+full matched-sample extraction before committing to it.

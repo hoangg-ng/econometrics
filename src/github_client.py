@@ -83,16 +83,28 @@ class GitHubClient:
         Pass `max_pages` to stop early -- popular repos can have thousands of
         pages of commits/contributors, and without a cap this will happily
         walk every one of them before a caller gets to slice the result.
+
+        Handles both bare-list endpoints (most REST list endpoints) and
+        Search API's {"total_count":.., "items":[...]} wrapper -- confirmed
+        live that treating the wrapper as a non-list terminal value (the
+        original behavior) silently stops after page 1 and returns the dict
+        instead of paginating, e.g. fastapi/fastapi returning 100/207 merged
+        PRs for a 6-month window with zero indication anything was missing.
         """
         results = []
         url = REST_BASE + path
         req_params = dict(params or {})
         req_params.setdefault("per_page", 100)
         pages_fetched = 0
+        is_search_wrapper = None
         while url:
             resp = self._request("GET", url, params=req_params)
             page = resp.json()
-            if isinstance(page, list):
+            if is_search_wrapper is None:
+                is_search_wrapper = isinstance(page, dict) and "items" in page and "total_count" in page
+            if is_search_wrapper:
+                results.extend(page.get("items", []))
+            elif isinstance(page, list):
                 results.extend(page)
             else:
                 return page
