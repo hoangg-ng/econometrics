@@ -1,0 +1,5 @@
+metric,n_common_repo_months,capped_mean,uncapped_mean,mean_difference,sd_difference,max_abs_difference,share_exactly_equal
+top1_share,1629,0.664302,0.670586,0.006284,0.351266,0.850234,0.1479
+top2_share,1629,0.850783,0.852874,0.002091,0.243987,0.733229,0.294
+mean_reviewers,2494,0.630873,0.94543,0.314557,0.882324,3.894737,0.0862
+zero_human_rate,2494,0.549017,0.320004,-0.229013,0.537746,1.0,0.1672

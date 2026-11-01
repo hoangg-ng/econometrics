@@ -1,0 +1,80 @@
+{
+  "E04_equal_repo_weighting": {
+    "core_incidences": {
+      "equal_repo_att": 2.2853791326818316,
+      "n_repos": 86,
+      "observed_month_att": 2.2783400346334424
+    },
+    "other_baseline_incidences": {
+      "equal_repo_att": 2.5936001410666867,
+      "n_repos": 86,
+      "observed_month_att": 2.3659616367275547
+    },
+    "newcomer_incidences": {
+      "equal_repo_att": 2.1383237876922028,
+      "n_repos": 86,
+      "observed_month_att": 2.180744195343714
+    },
+    "total_incidences": {
+      "equal_repo_att": 7.0173030614407175,
+      "n_repos": 86,
+      "observed_month_att": 6.825045866704707
+    },
+    "n_active_reviewers": {
+      "equal_repo_att": 0.4023368441704112,
+      "n_repos": 86,
+      "observed_month_att": 0.5348799050891424
+    },
+    "pr_reviewed_rate": {
+      "equal_repo_att": -0.0005769556904618877,
+      "n_repos": 86,
+      "observed_month_att": 0.009689623435415337
+    },
+    "n_prs": {
+      "equal_repo_att": 6.22985935777242,
+      "n_repos": 86,
+      "observed_month_att": 6.382559321181139
+    }
+  },
+  "E04_dependence": {
+    "pairs_with_baseline_reviewers": 1136,
+    "reviewers_appearing_in_more_than_one_pair": 448,
+    "pairs_touched_by_a_shared_reviewer": 408,
+    "share_of_pairs_touched": 0.3592,
+    "connected_components": 802,
+    "largest_component_pairs": 209,
+    "largest_component_share": 0.184,
+    "singleton_components": 728,
+    "distinct_treated_owners": 1019,
+    "most_common_owners": [
+      [
+        "microsoft",
+        24
+      ],
+      [
+        "apache",
+        17
+      ],
+      [
+        "actions",
+        6
+      ],
+      [
+        "kubernetes-sigs",
+        6
+      ],
+      [
+        "huggingface",
+        5
+      ]
+    ],
+    "note": "Pair bootstrap assumes independent pairs. A large connected component means that assumption is not satisfied and reported intervals are too narrow by an unknown amount."
+  },
+  "E01_september_completeness": {
+    "repos_with_august_2026_base_of_5plus": 635,
+    "median_sept_to_aug_ratio": 0.4861,
+    "mean_sept_to_aug_ratio": 0.6196,
+    "repos_with_zero_september_prs": 204,
+    "interpretation": "A ratio near 1.0 would indicate a complete month; well below 1.0 indicates truncation. September 2026 is excluded from all estimates either way."
+  }
+}

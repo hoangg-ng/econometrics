@@ -1,0 +1,6 @@
+covariate,n_retained,n_excluded,retained_mean,excluded_mean,retained_median,excluded_median,standardized_difference
+treated_stars,300,1096,6268.7,6345.6241,3609.0,3543.5,-0.0089
+treated_contributors,300,1096,82.4333,48.8969,69.0,31.0,0.6273
+match_distance,300,1096,0.1504,0.1309,0.1555,0.126,0.2851
+baseline_reviewers_per_pr,300,836,0.9091,0.7837,0.8868,0.75,0.2436
+baseline_prs_observed,300,836,152.2933,72.8577,88.0,19.0,0.5376

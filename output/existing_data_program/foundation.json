@@ -1,0 +1,275 @@
+{
+  "E01_sample_flow": {
+    "matched_pairs_rows": 2320,
+    "repo_month_cache_rows": 23109,
+    "repo_month_cache_distinct_repos": 3632,
+    "repo_month_panel_rows": 12553,
+    "repo_month_panel_distinct_pairs": 983,
+    "pr_level_rows": 293097,
+    "pr_level_valid_prs": 293095,
+    "pr_level_sentinel_rows": 2,
+    "pr_level_distinct_pairs": 1405,
+    "pr_level_distinct_repos": 2092,
+    "pr_level_repo_months": 11757,
+    "september_2026_repo_months": 595,
+    "september_2026_share_of_repo_months": 0.0506,
+    "september_2026_prs": 32893,
+    "repo_months_over_40_pr_cap": 1922,
+    "repo_months_over_cap_share": 0.1635,
+    "max_prs_in_a_repo_month": 1000,
+    "prs_discarded_by_a_40_cap": 107243,
+    "prs_discarded_by_a_40_cap_share": 0.3659
+  },
+  "E01_cap_composition": {
+    "capped_only_repo_months": 10059,
+    "uncapped_only_repo_months": 9265,
+    "common_repo_months": 2494
+  },
+  "E01_capped_vs_uncapped": [
+    {
+      "metric": "top1_share",
+      "n_common_repo_months": 1629,
+      "capped_mean": 0.664302,
+      "uncapped_mean": 0.670586,
+      "mean_difference": 0.006284,
+      "sd_difference": 0.351266,
+      "max_abs_difference": 0.850234,
+      "share_exactly_equal": 0.1479
+    },
+    {
+      "metric": "top2_share",
+      "n_common_repo_months": 1629,
+      "capped_mean": 0.850783,
+      "uncapped_mean": 0.852874,
+      "mean_difference": 0.002091,
+      "sd_difference": 0.243987,
+      "max_abs_difference": 0.733229,
+      "share_exactly_equal": 0.294
+    },
+    {
+      "metric": "mean_reviewers",
+      "n_common_repo_months": 2494,
+      "capped_mean": 0.630873,
+      "uncapped_mean": 0.94543,
+      "mean_difference": 0.314557,
+      "sd_difference": 0.882324,
+      "max_abs_difference": 3.894737,
+      "share_exactly_equal": 0.0862
+    },
+    {
+      "metric": "zero_human_rate",
+      "n_common_repo_months": 2494,
+      "capped_mean": 0.549017,
+      "uncapped_mean": 0.320004,
+      "mean_difference": -0.229013,
+      "sd_difference": 0.537746,
+      "max_abs_difference": 1.0,
+      "share_exactly_equal": 0.1672
+    }
+  ],
+  "E01_retention": {
+    "pairs_in_pr_panel": 1396,
+    "retained": 300,
+    "excluded": 1096
+  },
+  "E01_retained_vs_excluded": [
+    {
+      "covariate": "treated_stars",
+      "n_retained": 300,
+      "n_excluded": 1096,
+      "retained_mean": 6268.7,
+      "excluded_mean": 6345.6241,
+      "retained_median": 3609.0,
+      "excluded_median": 3543.5,
+      "standardized_difference": -0.0089
+    },
+    {
+      "covariate": "treated_contributors",
+      "n_retained": 300,
+      "n_excluded": 1096,
+      "retained_mean": 82.4333,
+      "excluded_mean": 48.8969,
+      "retained_median": 69.0,
+      "excluded_median": 31.0,
+      "standardized_difference": 0.6273
+    },
+    {
+      "covariate": "match_distance",
+      "n_retained": 300,
+      "n_excluded": 1096,
+      "retained_mean": 0.1504,
+      "excluded_mean": 0.1309,
+      "retained_median": 0.1555,
+      "excluded_median": 0.126,
+      "standardized_difference": 0.2851
+    },
+    {
+      "covariate": "baseline_reviewers_per_pr",
+      "n_retained": 300,
+      "n_excluded": 836,
+      "retained_mean": 0.9091,
+      "excluded_mean": 0.7837,
+      "retained_median": 0.8868,
+      "excluded_median": 0.75,
+      "standardized_difference": 0.2436
+    },
+    {
+      "covariate": "baseline_prs_observed",
+      "n_retained": 300,
+      "n_excluded": 836,
+      "retained_mean": 152.2933,
+      "excluded_mean": 72.8577,
+      "retained_median": 88.0,
+      "excluded_median": 19.0,
+      "standardized_difference": 0.5376
+    }
+  ],
+  "E02_signals": {
+    "candidate_pool_rows": 8976,
+    "adopted": 4415,
+    "not_adopted": 4561,
+    "adopted_with_t0": 3638,
+    "adopted_without_t0": 777,
+    "layer_a_signal_types": {
+      "codex_branch": 2233,
+      "copilot_pr_author": 817,
+      "cursor_branch": 335,
+      "copilot_branch": 128,
+      "devin_branch": 52,
+      "devin_pr_author": 43,
+      "cursor_pr_author": 23,
+      "jules_pr_author": 17
+    },
+    "layer_b_signal_types": {
+      "copilot_trailer": 1240,
+      "claude_trailer": 934,
+      "claude_code_footer": 679,
+      "cursor_trailer": 181,
+      "devin_trailer": 92,
+      "jules_trailer": 59,
+      "codex_footer": 10,
+      "aider_trailer": 3
+    },
+    "adopted_by_t0_year": {
+      "2022": 2,
+      "2024": 19,
+      "2025": 1193,
+      "2026": 2424,
+      "undated": 777
+    },
+    "config_files_present": [
+      [
+        "",
+        2182
+      ],
+      [
+        "AGENTS.md",
+        422
+      ],
+      [
+        "CLAUDE.md;AGENTS.md",
+        308
+      ],
+      [
+        "CLAUDE.md",
+        236
+      ],
+      [
+        "CLAUDE.md;AGENTS.md;.claude (dir)",
+        126
+      ]
+    ],
+    "caveat": "Signal types are heuristic detections, not validated adoption. Counts describe the detector, not true AI use, and cannot support claims about differences between tools."
+  },
+  "E03_balance": [
+    {
+      "covariate": "baseline_top1_share",
+      "measured": "pre-adoption (-6..-2)",
+      "n_treated": 933,
+      "n_control": 664,
+      "treated_mean": 0.70572,
+      "control_mean": 0.75497,
+      "standardized_difference": -0.2097
+    },
+    {
+      "covariate": "baseline_top2_share",
+      "measured": "pre-adoption (-6..-2)",
+      "n_treated": 933,
+      "n_control": 664,
+      "treated_mean": 0.87903,
+      "control_mean": 0.92899,
+      "standardized_difference": -0.3462
+    },
+    {
+      "covariate": "baseline_mean_reviewers",
+      "measured": "pre-adoption (-6..-2)",
+      "n_treated": 1301,
+      "n_control": 1009,
+      "treated_mean": 0.53554,
+      "control_mean": 0.49403,
+      "standardized_difference": 0.0718
+    },
+    {
+      "covariate": "baseline_zero_human_rate",
+      "measured": "pre-adoption (-6..-2)",
+      "n_treated": 1301,
+      "n_control": 1009,
+      "treated_mean": 0.60661,
+      "control_mean": 0.62121,
+      "standardized_difference": -0.0365
+    },
+    {
+      "covariate": "stars",
+      "measured": "AT COLLECTION (post-adoption; not balance evidence)",
+      "n_treated": 2320,
+      "n_control": 2320,
+      "treated_mean": 5323.1,
+      "control_mean": 4844.82,
+      "standardized_difference": 0.0678
+    },
+    {
+      "covariate": "contributors",
+      "measured": "AT COLLECTION (post-adoption; not balance evidence)",
+      "n_treated": 2320,
+      "n_control": 2320,
+      "treated_mean": 43.01,
+      "control_mean": 42.07,
+      "standardized_difference": 0.0193
+    }
+  ],
+  "E03_common_support": {
+    "pairs": 2320,
+    "match_distance_mean": 0.12367,
+    "match_distance_median": 0.12,
+    "match_distance_p90": 0.226,
+    "pairs_within_caliper_0.10": 967,
+    "pairs_within_caliper_0.25": 2320,
+    "pairs_within_caliper_0.50": 2320,
+    "languages": [
+      [
+        "Rust",
+        445
+      ],
+      [
+        "Go",
+        425
+      ],
+      [
+        "TypeScript",
+        384
+      ],
+      [
+        "Python",
+        380
+      ],
+      [
+        "JavaScript",
+        357
+      ],
+      [
+        "Java",
+        329
+      ]
+    ]
+  }
+}

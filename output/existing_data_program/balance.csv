@@ -1,0 +1,7 @@
+covariate,measured,n_treated,n_control,treated_mean,control_mean,standardized_difference
+baseline_top1_share,pre-adoption (-6..-2),933,664,0.70572,0.75497,-0.2097
+baseline_top2_share,pre-adoption (-6..-2),933,664,0.87903,0.92899,-0.3462
+baseline_mean_reviewers,pre-adoption (-6..-2),1301,1009,0.53554,0.49403,0.0718
+baseline_zero_human_rate,pre-adoption (-6..-2),1301,1009,0.60661,0.62121,-0.0365
+stars,AT COLLECTION (post-adoption; not balance evidence),2320,2320,5323.1,4844.82,0.0678
+contributors,AT COLLECTION (post-adoption; not balance evidence),2320,2320,43.01,42.07,0.0193
