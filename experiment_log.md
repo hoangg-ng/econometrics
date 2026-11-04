@@ -2775,3 +2775,55 @@ This does not prove the effect is zero. The residual is positive and the placebo
 Limitations, stated plainly. The placebo pairs control repositories at random with no covariate matching, whereas the real design matched on language, stars and year bin; if matching dampens reversion, the placebo overstates the mechanical share. Against that, the real matching demonstrably failed to balance the outcome, which is the premise of the whole test. Monthly top-two share is noisy in low-volume months, so part of the measured reversion is regression to the mean from measurement error rather than true dynamics; it biases the estimator identically either way. With 400 draws the placebo p-value carries Monte Carlo error of roughly +/-0.013. The placebo mean was subtracted from the reported point estimate without propagating the placebo's own variance into a corrected interval.
 
 Recommended next step, not performed here: re-match on baseline outcome levels so the gap is closed by design, then re-estimate. E03 already proposed a baseline-only matching design; this entry supplies the reason it is necessary rather than optional.
+
+# CLOSING THE CONCENTRATION PROGRAMME (2026-11-04)
+All event-study directions on review concentration (E01-E06, E11) are closed. They are not closed for lack of effort but because the identification does not support the claim:
+
+- The headline +2.43pp top-two share effect has a placebo p-value of 0.078 once baseline imbalance and mean reversion are accounted for, against a nominal bootstrap p of 0.0054. Roughly half is mechanical. Top-one share is entirely explained (placebo p 0.36).
+- The activity decomposition that was meant to supply the mechanism found nothing surviving Holm across 14 endpoints, and its one nominal result failed its own pre-trend test.
+- Matching never balanced the outcome it was meant to balance (baseline top-two SMD -0.35), and the caliper was non-binding.
+- Pre-trend tests cannot detect the operative problem, because reversion acts on levels while the joint lead test acts on differences.
+- E07-E10, which would have supplied familiarity, assignment, process and quality outcomes, all require data the exports do not contain.
+
+Salvageable from the programme: the measurement work (reviewer-incidence reconstruction, bot handling, the frozen-core design) and the negative methodological result itself, which is a genuine contribution: an imputation estimator with repository fixed effects is NOT robust to baseline imbalance in a reverting bounded outcome, and passing a pre-trend test does not establish that it is. No further concentration specifications will be run. Reopening requires re-matching on baseline outcome levels, which is a new design, not a new test.
+
+# NEW DIRECTION: who reviews the agent's code? (2026-11-04)
+Experiment ID: F01-agent-review-scrutiny. Status: complete, first pass. Code: analysis/who_reviews_the_agent.py. Data: output/pr_level_data.csv, unchanged, 293,065 merged pull requests.
+
+Question that developers actually argue about: when an AI coding agent opens a pull request, does a human scrutinise it as carefully as a human-authored one? The widespread expectation is that agent output is rubber-stamped.
+
+Why this design avoids every failure of the programme above. The unit is the pull request and identification is a repository-by-month fixed effect, so every comparison is between pull requests merged into the SAME project in the SAME month. There is no adoption date, no matched control, no before/after contrast, and no bounded share drifting toward a ceiling. Standard errors cluster by repository. Author classification: AI coding agents (copilot, devin, cursor, claude, codex, warp-agent and similar) against human authors, with dependency updaters (dependabot, renovate) carried separately as a scrutiny benchmark. Review-side automation is excluded from human reviewer counts, and self-reviews are excluded, so "human reviewer" means a person other than the author.
+
+Sample: 2,926 agent-authored and 237,742 human-authored merged pull requests; the contrast is identified from 515 repository-months in 250 repositories that contain both kinds.
+
+Estimator validation first, the check the concentration work lacked. Splitting HUMAN pull requests at random within each cell, where the true difference is zero by construction, returns +0.00065 (sd 0.00270) for human reviewers, -0.00035 for the unreviewed indicator and +0.00088 for log additions. The estimator is unbiased at this scale.
+
+## Result: agent pull requests receive MORE human review, not less
+
+| outcome | agent vs human (raw) | size-adjusted | SE | t | 95% interval |
+|---|---|---|---|---|---|
+| distinct human reviewers | +0.151 | +0.177 | 0.038 | +4.64 | [+0.102, +0.252] |
+| merged with no human review | -0.091 | -0.093 | 0.029 | -3.22 | [-0.150, -0.036] |
+| review events | -0.482 | -0.088 | 0.128 | -0.69 | [-0.338, +0.162] |
+| log hours to merge | -0.413 | -0.223 | 0.086 | -2.60 | [-0.391, -0.055] |
+| log additions (size itself) | -0.667 | - | 0.132 | -5.04 | [-0.926, -0.408] |
+| review events per 100 lines | +2.666 | - | 0.744 | +3.58 | [+1.208, +4.125] |
+
+## The dependency-bot benchmark proves the method can see rubber-stamping
+
+| outcome | depbot vs human (raw) | size-adjusted | SE | t |
+|---|---|---|---|---|
+| distinct human reviewers | -0.248 | -0.197 | 0.025 | -7.82 |
+| merged with no human review | +0.093 | +0.084 | 0.018 | +4.77 |
+| review events | -1.470 | -0.521 | 0.080 | -6.47 |
+| log hours to merge | -0.002 | +0.451 | 0.073 | +6.18 |
+
+Interpretation. Agent-authored pull requests attract about 0.18 MORE distinct human reviewers and are 9.3 percentage points LESS likely to be merged with no human review at all, comparing similarly sized pull requests in the same repository and month. Dependency-bot pull requests show precisely the opposite signature in the same repositories: 0.20 fewer human reviewers and 8.4 points more likely to go unreviewed. So the design is capable of detecting rubber-stamping, and does detect it, just not for coding agents. This contradicts the common expectation.
+
+Agent pull requests are also much smaller, by about 0.67 log points, roughly half the additions of a human pull request, and attract more review events per 100 lines changed. Two raw differences turn out to be size artefacts: the apparent deficit in review events (-0.48 raw) disappears entirely once size is controlled (-0.09, t=-0.69), and the raw merge-time advantage halves (-0.41 to -0.22). For dependency bots the sign of merge time actually reverses under size adjustment, from -0.00 to +0.45: size-for-size, dependency pull requests linger longer.
+
+The binding limitation, stated first because it is the one that could overturn this. The panel contains MERGED pull requests only. Agent pull requests that maintainers closed without merging are invisible. If bad agent output is closed rather than merged, the merged agent pull requests are survivors of a filter, and the measured extra review is partly the visible part of that gating. That mechanism is consistent with the finding, and it would still mean agent code faces MORE human gatekeeping, not less, but the magnitude here cannot be read as the effect on all submitted agent work. Resolving it requires all-PR collection including closed-unmerged, the same gap that blocked E09.
+
+Further limits. 250 repositories, dominated by Copilot-authored pull requests, so this describes early deliberate adopters rather than open source generally; these projects plausibly have explicit agent-review policies. Author classification is login-pattern based and not validated. The comparison is descriptive within repository-months, not causal: it does not say what would happen if a given human pull request had instead been written by an agent. Nothing here measures review quality, only its presence and amount.
+
+Next step for this direction, highest value first: all-PR collection on the 250 repositories already identified, to recover closed-unmerged agent pull requests and close the selection gap. That is a narrow, bounded collection task on a known repository list rather than a new universe.
