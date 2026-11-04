@@ -1,0 +1,62 @@
+{
+  "n_control_units": 300,
+  "draws_per_mode": 200,
+  "random": {
+    "draws": 200,
+    "mean_baseline_gap_treated_minus_control": 0.0002,
+    "top1": {
+      "mean_att": -0.01059,
+      "sd_att": 0.01801,
+      "p05": -0.03616,
+      "p95": 0.01884,
+      "share_positive": 0.28
+    },
+    "top2": {
+      "mean_att": -0.00434,
+      "sd_att": 0.01059,
+      "p05": -0.02088,
+      "p95": 0.01414,
+      "share_positive": 0.305
+    }
+  },
+  "lower_is_treated": {
+    "draws": 200,
+    "mean_baseline_gap_treated_minus_control": -0.1391,
+    "top1": {
+      "mean_att": 0.02627,
+      "sd_att": 0.01599,
+      "p05": -0.00052,
+      "p95": 0.05062,
+      "share_positive": 0.935
+    },
+    "top2": {
+      "mean_att": 0.0253,
+      "sd_att": 0.00746,
+      "p05": 0.01394,
+      "p95": 0.03885,
+      "share_positive": 1.0
+    }
+  },
+  "higher_is_treated": {
+    "draws": 200,
+    "mean_baseline_gap_treated_minus_control": 0.1391,
+    "top1": {
+      "mean_att": -0.04735,
+      "sd_att": 0.01677,
+      "p05": -0.07201,
+      "p95": -0.01872,
+      "share_positive": 0.005
+    },
+    "top2": {
+      "mean_att": -0.03808,
+      "sd_att": 0.00771,
+      "p05": -0.05103,
+      "p95": -0.02629,
+      "share_positive": 0.0
+    }
+  },
+  "real_design": {
+    "baseline_gap_treated_minus_control": -0.0712,
+    "reported_top2_att": 0.0243
+  }
+}

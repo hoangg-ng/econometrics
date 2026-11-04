@@ -1,0 +1,58 @@
+[
+  {
+    "p_lower_is_treated": 0.5,
+    "draws": 120,
+    "mean_gap": -0.00073,
+    "top1_att": -0.00904,
+    "top2_att": -0.00469,
+    "top2_sd": 0.01056
+  },
+  {
+    "p_lower_is_treated": 0.6,
+    "draws": 120,
+    "mean_gap": -0.02788,
+    "top1_att": -0.00368,
+    "top2_att": 0.00164,
+    "top2_sd": 0.01015
+  },
+  {
+    "p_lower_is_treated": 0.7,
+    "draws": 120,
+    "mean_gap": -0.05761,
+    "top1_att": 0.00597,
+    "top2_att": 0.00852,
+    "top2_sd": 0.00978
+  },
+  {
+    "p_lower_is_treated": 0.75,
+    "draws": 120,
+    "mean_gap": -0.07072,
+    "top1_att": 0.00904,
+    "top2_att": 0.01182,
+    "top2_sd": 0.00997
+  },
+  {
+    "p_lower_is_treated": 0.8,
+    "draws": 120,
+    "mean_gap": -0.08439,
+    "top1_att": 0.01268,
+    "top2_att": 0.01517,
+    "top2_sd": 0.00968
+  },
+  {
+    "p_lower_is_treated": 0.9,
+    "draws": 120,
+    "mean_gap": -0.11129,
+    "top1_att": 0.02172,
+    "top2_att": 0.02149,
+    "top2_sd": 0.00895
+  },
+  {
+    "p_lower_is_treated": 1.0,
+    "draws": 120,
+    "mean_gap": -0.13923,
+    "top1_att": 0.02854,
+    "top2_att": 0.02752,
+    "top2_sd": 0.00797
+  }
+]

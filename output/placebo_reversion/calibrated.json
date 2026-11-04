@@ -1,0 +1,22 @@
+{
+  "draws": 400,
+  "mean_gap": -0.07003,
+  "real_gap": -0.0712,
+  "note": "placebo calibrated to the real baseline gap; true effect is zero by construction",
+  "top1": {
+    "placebo_mean": 0.00882,
+    "placebo_sd": 0.01744,
+    "placebo_p95": 0.03827,
+    "reported": 0.01395,
+    "placebo_p_value_for_reported": 0.355,
+    "residual_after_netting_mechanical": 0.00513
+  },
+  "top2": {
+    "placebo_mean": 0.0111,
+    "placebo_sd": 0.00907,
+    "placebo_p95": 0.02628,
+    "reported": 0.02434,
+    "placebo_p_value_for_reported": 0.0775,
+    "residual_after_netting_mechanical": 0.01324
+  }
+}

@@ -2710,3 +2710,68 @@ Signal-type and era counts were tabulated from candidate_pool.csv and are writte
 - E12 burden: deferred by the plan itself; nothing here measures burden, effort, capacity or harm.
 
 Deviations from plan: none beyond those recorded above. No treatment date, outcome definition or window was chosen by effect size. No completed test was rerun in search of significance.
+
+## Paper revision and interpretation corrections (2026-11-02)
+
+Updated the paper around the 300-pair top-two association and the 86-pair activity decomposition; no activity endpoint survives the 14-test Holm correction. No new estimates were run. Corrected the previous interpretation: shared reviewers indicate possible dependence, not proof that every interval is too narrow; September/August counts do not prove truncation; the hypothetical cap removes PR rows, not a measured fraction of review effort. Invalidated the new capped/uncapped export comparison: 2,277 of 2,494 nominal key matches have different repositories (2,278 different event dates). Excluded its differences and the unvalidated cache-based balance table from substantive claims. The earlier statement that E01–E05 were complete was too strong: extraction, reference-estimator, matching, and dependence checks remain unfinished. Raw numerical outputs retained for audit; this entry supersedes their earlier interpretation.
+
+## New finding: about half the top-two concentration effect is mechanical (2026-11-04)
+Experiment ID: E04b-placebo-reversion. Purpose: test the most direct mechanical rival to the headline result, which no prior entry had examined. Status: complete. No new data, no API extraction. Code: analysis/ceiling_and_reversion.py, analysis/placebo_reversion.py, both reusing the estimator in analysis/research_followup.py. Data unchanged (pr_level_data.csv sha256 4f55b920...). Bootstrap seed 20261102.
+
+### The rival explanation
+E03 recorded that treated repositories begin about 0.35 standardized units LESS concentrated than controls. Two further facts make that imbalance consequential rather than cosmetic.
+
+First, concentration reverts strongly. Measured inside the CONTROL arm only, where no treatment exists and any reversion is therefore mechanical, the slope of the post-period mean on the baseline mean is 0.7023 (SE 0.0536) for top-two share, rejecting full persistence. In change-on-baseline form the reversion slope is -0.2977 (SE 0.0536, t=-5.556); for top-one share it is -0.4752 (t=-8.633). Repositories that start high fall back and those that start low rise.
+
+Second, the outcome is bounded and the sample sits near the bound. Top-two share is at exactly 1.0 in 40.7% of treated pre-adoption months and 52.8% of control pre-adoption months. Mean headroom to the bound is 0.1987 for treated and 0.1283 for controls, so treated repositories have about 55% more room to rise.
+
+Together these imply the treated arm would drift upward relative to controls with no treatment effect at all. The imputation estimator carries repository and calendar-month fixed effects and trains only on untreated observations, so it might neutralise this. Whether it does is an empirical question.
+
+### It is not a ceiling artefact
+Re-estimating away from the bound does not weaken the effect; it strengthens it slightly. Selection here is on baseline information only, never on the outcome.
+
+| specification | pairs | top-two ATT | SE | p | pretrend p |
+|---|---|---|---|---|---|
+| full_sample | 300 | +0.0243 | 0.0087 | 0.0054 | 0.441 |
+| baseline_headroom_lt0.95 | 100 | +0.0333 | 0.0157 | 0.0340 | 0.340 |
+| ceiling_months_dropped_DIAGNOSTIC | 274 | +0.0278 | 0.0122 | 0.0228 | 0.166 |
+
+The third row drops months on the basis of their own outcome value and is a diagnostic only, not a corrected estimate.
+
+### It is substantially a reversion artefact
+The decisive test is an in-space placebo built from CONTROL observations only, where the true effect is zero by construction. Control repositories are paired at random and a treated label is fabricated; each keeps its own event time, so the pre/post structure matches the real design and only the label is invented.
+
+| placebo mode | achieved baseline gap | top-two ATT | draws positive |
+|---|---|---|---|
+| random assignment | +0.0002 | -0.00434 | 30.5% |
+| lower baseline = pseudo-treated | -0.1391 | +0.02530 | 100.0% |
+| higher baseline = pseudo-treated | +0.1391 | -0.03808 | 0.0% |
+
+With no baseline gap the estimator is approximately unbiased (-0.00434), which validates it. With the lower-baseline member labelled treated, a wholly fabricated treatment yields +0.02530 in 100% of 200 draws, larger than the real reported effect. The mirror assignment flips the sign, confirming the gap is the operative mechanism.
+
+Because that maximal gap is about twice the real one, the placebo was calibrated by sweeping the probability that the lower-baseline member is labelled treated, tracing mechanical ATT against achieved gap rather than extrapolating from one point:
+
+| p(lower=treated) | achieved gap | placebo top-two ATT | placebo top-one ATT |
+|---|---|---|---|
+| 0.50 | -0.00073 | -0.00469 | -0.00904 |
+| 0.60 | -0.02788 | +0.00164 | -0.00368 |
+| 0.70 | -0.05761 | +0.00852 | +0.00597 |
+| 0.75 | -0.07072 | +0.01182 | +0.00904 |
+| 0.80 | -0.08439 | +0.01517 | +0.01268 |
+| 0.90 | -0.11129 | +0.02149 | +0.02172 |
+| 1.00 | -0.13923 | +0.02752 | +0.02854 |
+
+At p=0.75 the achieved gap is -0.07072, essentially the real design's -0.0712. Running 400 draws at that calibration gives the placebo distribution against which the reported effects must be judged:
+
+| outcome | reported ATT | placebo mean (true effect zero) | placebo sd | placebo 95th pct | placebo p-value | residual |
+|---|---|---|---|---|---|---|
+| top2 | +0.02434 | +0.01110 | 0.00907 | +0.02628 | 0.0775 | +0.01324 |
+| top1 | +0.01395 | +0.00882 | 0.01744 | +0.03827 | 0.3550 | +0.00513 |
+
+Interpretation. Roughly **46% of the reported top-two effect and 63% of the reported top-one effect are reproduced by baseline imbalance and mean reversion with no treatment whatsoever.** Judged against the placebo distribution rather than a conventional standard error, the top-two estimate has a placebo p-value of 0.0775, so it is not significant at the 5% level, against a nominal bootstrap p of 0.0054. The top-one estimate is wholly unremarkable (placebo p 0.355). The residual top-two effect after netting the mechanical component is +0.01324, which is smaller than 1.96 times the reported bootstrap SE of 0.0087 and therefore not distinguishable from zero.
+
+This does not prove the effect is zero. The residual is positive and the placebo is an approximation. It does mean the headline concentration result is not robust to the baseline imbalance already documented in E03, and that the pre-trend tests which the specification passes do not detect this: reversion operates on levels, and a joint lead test on differences has little power against it.
+
+Limitations, stated plainly. The placebo pairs control repositories at random with no covariate matching, whereas the real design matched on language, stars and year bin; if matching dampens reversion, the placebo overstates the mechanical share. Against that, the real matching demonstrably failed to balance the outcome, which is the premise of the whole test. Monthly top-two share is noisy in low-volume months, so part of the measured reversion is regression to the mean from measurement error rather than true dynamics; it biases the estimator identically either way. With 400 draws the placebo p-value carries Monte Carlo error of roughly +/-0.013. The placebo mean was subtracted from the reported point estimate without propagating the placebo's own variance into a corrected interval.
+
+Recommended next step, not performed here: re-match on baseline outcome levels so the gap is closed by design, then re-estimate. E03 already proposed a baseline-only matching design; this entry supplies the reason it is necessary rather than optional.
