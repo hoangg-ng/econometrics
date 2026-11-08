@@ -1,28 +1,196 @@
-# AI Coding Tool Adoption and the Evolution of Code Review
+# Verification Under Machine Authorship
 
-Causal re-test of whether a repo's own AI coding tool adoption changes its
-review behavior — does it drop review rate (H1), and does it concentrate
-review burden on one member (H2)? A direct re-test of the archived prior
-project's question, on fresh data, with a materially better-validated
-adoption signal. Full research design, adoption signal, outcomes, sample,
-and sequencing: [`new_design.md`](new_design.md).
+How human code review changes when a machine writes the code. The scarce
+human task shifts from producing code to verifying it, so the questions are
+about the verification function: how that work is allocated, whether
+machine-authored code is held to the same standard, and what the review gate
+does when the author is not a person.
+
+Full evidence trail for every number below: [`experiment_log.md`](experiment_log.md).
+
+## Paper architecture
+
+Three claims resting on three different identification strategies, so no
+single referee objection takes down the paper. This replaces an earlier
+single-claim structure whose survival was identical to one coefficient's
+survival — and that coefficient did not survive.
+
+| | Claim | Identification | Status |
+|---|---|---|---|
+| **C2** | Machine-authored code receives **more** human review, not less | repository x month fixed effects | **identified, placebo-validated** |
+| **C3** | The review gate rejects machine-authored code at a different rate | same FE, opening cohort | collection in progress |
+| **C1** | Increased verification demand concentrates on few reviewers | re-match on the baseline outcome | re-identification pending |
+
+### Theoretical frame
+
+Code review is never exhaustive; reviewers ration attention. Part of what
+they rely on is the **author's own accountability** — a named person with
+reputation at stake who has already checked their work. Author
+accountability and formal review are partial substitutes.
+
+When a machine authors the change that substitute disappears: the agent
+carries no reputation, absorbs no blame, and cannot be asked why. The theory
+predicts explicit verification is **reinstated** to cover the gap.
+
+This yields a discriminating prediction rather than a story. The effect
+should be largest exactly where author accountability was doing the most
+work — small teams, where developers routinely merge their own code without
+review. Large projects that already mandate review on everything have
+nothing to reinstate.
+
+Confirmed in the data: small teams (<=42 contributors) show agent PRs
+**22.0pp** less likely to merge unreviewed (t=-4.49); large teams show
+**3.2pp**, not significant (t=-1.13). The mechanism predicts this split
+rather than being fitted to it.
+
+### C2 — Differential scrutiny (lead claim)
+
+Within the same repository and month, comparing similarly sized pull
+requests:
+
+| Outcome | Agent vs human | t |
+|---|---|---|
+| Distinct human reviewers | +0.177 | +4.64 |
+| Merged with no human review | -9.3pp | -3.22 |
+| Review events per 100 lines | +2.67 | +3.58 |
+| PR size (log additions) | -0.667 | -5.04 |
+
+Identification is a repository-by-month fixed effect: no adoption date, no
+matched control, no bounded share near a ceiling, so none of the failure
+modes that sank the original design apply. Clustered by repository.
+
+Two falsification tests make it credible. A random split of human PRs
+returns **+0.0007** where the truth is zero. And dependency bots in the
+*same* repositories show the opposite signature (**-0.197** reviewers,
+**+8.4pp** unreviewed), proving the design detects rubber-stamping when it
+exists and simply does not find it for coding agents.
+
+Code: [`analysis/who_reviews_the_agent.py`](analysis/who_reviews_the_agent.py).
+
+### C3 — The review gate (novelty anchor)
+
+Acceptance rate, the share of opened PRs merged rather than closed, is the
+gate's actual decision. No prior work reports it for AI agents at scale
+because panels are almost always built from merged PRs only. The running
+collection captures **closed-unmerged** PRs, making this measurable for the
+first time; early returns show roughly 59% of PRs in the window are closed
+unmerged. The previous panel saw only the merged share, which is also why
+C2 currently carries a survivorship caveat that C3 closes.
+
+Report review-then-reject separately from reject-unreviewed: these are
+different gate behaviours.
+
+### C1 — Allocation (supporting claim)
+
+Your original headline, demoted and being re-identified rather than
+defended as it stood.
+
+| Estimate | Top-two share | Verdict |
+|---|---|---|
+| Original, pooled | +0.0243 | about half mechanical |
+| Placebo, zero true effect | +0.0111 | placebo p = 0.078 |
+| Balanced and free to move (24 pairs) | +0.0337 | underpowered |
+| Re-matched design | target | 150-200 pairs |
+
+The fix is matching **on the baseline outcome**, inside a population with
+three or more baseline reviewers so the measure is not pinned at its 1.0
+ceiling. The placebo at zero baseline gap returns -0.004, so a balanced
+design switches the mechanical channel off and whatever survives is real.
+
+Honest prior: the clean-cell interval was [-0.016, +0.083]. This may return
+a null, and the architecture is built so a null here still leaves a
+publishable paper.
+
+### Fourth contribution — methodological
+
+What came out of dismantling C1 generalises well beyond this paper: **an
+imputation / difference-in-differences estimator with unit fixed effects is
+not robust to baseline imbalance when the outcome is bounded and
+mean-reverting, and passing a pre-trend test does not establish that it
+is.**
+
+Fixed effects remove levels, but reversion makes the expected *change*
+depend on the level, so a level gap converts into a differential trend the
+fixed effects never touch. Pre-trend tests check slopes over a short
+pre-window and are blind to it. Every DiD paper using a share, rate or index
+outcome is exposed. The diagnostic that detects it is a calibrated in-space
+placebo that sweeps the baseline gap and reads off the mechanical component:
+[`analysis/placebo_reversion.py`](analysis/placebo_reversion.py).
+
+Place it as a methods subsection inside the C1 analysis plus an appendix.
+It is stronger attached to a substantive finding than spun off alone.
+
+## Manuscript skeleton
+
+1. **Introduction** — open on the verification inversion; lead with C2 as the
+   counterintuitive hook, since the consensus says AI output is waved through
+   and it is not. State all three claims and the methodological contribution.
+2. **Theory and hypotheses** — complementarity and task allocation under
+   machine production; develop author accountability as a partial substitute
+   for review, derive the reinstatement prediction and the small-team
+   moderation *before* showing it.
+3. **Setting and data** — GitHub, the wide fixed calendar window, the
+   >=40-contributor universe and why it is required, author classification
+   into agents / dependency bots / humans. Treatment is *first detected*
+   adoption, stated explicitly.
+4. **Differential scrutiny (C2)** — lead empirical section: repo-by-month
+   design, size adjustment, the human-PR placebo, the dependency-bot
+   benchmark, then the small-team moderation as the theory test.
+5. **The review gate (C3)** — acceptance rates on the opening cohort; closes
+   C2's survivorship caveat and carries the novelty claim.
+6. **Allocation (C1)** — the re-matched concentration estimate, with
+   baseline-outcome matching and the >=3-reviewer population stated as design
+   requirements rather than robustness checks. Placebo calibration here.
+7. **Robustness and threats** — pair dependence (shared reviewers touch 36%
+   of pairs, largest component 209), Copilot-reviewer measurement
+   instability from 2026-02, adoption-date sensitivity, September-2026
+   truncation.
+8. **Discussion** — what verification work becomes when authorship is
+   automated; review policy in small teams, the group that currently
+   self-merges and is least protected. Concentration measures allocation,
+   never burden or welfare.
+
+### Contingency
+
+- **If C1 returns positive** — the complete account: verification demand
+  rises, the gate tightens, and the extra work concentrates on a few
+  maintainers. Three linked claims describing one reorganisation.
+- **If C1 returns null** — the sharper account: verification is
+  *differentiated* by author type without being *reallocated* between
+  people. A precise null on the obvious hypothesis beside a confirmed effect
+  on the surprising one, plus the methodological result explaining why
+  earlier concentration findings deserve doubt.
+
+Either branch keeps C2 and C3 intact, because neither depends on adoption
+timing, matching, or a bounded outcome. That independence is the point.
 
 ## Status
 
-**Design only — no extraction run yet for this direction.** The adoption
-signal (`src/adoption_signal.py`) is built and validated against three
-published papers (Appendix A below). Two prior directions were explored
-and abandoned this session, both archived rather than deleted:
+Collection running: 870 repositories over a wide fixed calendar window
+(2025-03 to 2026-08), merged **and** closed-unmerged PRs, roughly 18-24
+hours. Resumable — re-running `collect_wide_window.py` skips repositories
+already present in the output.
 
-- [`archive/prior_project_ai_code_review/`](archive/prior_project_ai_code_review/) —
-  matched treated/control DiD on the same question. Reached a well-identified
-  null under rigorous testing; its *extracted data* was accidentally deleted
-  mid-session and is unrecoverable, but its methodology, lessons, and code
-  are preserved and carried forward into `new_design.md` §10.
-- [`archive/explored_crypto_event_study/`](archive/explored_crypto_event_study/) —
-  GitHub dev events vs. crypto token price response. Dropped because the
-  DefiLlama/CoinGecko universe needed more scam/dead-project filtering than
-  the question warranted.
+Before submission:
+
+- Finish the collection.
+- Re-match on the baseline outcome within the >=3-reviewer population, then
+  estimate C1 **once** — not repeatedly, and not across alternative
+  definitions.
+- Estimate C3 on the opening cohort, separating review-then-reject from
+  reject-unreviewed.
+- Validate the agent classification by hand on a sample of PRs. It is
+  login-pattern based and currently unvalidated; a referee will ask, and
+  Copilot is 1,796 of 2,926 agent PRs.
+- Re-run C2 on the new panel so every claim rests on one consistently
+  measured dataset, and because the old panel is unreliable for
+  bot-reviewer counts after 2026-02.
+- Rewrite the abstract and introduction around C2. The current `paper.tex`
+  still asserts the causal concentration version.
+
+Do **not** defend C1 as originally estimated. A referee who knows about
+reverting bounded outcomes runs the control-only placebo and the result is
+gone in a page. The restructure exists so that defence is never needed.
 
 ## Setup
 
@@ -31,23 +199,33 @@ python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-`.env` needs `GITHUB_TOKEN=ghp_...` (already present; never commit this file
-— it's gitignored).
+`.env` needs `GITHUB_TOKEN=ghp_...` (gitignored; never commit it).
 
 ## Layout
 
 ```
-src/
-  github_client.py       GitHub REST/GraphQL client (rate-limit aware) — the
-                         one piece reused across all three directions explored
-  adoption_signal.py     Combined trailer + config-file adoption detector (§2)
-new_design.md            Current design: does AI adoption change a repo's own review behavior (H1/H2)
-archive/                 Two abandoned directions, kept for their code/lessons
+collect_wide_window.py          Wide-calendar-window collector (merged + closed PRs)
+src/github_client.py            GitHub REST/GraphQL client, rate-limit aware
+analysis/
+  who_reviews_the_agent.py      C2: agent vs human review, repo x month FE
+  placebo_reversion.py          The methodological diagnostic (C1 bias)
+  ceiling_and_reversion.py      Ceiling census and control-arm reversion
+  research_followup.py          Reviewer-incidence reconstruction + estimator
+  existing_data_program.py      Sample flow, balance, signal composition
+  activity_decomposition.py     Frozen-core activity decomposition
+run_event_study.py              BJS imputation estimator (recovered)
+run_checks.py                   Identifying-assumption checks (recovered)
+experiment_log.md               Every attempt, result and failure
+overleaf/paper/                 Manuscript
 ```
 
-Next step per `new_design.md` §9: Phase 0 — a small fresh pull to
-re-verify the adoption signal's known contamination fixes still hold,
-before committing to the full matched-sample extraction.
+**Lost code.** `build_pr_level_data.py`, `build_repo_month_panel.py`,
+`match_candidate_pool.py` and `src/adoption_signal.py` were never committed
+and exist only as `.pyc` remnants. The derived panels in `output/` are
+therefore unregenerable and are tracked in git despite their size. The
+adoption signal documented below is validated but its implementation is
+gone; `collect_wide_window.py` relies on the already-computed `adopted` and
+`t0` columns in `output/candidate_pool.csv`.
 
 ## Validating the adoption signal against published methods
 
