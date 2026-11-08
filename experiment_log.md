@@ -2827,3 +2827,23 @@ The binding limitation, stated first because it is the one that could overturn t
 Further limits. 250 repositories, dominated by Copilot-authored pull requests, so this describes early deliberate adopters rather than open source generally; these projects plausibly have explicit agent-review policies. Author classification is login-pattern based and not validated. The comparison is descriptive within repository-months, not causal: it does not say what would happen if a given human pull request had instead been written by an agent. Nothing here measures review quality, only its presence and amount.
 
 Next step for this direction, highest value first: all-PR collection on the 250 repositories already identified, to recover closed-unmerged agent pull requests and close the selection gap. That is a narrow, bounded collection task on a known repository list rather than a new universe.
+
+## F01 follow-up: the agent-review effect is driven by SMALL teams (2026-11-08)
+
+Two questions motivated this: what the merged-only limitation actually costs, and whether the 250 identifying repositories are large-organisation projects whose review policies would explain the result.
+
+Repository composition. The 250 repositories that identify the contrast have median 4,636 stars and median 42 contributors, against median 3,295 stars and median 42 contributors for the other 1,842 panel repositories. So they are somewhat more popular but identical in team size. Ownership is not concentrated: 225 distinct owners for 250 repositories, the largest being microsoft with 16; every other owner has one to three. The heaviest agent users span the range, from warpdotdev/warp (64,869 stars, 157 contributors) and airbytehq/airbyte (22,010, 195) down to thomasnordquist/MQTT-Explorer (4,057 stars, 9 contributors) and acepanel/panel (2,955, 7). Note the panel floor: the candidate pool has a minimum of 234 stars, so "small" here means a small team on an established project, never an obscure one.
+
+Heterogeneity by team size, split at the median of 42 contributors, size-adjusted within repository-month:
+
+| | small teams (<=42 contributors) | large teams (>42) |
+|---|---|---|
+| repositories with agent PRs | 151 | 130 |
+| distinct human reviewers | +0.279 (SE 0.072, t=+3.86) | +0.128 (SE 0.040, t=+3.19) |
+| merged with no human review | -0.220 (SE 0.049, t=-4.49) | -0.032 (SE 0.029, t=-1.13) |
+
+The result is driven by small teams, which rules out the most obvious rival explanation. If mandatory-review policies at large organisations were producing the finding, the effect would concentrate in large teams; instead the unreviewed-rate effect is absent there (-0.03, not significant) and large in small teams (-0.22). The natural reading is a coverage ceiling: large projects already require review on essentially everything, so there is no room for agent PRs to differ, whereas small teams where developers routinely self-merge their own work make a deliberate exception for agent-authored changes. Reviewer count still rises in both strata.
+
+This is a subgroup comparison on a prespecified moderator (baseline team size), not a search across moderators, and the two strata are compared descriptively rather than by a formal interaction test.
+
+Merged-only selection, restated precisely. The panel contains only pull requests that were merged; those opened and closed without merging are absent. The comparison is therefore between agent PRs that succeeded and human PRs that succeeded, and nothing here measures the two groups' differing success rates. Two readings remain open: agent code genuinely draws more human attention, or agent PRs require more reviewer sign-off to clear the gate so that lightly-reviewed ones are closed rather than merged and never enter the data. Both imply agent code meets more human gatekeeping, but only the first supports reading the magnitude as the treatment of all submitted agent work. Collecting closed-unmerged PRs for these 250 named repositories would separate them.
