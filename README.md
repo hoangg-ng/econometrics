@@ -1,196 +1,199 @@
-# Verification Under Machine Authorship
+# The Division of Review Labor After AI Adoption
 
-How human code review changes when a machine writes the code. The scarce
-human task shifts from producing code to verifying it, so the questions are
-about the verification function: how that work is allocated, whether
-machine-authored code is held to the same standard, and what the review gate
-does when the author is not a person.
+When a machine absorbs routine code production, who is left reviewing the
+code — and does that work concentrate on a few people? This is a study of a
+general-purpose invention restructuring an established work process, in a
+setting where the process is observable at the level of individual acts.
 
 Full evidence trail for every number below: [`experiment_log.md`](experiment_log.md).
 
-## Paper architecture
+## Framing: an invention restructures a work process
 
-Three claims resting on three different identification strategies, so no
-single referee objection takes down the paper. This replaces an earlier
-single-claim structure whose survival was identical to one coefficient's
-survival — and that coefficient did not survive.
+The paper sits in a line of work on technologies that reorganise *who does
+what* rather than simply making existing work faster. Four anchors carry the
+argument.
+
+**The theoretical prediction — Garicano (2000),** *Hierarchies and the
+Organization of Knowledge in Production*, Journal of Political Economy
+108(5). In a knowledge-based hierarchy, production workers learn the common
+and easy problems while specialised problem solvers absorb the rare and hard
+ones, because matching a problem to someone who can solve it is costly.
+This yields our central prediction directly: when an AI agent absorbs
+routine code production, the review problems that remain are
+disproportionately exceptional, and exceptions route upward to the most
+knowledgeable reviewers. **Concentration is not an incidental side effect —
+it is what the model predicts.**
+
+**The structural precedent — Barley (1986),** *Technology as an Occasion for
+Structuring: Evidence from Observations of CT Scanners and the Social Order
+of Radiology Departments*, Administrative Science Quarterly 31(1). CT
+scanners restructured the relationship between radiologists and
+technologists. The essential lesson for us is the contingency: identical
+scanners occasioned similar structuring processes in two departments and yet
+produced **divergent** organisational forms. Structure was not determined by
+the technology but by its interaction with local social context. This is why
+we expect and test heterogeneity across repositories rather than one average
+effect.
+
+**What is actually at stake — Zuboff (1988),** *In the Age of the Smart
+Machine*, and **Beane (2019),** *Shadow Learning: Building Robotic Surgical
+Skill When Approved Means Fail*, Administrative Science Quarterly 64(1).
+Zuboff distinguishes automating from informating and reframes the question
+as a shift from a division of labour to a **division of learning**. Beane
+supplies the sharpest modern instance: robotic surgery removed the need for
+a resident's hands, so residents received *ten to twenty times less
+practice*, and skill formation broke down badly enough that trainees
+resorted to norm-bending "shadow learning". That is the structural twin of
+our question. If review concentrates on incumbents, peripheral reviewers
+lose the practice through which codebase knowledge is transferred — and the
+cost is not reviewer burden but **succession**.
+
+**The work-practice mechanism — Leonardi and Bailey (2008),** *Transformational
+Technologies and the Creation of New Work Practices*, MIS Quarterly
+32(2):411-436. Technologies that permit work to be distributed at the task
+level generate new practices for handling it, among them *routing tasks
+strategically* and *filtering quality*. Review after AI adoption is exactly
+a routing-and-filtering problem.
+
+**Our contribution to this line.** Each of these studies infers structural
+change from ethnography or from aggregate outcomes. Code review leaves a
+complete per-act record: every review, by whom, on which change, at what
+time. We can therefore measure the restructuring of a work process directly
+rather than inferring it — and we show that doing so demands an
+identification strategy the literature has not been careful about (see the
+methodological contribution).
+
+## Claims
 
 | | Claim | Identification | Status |
 |---|---|---|---|
-| **C2** | Machine-authored code receives **more** human review, not less | repository x month fixed effects | **identified, placebo-validated** |
+| **C1** | **Review concentrates on few reviewers after AI adoption** | matched pairs, re-matched **on the baseline outcome** | **verification in progress** |
+| **C2** | Machine-authored code receives *more* human review, not less | repository x month fixed effects | identified, placebo-validated |
 | **C3** | The review gate rejects machine-authored code at a different rate | same FE, opening cohort | collection in progress |
-| **C1** | Increased verification demand concentrates on few reviewers | re-match on the baseline outcome | re-identification pending |
+| **C4** | DiD with unit fixed effects is not robust to baseline imbalance in a bounded reverting outcome | calibrated in-space placebo | established |
 
-### Theoretical frame
+C1 is the central claim. C2 and C3 establish that the review function is
+actively changing rather than passively inheriting a shift in volume, which
+is what makes concentration an organisational result and not an accounting
+identity. C4 is why C1 can be believed once it is re-estimated.
 
-Code review is never exhaustive; reviewers ration attention. Part of what
-they rely on is the **author's own accountability** — a named person with
-reputation at stake who has already checked their work. Author
-accountability and formal review are partial substitutes.
+### C1 — Concentration (central claim)
 
-When a machine authors the change that substitute disappears: the agent
-carries no reputation, absorbs no blame, and cannot be asked why. The theory
-predicts explicit verification is **reinstated** to cover the gap.
-
-This yields a discriminating prediction rather than a story. The effect
-should be largest exactly where author accountability was doing the most
-work — small teams, where developers routinely merge their own code without
-review. Large projects that already mandate review on everything have
-nothing to reinstate.
-
-Confirmed in the data: small teams (<=42 contributors) show agent PRs
-**22.0pp** less likely to merge unreviewed (t=-4.49); large teams show
-**3.2pp**, not significant (t=-1.13). The mechanism predicts this split
-rather than being fitted to it.
-
-### C2 — Differential scrutiny (lead claim)
-
-Within the same repository and month, comparing similarly sized pull
-requests:
-
-| Outcome | Agent vs human | t |
-|---|---|---|
-| Distinct human reviewers | +0.177 | +4.64 |
-| Merged with no human review | -9.3pp | -3.22 |
-| Review events per 100 lines | +2.67 | +3.58 |
-| PR size (log additions) | -0.667 | -5.04 |
-
-Identification is a repository-by-month fixed effect: no adoption date, no
-matched control, no bounded share near a ceiling, so none of the failure
-modes that sank the original design apply. Clustered by repository.
-
-Two falsification tests make it credible. A random split of human PRs
-returns **+0.0007** where the truth is zero. And dependency bots in the
-*same* repositories show the opposite signature (**-0.197** reviewers,
-**+8.4pp** unreviewed), proving the design detects rubber-stamping when it
-exists and simply does not find it for coding agents.
-
-Code: [`analysis/who_reviews_the_agent.py`](analysis/who_reviews_the_agent.py).
-
-### C3 — The review gate (novelty anchor)
-
-Acceptance rate, the share of opened PRs merged rather than closed, is the
-gate's actual decision. No prior work reports it for AI agents at scale
-because panels are almost always built from merged PRs only. The running
-collection captures **closed-unmerged** PRs, making this measurable for the
-first time; early returns show roughly 59% of PRs in the window are closed
-unmerged. The previous panel saw only the merged share, which is also why
-C2 currently carries a survivorship caveat that C3 closes.
-
-Report review-then-reject separately from reject-unreviewed: these are
-different gate behaviours.
-
-### C1 — Allocation (supporting claim)
-
-Your original headline, demoted and being re-identified rather than
-defended as it stood.
+Monthly share of review activity held by the busiest two reviewers, at the
+repository-month level, around first detected AI adoption, against matched
+controls.
 
 | Estimate | Top-two share | Verdict |
 |---|---|---|
-| Original, pooled | +0.0243 | about half mechanical |
+| Original, pooled, 300 pairs | +0.0243 | about half mechanical |
 | Placebo, zero true effect | +0.0111 | placebo p = 0.078 |
-| Balanced and free to move (24 pairs) | +0.0337 | underpowered |
-| Re-matched design | target | 150-200 pairs |
+| Balanced and free to move, 24 pairs | **+0.0337** | right sign, underpowered |
+| Re-matched design | pending | target 150-200 pairs |
 
-The fix is matching **on the baseline outcome**, inside a population with
-three or more baseline reviewers so the measure is not pinned at its 1.0
-ceiling. The placebo at zero baseline gap returns -0.004, so a balanced
-design switches the mechanical channel off and whatever survives is real.
+**Why the first estimate did not hold, briefly.** Matching used stars,
+contributors, language and year bin but never the baseline outcome, leaving
+treated repositories 0.071 below controls. Top-two share is simultaneously
+capped at 1.0 and strongly mean-reverting (control-arm reversion slope
+-0.298, t=-5.6), so the two arms converge mechanically. Repository fixed
+effects do not help: they remove levels, while reversion makes the expected
+*change* depend on the level. Pre-trend tests are blind to it.
 
-Honest prior: the clean-cell interval was [-0.016, +0.083]. This may return
-a null, and the architecture is built so a null here still leaves a
-publishable paper.
+**Why the claim is still live.** In the only subsample that is both balanced
+and free to move, the estimate is **+0.0337 — larger than the original**,
+with a pre-trend p of 0.84. It is not significant at 24 pairs, but the sign
+and magnitude are intact. The failure was of identification, not necessarily
+of the phenomenon.
 
-### Fourth contribution — methodological
+### C2 — Differential scrutiny (supporting)
 
-What came out of dismantling C1 generalises well beyond this paper: **an
-imputation / difference-in-differences estimator with unit fixed effects is
-not robust to baseline imbalance when the outcome is bounded and
-mean-reverting, and passing a pre-trend test does not establish that it
-is.**
+Within the same repository and month, comparing similarly sized pull
+requests, agent-authored PRs draw **+0.177** more distinct human reviewers
+(t=+4.64) and are **9.3pp** less likely to be merged with no human review
+(t=-3.22). Two falsification tests: a random split of human PRs returns
++0.0007 where the truth is zero, and dependency bots in the same
+repositories show the opposite signature (-0.197 reviewers, +8.4pp
+unreviewed), so the design detects rubber-stamping where it exists.
 
-Fixed effects remove levels, but reversion makes the expected *change*
-depend on the level, so a level gap converts into a differential trend the
-fixed effects never touch. Pre-trend tests check slopes over a short
-pre-window and are blind to it. Every DiD paper using a share, rate or index
-outcome is exposed. The diagnostic that detects it is a calibrated in-space
-placebo that sweeps the baseline gap and reads off the mechanical component:
+Heterogeneity consistent with Barley's contingency: small teams (<=42
+contributors) show **-22.0pp** unreviewed (t=-4.49); large teams, which
+already mandate review, show **-3.2pp**, not significant.
+
+Code: [`analysis/who_reviews_the_agent.py`](analysis/who_reviews_the_agent.py).
+
+### C3 — The review gate (supporting)
+
+Acceptance rate on the opening cohort, newly measurable because the running
+collection captures closed-unmerged PRs; roughly 59% of PRs in the window
+are closed unmerged, and the previous panel saw only the merged share.
+Report review-then-reject separately from reject-unreviewed: different gate
+behaviours.
+
+### C4 — Methodological contribution
+
+An imputation / difference-in-differences estimator with unit fixed effects
+is not robust to baseline imbalance when the outcome is bounded and
+mean-reverting, and passing a pre-trend test does not establish that it is.
+Every DiD paper using a share, rate or index outcome is exposed. The
+diagnostic is a calibrated in-space placebo that sweeps the baseline gap and
+reads off the mechanical component:
 [`analysis/placebo_reversion.py`](analysis/placebo_reversion.py).
 
-Place it as a methods subsection inside the C1 analysis plus an appendix.
-It is stronger attached to a substantive finding than spun off alone.
+## Verifying C1: what the new data does
 
-## Manuscript skeleton
+The fix C1 needs is to **match on the baseline outcome**, which the original
+data cannot support — it was windowed per repository around each repository's
+own t0, leaving a median of 5 calendar months each, so no control can be
+re-paired against a different treated repository.
 
-1. **Introduction** — open on the verification inversion; lead with C2 as the
-   counterintuitive hook, since the consensus says AI output is waved through
-   and it is not. State all three claims and the methodological contribution.
-2. **Theory and hypotheses** — complementarity and task allocation under
-   machine production; develop author accountability as a partial substitute
-   for review, derive the reinstatement prediction and the small-team
-   moderation *before* showing it.
-3. **Setting and data** — GitHub, the wide fixed calendar window, the
-   >=40-contributor universe and why it is required, author classification
-   into agents / dependency bots / humans. Treatment is *first detected*
-   adoption, stated explicitly.
-4. **Differential scrutiny (C2)** — lead empirical section: repo-by-month
-   design, size adjustment, the human-PR placebo, the dependency-bot
-   benchmark, then the small-team moderation as the theory test.
-5. **The review gate (C3)** — acceptance rates on the opening cohort; closes
-   C2's survivorship caveat and carries the novelty claim.
-6. **Allocation (C1)** — the re-matched concentration estimate, with
-   baseline-outcome matching and the >=3-reviewer population stated as design
-   requirements rather than robustness checks. Placebo calibration here.
-7. **Robustness and threats** — pair dependence (shared reviewers touch 36%
-   of pairs, largest component 209), Copilot-reviewer measurement
-   instability from 2026-02, adoption-date sensitivity, September-2026
-   truncation.
-8. **Discussion** — what verification work becomes when authorship is
-   automated; review policy in small teams, the group that currently
-   self-merges and is least protected. Concentration measures allocation,
-   never burden or welfare.
+The running collection fixes exactly that:
 
-### Contingency
+- **One calendar window shared by every repository** (2025-03 to 2026-08), so
+  any control can be re-windowed against any treated t0.
+- **Universe screened to >=40 contributors**, where P(>=3 baseline reviewers)
+  runs 69-80% versus 37% below 20 contributors. Three or more baseline
+  reviewers is required for top-two share to be off its 1.0 ceiling at all —
+  this is a design requirement, not a robustness check.
+- **220 treated plus 650 control donors**, about three donors per treated, so
+  balance is achieved by matching rather than by chance. Previously only 24
+  of 300 pairs happened to be balanced and free to move.
+- **Merged and closed-unmerged PRs**, which also serves C2 and C3.
 
-- **If C1 returns positive** — the complete account: verification demand
-  rises, the gate tightens, and the extra work concentrates on a few
-  maintainers. Three linked claims describing one reorganisation.
-- **If C1 returns null** — the sharper account: verification is
-  *differentiated* by author type without being *reallocated* between
-  people. A precise null on the obvious hypothesis beside a confirmed effect
-  on the surprising one, plus the methodological result explaining why
-  earlier concentration findings deserve doubt.
+Why this should verify rather than merely re-run: the placebo at a zero
+baseline gap returns **-0.004**. Closing the gap by design switches the
+mechanical channel off, so whatever remains is the effect. Power at the
+observed per-pair standard deviation of 0.1205 needs 100 pairs for 80% power
+at +0.034, or 193 at +0.024.
 
-Either branch keeps C2 and C3 intact, because neither depends on adoption
-timing, matching, or a bounded outcome. That independence is the point.
+**Honest prior.** The clean-cell interval was [-0.016, +0.083] and includes
+zero. This verifies C1 either way; it cannot make it positive. If it returns
+a null, C1 becomes a precise null and the paper leads on differentiated
+scrutiny instead — but that is the fallback, not the plan.
 
 ## Status
 
-Collection running: 870 repositories over a wide fixed calendar window
-(2025-03 to 2026-08), merged **and** closed-unmerged PRs, roughly 18-24
-hours. Resumable — re-running `collect_wide_window.py` skips repositories
-already present in the output.
+Collection running: 870 repositories, resumable. Re-running
+`collect_wide_window.py` skips repositories already present in the output.
 
-Before submission:
+Then, in order:
 
-- Finish the collection.
-- Re-match on the baseline outcome within the >=3-reviewer population, then
-  estimate C1 **once** — not repeatedly, and not across alternative
-  definitions.
-- Estimate C3 on the opening cohort, separating review-then-reject from
-  reject-unreviewed.
-- Validate the agent classification by hand on a sample of PRs. It is
-  login-pattern based and currently unvalidated; a referee will ask, and
-  Copilot is 1,796 of 2,926 agent PRs.
-- Re-run C2 on the new panel so every claim rests on one consistently
-  measured dataset, and because the old panel is unreliable for
-  bot-reviewer counts after 2026-02.
-- Rewrite the abstract and introduction around C2. The current `paper.tex`
-  still asserts the causal concentration version.
+1. Build repo-months from the wide panel; require >=3 baseline reviewers in
+   both arms.
+2. Match on baseline top-two share plus the existing covariates.
+3. Estimate C1 **once**. Not repeatedly, and not across alternative
+   definitions.
+4. Re-run C2 on the new panel so every claim rests on one consistently
+   measured dataset, and because the old panel is unreliable for
+   bot-reviewer counts after 2026-02.
+5. Estimate C3 on the opening cohort.
+6. Validate the agent classification by hand on a sample of PRs — it is
+   login-pattern based and currently unvalidated, and Copilot is 1,796 of
+   2,926 agent PRs.
+7. Rewrite the abstract and introduction. The current `paper.tex` asserts the
+   causal concentration version without the identification that supports it.
 
-Do **not** defend C1 as originally estimated. A referee who knows about
-reverting bounded outcomes runs the control-only placebo and the result is
-gone in a page. The restructure exists so that defence is never needed.
+Do **not** defend the original C1 estimate as it stands. A referee who knows
+about reverting bounded outcomes runs the control-only placebo and it is gone
+in a page.
 
 ## Setup
 
@@ -207,10 +210,10 @@ pip install -r requirements.txt
 collect_wide_window.py          Wide-calendar-window collector (merged + closed PRs)
 src/github_client.py            GitHub REST/GraphQL client, rate-limit aware
 analysis/
-  who_reviews_the_agent.py      C2: agent vs human review, repo x month FE
-  placebo_reversion.py          The methodological diagnostic (C1 bias)
-  ceiling_and_reversion.py      Ceiling census and control-arm reversion
   research_followup.py          Reviewer-incidence reconstruction + estimator
+  placebo_reversion.py          C4: the in-space placebo diagnostic
+  ceiling_and_reversion.py      Ceiling census and control-arm reversion
+  who_reviews_the_agent.py      C2: agent vs human review, repo x month FE
   existing_data_program.py      Sample flow, balance, signal composition
   activity_decomposition.py     Frozen-core activity decomposition
 run_event_study.py              BJS imputation estimator (recovered)
@@ -223,9 +226,28 @@ overleaf/paper/                 Manuscript
 `match_candidate_pool.py` and `src/adoption_signal.py` were never committed
 and exist only as `.pyc` remnants. The derived panels in `output/` are
 therefore unregenerable and are tracked in git despite their size. The
-adoption signal documented below is validated but its implementation is
+adoption signal validated below is documented but its implementation is
 gone; `collect_wide_window.py` relies on the already-computed `adopted` and
 `t0` columns in `output/candidate_pool.csv`.
+
+## References for the framing
+
+- Garicano, L. (2000). Hierarchies and the Organization of Knowledge in
+  Production. *Journal of Political Economy* 108(5), 874-904.
+  https://doi.org/10.1086/317671
+- Barley, S. R. (1986). Technology as an Occasion for Structuring: Evidence
+  from Observations of CT Scanners and the Social Order of Radiology
+  Departments. *Administrative Science Quarterly* 31(1), 78-108.
+- Zuboff, S. (1988). *In the Age of the Smart Machine: The Future of Work and
+  Power*. Basic Books.
+- Beane, M. (2019). Shadow Learning: Building Robotic Surgical Skill When
+  Approved Means Fail. *Administrative Science Quarterly* 64(1), 87-123.
+- Leonardi, P. M., and Bailey, D. E. (2008). Transformational Technologies
+  and the Creation of New Work Practices: Making Implicit Knowledge Explicit
+  in Task-based Offshoring. *MIS Quarterly* 32(2), 411-436.
+
+Page and volume details for Garicano, Barley, Beane and Leonardi & Bailey
+should be checked against the publisher record before submission.
 
 ## Validating the adoption signal against published methods
 
