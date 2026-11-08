@@ -2847,3 +2847,31 @@ The result is driven by small teams, which rules out the most obvious rival expl
 This is a subgroup comparison on a prespecified moderator (baseline team size), not a search across moderators, and the two strata are compared descriptively rather than by a formal interaction test.
 
 Merged-only selection, restated precisely. The panel contains only pull requests that were merged; those opened and closed without merging are absent. The comparison is therefore between agent PRs that succeeded and human PRs that succeeded, and nothing here measures the two groups' differing success rates. Two readings remain open: agent code genuinely draws more human attention, or agent PRs require more reviewer sign-off to clear the gate so that lightly-reviewed ones are closed rather than merged and never enter the data. Both imply agent code meets more human gatekeeping, but only the first supports reading the magnitude as the treatment of all submitted agent work. Collecting closed-unmerged PRs for these 250 named repositories would separate them.
+
+## Correction: the concentration result is unidentified, not refuted (2026-11-08)
+
+The 2026-11-04 entry said roughly half the top-two effect is mechanical and read that as closing the question. That framing was too strong, and this entry corrects it.
+
+Direct test of the mechanical channel. Computing each pair's own baseline gap (treated minus control, pre-adoption only) and re-estimating on pairs that are already balanced:
+
+| subsample | pairs | achieved gap | top-two ATT | SE | p |
+|---|---|---|---|---|---|
+| all | 300 | -0.0712 | +0.0243 | 0.0087 | 0.0053 |
+| abs(gap) <= 0.05 | 104 | +0.0012 | -0.0077 | 0.0121 | 0.52 |
+| abs(gap) <= 0.03 | 84 | -0.0001 | -0.0070 | 0.0135 | 0.60 |
+| abs(gap) <= 0.02 | 71 | -0.0005 | -0.0052 | 0.0160 | 0.74 |
+
+Taken alone this looks decisive: close the gap and the effect vanishes. But the balanced subsample is degenerate. Its mean baseline top-two level is 0.9544, with 54% of pairs sitting at the exact ceiling of 1.0, where both arms are trivially balanced because both are maximal and the outcome cannot rise at all. By contrast the unbalanced pairs average 0.8150 with 0% at the ceiling and 91% below 0.95. The balanced-pair test therefore mostly measures repositories where no increase is arithmetically possible, and its near-zero estimate is close to uninformative.
+
+The only cell that is both balanced and able to move, selecting on baseline information only (abs(gap) <= 0.05 and mean baseline level < 0.95), contains 24 pairs:
+
+- top-two: ATT +0.0337, SE 0.0253, p 0.18, interval [-0.0160, +0.0834], pretrend p 0.84
+- top-one: ATT +0.0140, SE 0.0428, p 0.74, pretrend p 0.81
+
+The point estimate there is LARGER than the reported +0.0243, not smaller, but with 24 pairs it is far too imprecise to support anything.
+
+Corrected conclusion. The concentration finding is neither confirmed nor refuted. It is underdetermined by this design, because the sample has no adequate clean cell: 196 pairs carry a baseline gap and are contaminated by reversion, 104 are balanced only by virtue of being pinned at the ceiling, and the intersection that is both balanced and free to move is 24 pairs. The earlier statement that about half the effect is mechanical remains correct for the POOLED estimate; the inference drawn from it, that the result is substantially an artefact, is not established, because the residual signal cannot be measured in this sample.
+
+Why the design could not detect this. The root cause is that matching used stars, contributors, language and year bin but never the baseline outcome, so a level gap in top-two share was left open. That gap becomes a bias only because the outcome is simultaneously bounded above and strongly reverting. Repository fixed effects do not fix it: fixed effects remove additive time-invariant levels, whereas reversion makes the expected CHANGE a function of the level, so a level gap converts directly into a differential trend that the fixed effects leave untouched. Parallel trends fails by construction once baseline levels differ in a reverting series. The pre-trend test cannot catch it either, since it tests differential slopes over a two-to-five month pre-window while the operative problem is a level difference feeding a convergence process; flat leads and a post-period gap are fully compatible.
+
+Rescue path, feasible and specific. The measure needs a population where it is not pinned at its bound. Restrict the universe to repositories with at least three active reviewers in the baseline window, so top-two share is not mechanically 1.0, and only then match on the baseline outcome. That yields a population in which the gap can be closed by design and the outcome still has room to move. The 24-pair cell shows such repositories exist in the current panel but are too rare; the selection criterion is computable from existing data, so the sample would have to be re-drawn from the 8,977-repository candidate pool with that criterion applied before matching. This is a new sample and a new design, not a reanalysis.
