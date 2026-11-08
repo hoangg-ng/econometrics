@@ -1,4 +1,4 @@
-"""Re-collect merged PRs over a WIDE FIXED CALENDAR WINDOW for a fresh sample.
+"""Re-collect merged AND closed-unmerged PRs over a WIDE FIXED CALENDAR WINDOW.
 
 Why this exists. The original extraction windowed each repository around its own
 t0, which left repo_month_cache with a median of 5 calendar months per
@@ -44,7 +44,8 @@ MIN_CONTRIBUTORS = 40
 N_TREATED = 220                    # target, before match attrition
 N_CONTROL = 650                    # donor pool, ~3 per treated
 
-FIELDS = ['repo', 'role', 'pr_number', 'author_login', 'created_at', 'merged_at',
+FIELDS = ['repo', 'role', 'pr_number', 'author_login', 'state', 'created_at',
+          'merged_at', 'closed_at',
           'additions', 'deletions', 'changed_files', 'commits',
           'n_review_events', 'n_distinct_reviewers', 'reviewer_logins',
           'reviewer_event_counts']
@@ -52,11 +53,11 @@ FIELDS = ['repo', 'role', 'pr_number', 'author_login', 'created_at', 'merged_at'
 QUERY = """
 query($owner:String!, $name:String!, $cursor:String) {
   repository(owner:$owner, name:$name) {
-    pullRequests(states:MERGED, first:50, after:$cursor,
+    pullRequests(states:[MERGED,CLOSED], first:50, after:$cursor,
                  orderBy:{field:CREATED_AT, direction:DESC}) {
       pageInfo { hasNextPage endCursor }
       nodes {
-        number createdAt mergedAt additions deletions changedFiles
+        number createdAt mergedAt closedAt state additions deletions changedFiles
         author { login }
         commits { totalCount }
         reviews(first:100) { nodes { author { login } submittedAt } }
@@ -131,8 +132,10 @@ def fetch_repo(gh, repo):
             rows.append({
                 'repo': repo, 'role': '', 'pr_number': n['number'],
                 'author_login': author,
+                'state': n.get('state') or '',
                 'created_at': n.get('createdAt') or '',
                 'merged_at': n.get('mergedAt') or '',
+                'closed_at': n.get('closedAt') or '',
                 'additions': n.get('additions'), 'deletions': n.get('deletions'),
                 'changed_files': n.get('changedFiles'),
                 'commits': (n.get('commits') or {}).get('totalCount'),
