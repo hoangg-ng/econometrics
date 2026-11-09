@@ -1,0 +1,190 @@
+{
+  "n_measured": 30489,
+  "counts_measured": {
+    "insider": 9191,
+    "outsider": 17035,
+    "agent": 1795,
+    "depbot": 48412
+  },
+  "counts_proxy": {
+    "insider": 17361,
+    "outsider": 8865,
+    "agent": 1795,
+    "depbot": 48412
+  },
+  "agreement_pct": 65.0,
+  "confusion": {
+    "insider->insider": 8693,
+    "outsider->outsider": 8367,
+    "insider->outsider": 8668,
+    "outsider->insider": 498
+  },
+  "self_merge_measured": {
+    "agent": {
+      "n": 934,
+      "self_merged": 0,
+      "self_pct": 0.0
+    },
+    "outsider": {
+      "n": 1318,
+      "self_merged": 319,
+      "self_pct": 24.2
+    },
+    "insider": {
+      "n": 1200,
+      "self_merged": 859,
+      "self_pct": 71.6
+    }
+  },
+  "self_merge_proxy": {
+    "agent": {
+      "n": 934,
+      "self_merged": 0,
+      "self_pct": 0.0
+    },
+    "outsider": {
+      "n": 771,
+      "self_merged": 12,
+      "self_pct": 1.6
+    },
+    "insider": {
+      "n": 1747,
+      "self_merged": 1166,
+      "self_pct": 66.7
+    }
+  },
+  "contrasts": [
+    {
+      "spec": "measured",
+      "contrast": "agent vs outsider",
+      "outcome": "merged",
+      "diff": -0.1969,
+      "se": 0.0319,
+      "t": -6.18,
+      "cells": 370,
+      "clusters": 128,
+      "n": 18809
+    },
+    {
+      "spec": "measured",
+      "contrast": "agent vs outsider",
+      "outcome": "unreviewed",
+      "diff": 0.1934,
+      "se": 0.0323,
+      "t": 5.9771,
+      "cells": 370,
+      "clusters": 128,
+      "n": 18809
+    },
+    {
+      "spec": "measured",
+      "contrast": "agent vs insider",
+      "outcome": "merged",
+      "diff": -0.3356,
+      "se": 0.0337,
+      "t": -9.9618,
+      "cells": 339,
+      "clusters": 119,
+      "n": 10911
+    },
+    {
+      "spec": "measured",
+      "contrast": "agent vs insider",
+      "outcome": "unreviewed",
+      "diff": 0.1715,
+      "se": 0.0417,
+      "t": 4.1099,
+      "cells": 339,
+      "clusters": 119,
+      "n": 10911
+    },
+    {
+      "spec": "measured",
+      "contrast": "outsider vs insider",
+      "outcome": "merged",
+      "diff": -0.1519,
+      "se": 0.0423,
+      "t": -3.5926,
+      "cells": 334,
+      "clusters": 116,
+      "n": 24222
+    },
+    {
+      "spec": "measured",
+      "contrast": "outsider vs insider",
+      "outcome": "unreviewed",
+      "diff": -0.0455,
+      "se": 0.0264,
+      "t": -1.7218,
+      "cells": 334,
+      "clusters": 116,
+      "n": 24222
+    },
+    {
+      "spec": "proxy",
+      "contrast": "agent vs outsider",
+      "outcome": "merged",
+      "diff": -0.044,
+      "se": 0.0474,
+      "t": -0.9283,
+      "cells": 369,
+      "clusters": 128,
+      "n": 10571
+    },
+    {
+      "spec": "proxy",
+      "contrast": "agent vs outsider",
+      "outcome": "unreviewed",
+      "diff": 0.1211,
+      "se": 0.043,
+      "t": 2.8135,
+      "cells": 369,
+      "clusters": 128,
+      "n": 10571
+    },
+    {
+      "spec": "proxy",
+      "contrast": "agent vs insider",
+      "outcome": "merged",
+      "diff": -0.3391,
+      "se": 0.0276,
+      "t": -12.268,
+      "cells": 360,
+      "clusters": 124,
+      "n": 19130
+    },
+    {
+      "spec": "proxy",
+      "contrast": "agent vs insider",
+      "outcome": "unreviewed",
+      "diff": 0.1954,
+      "se": 0.0382,
+      "t": 5.1126,
+      "cells": 360,
+      "clusters": 124,
+      "n": 19130
+    },
+    {
+      "spec": "proxy",
+      "contrast": "outsider vs insider",
+      "outcome": "merged",
+      "diff": -0.3193,
+      "se": 0.0343,
+      "t": -9.3116,
+      "cells": 354,
+      "clusters": 121,
+      "n": 25385
+    },
+    {
+      "spec": "proxy",
+      "contrast": "outsider vs insider",
+      "outcome": "unreviewed",
+      "diff": 0.0593,
+      "se": 0.0234,
+      "t": 2.5359,
+      "cells": 354,
+      "clusters": 121,
+      "n": 25385
+    }
+  ]
+}

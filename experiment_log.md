@@ -3283,3 +3283,40 @@ The findings are unequal in how much weight they can bear, and this should gover
 - The agent-versus-outsider null is the weakest claim recorded and should be presented as a bounded null with its interval stated inline.
 
 No remedy is available within this population: agent-authored pull requests are 0.63% of the panel because that is the share of these repositories using agents during the window. Expanding would require sampling repositories on observed agent activity, which changes the population and forfeits comparability with everything else here.
+
+## Measured authorAssociation versus the reviewer proxy: the proxy wins (2026-11-09)
+
+GitHub's `authorAssociation` was collected for 30,489 pull requests to replace the insider proxy with a measured field. The result is not the straightforward improvement expected, and the self-merge validation decides against the measured field for this construct.
+
+Distribution: CONTRIBUTOR 18,450; MEMBER 5,785; COLLABORATOR 3,253; NONE 2,848; OWNER 153. Mapping OWNER/MEMBER/COLLABORATOR to insider and CONTRIBUTOR/NONE to outsider.
+
+**The two classifications disagree on a third of cases.** On 26,226 human pull requests with both available, agreement is 65.0%:
+
+| proxy | measured | n |
+|---|---|---|
+| insider | insider | 8,693 |
+| **insider** | **outsider** | **8,668** |
+| outsider | outsider | 8,367 |
+| outsider | insider | 498 |
+
+The proxy calls insider roughly twice as often as the measured field does, and almost all the disagreement is in that one cell.
+
+**Taken at face value the measured field overturns the headline.** Agent versus outsider acceptance becomes -0.1969 (SE 0.0319, t=-6.18) instead of -0.0440 (t=-0.93), which would mean agent pull requests ARE accepted substantially less often than comparable human outsiders.
+
+**But the measured field fails the validation test, and badly.** The construct required is merge authority: can this author merge their own work? A group lacking it should essentially never appear as its own merger. Self-merge rates from the collected `mergedBy` field:
+
+| group | measured split | proxy split |
+|---|---|---|
+| insider | 71.6% (n=1,200) | 66.7% (n=1,747) |
+| **outsider** | **24.2% (n=1,318)** | **1.6% (n=771)** |
+| agent | 0.0% (n=934) | 0.0% (n=934) |
+
+Under the measured split, 24.2% of "outsiders" merged their own pull requests. Under the proxy, 1.6% did. The proxy's outsider group genuinely cannot merge; the measured field's cannot be described that way.
+
+**Why, and it is a property of the field rather than a collection error.** GitHub's `CONTRIBUTOR` means the author has previously committed to the repository. That is contribution *history*, not *permission*. Write access frequently arrives through organisation team membership or direct commit rights without the author ever being recorded as COLLABORATOR, so a substantial share of CONTRIBUTOR-labelled authors can merge. Mapping CONTRIBUTOR to outsider therefore reintroduces exactly the confound the insider/outsider split exists to remove: it puts people who can merge into the group defined by being unable to.
+
+**Decision.** The reviewer proxy is retained as primary, not because it is measured but because it is validated: 1.6% against 24.2% misclassification on the only behaviour that defines the construct. The measured field is reported as a robustness check with its failure stated, and the -0.1969 estimate must be presented as what happens when the comparison group is contaminated with authors who hold merge rights, not as a corrected result.
+
+This inverts the earlier flag that `authorAssociation` would settle the question. It does settle it, but in favour of the proxy. The general lesson is that a measured field is only better than an inference when it measures the same construct, and `authorAssociation` measures standing-by-history rather than standing-by-permission.
+
+Open: the proxy's own residual error is its 1.6% self-merging outsiders, and roughly half its insiders are CONTRIBUTOR by GitHub's record. Both groups are probably right for merge authority and wrong for organisational membership, which are different things and should not be conflated in the paper's language. Prefer "can merge their own work" over "insider" wherever the distinction matters.
