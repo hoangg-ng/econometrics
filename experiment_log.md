@@ -3078,3 +3078,21 @@ Correction to the previous entry's framing. The raw marginal review rates are ne
 The acceptance gap is not a composition artefact: 52.0% versus 75.0% marginally, and -25.7 points within repository-month, agree in direction and rough magnitude.
 
 Revised substantive statement. Machine-authored pull requests are accepted far less often, and the mechanism is concentrated in the unreviewed stratum: when nobody engages with an agent PR it is abandoned, whereas an unengaged human PR is usually merged by its own author. Review functions as the gate for machine-authored work in a way it does not for human-authored work, where authorship itself confers merge authority.
+
+## Core routing: the allocation mechanism exists at PR level and is hidden by volume (2026-11-09)
+
+Four further dimensions tested on the opening cohort. Roster window 2025-03..2025-08 defines each repository's baseline core (top two human reviewers) and is EXCLUDED from estimation, so the core is never defined by the PR being scored. Within repository-month fixed effects, size-adjusted, clustered by repository.
+
+**1. Who reviews machine-authored code.** Conditional on receiving any human review, agent-authored PRs are more likely to be reviewed by a member of the repository's baseline core: core-reviewed +0.2026 (SE 0.0937, t=+2.16), and the core's share of the reviewer set +0.0919 (SE 0.0492, t=+1.87). Machine-authored work is routed upward to established reviewers.
+
+This resolves the apparent contradiction between the aggregate null and the gate finding. Exception-routing to high-knowledge evaluators, which the knowledge-hierarchy account predicts, IS present -- but at the level of the individual pull request, not the repository-month. It does not move monthly concentration because machine-authored work is still only 0.63% of opened pull requests (1,795 of 286,593). Routing a 0.6% stream to the core is arithmetically invisible in a monthly share. The mechanism is in place; the volume is not yet.
+
+This yields a falsifiable forward prediction the aggregate null does not: if machine-authored volume grows while the routing elasticity holds, aggregate concentration should rise roughly in proportion. At 10% agent volume the implied shift is about +0.02 in monthly top-two share, which is the magnitude the original (unidentified) analysis mistakenly reported as already present.
+
+**2. Adoption as a moderator: DISCARDED as circular.** Agent PRs in adopted repositories give -0.2011 (t=-7.29, 118 clusters); in non-adopted repositories -0.7755 (t=-4.40) but on only 6 cells and 6 clusters. The comparison is near-tautological and must not be reported: agent-authored pull requests are themselves part of the signal by which adoption was detected, so non-adopted repositories have almost no agent PRs by construction. Recorded here so the dead end is not re-walked.
+
+**3. Does the gap narrow over time?** Acceptance gap by opening period: 2025-09..2025-12 -0.2675 (t=-6.22); 2026-01..2026-04 -0.1575 (t=-4.37); 2026-05..2026-08 -0.1905 (t=-3.63). The gap is smaller in 2026 than in late 2025 but is not monotone and the intervals overlap, so this is suggestive of partial adaptation at best and should be reported as a descriptive pattern, not a trend.
+
+**4. Heterogeneity unavailable in this panel.** The 40-contributor screen removed small teams, so only the large stratum estimates (acceptance -0.2049, t=-7.40; reviewed -0.1217, t=-3.84) and the small/large contrast found on the old panel cannot be reproduced here. Agent identity is also too concentrated for comparison: Copilot 1,234 PRs at 57.9% acceptance, Devin 44 at 47.7%, against humans at 73.9%. No agent-type claim is supportable.
+
+Net addition to the paper: one substantial new result (core routing, with the volume reconciliation and the forward prediction), one descriptive pattern (narrowing gap), and two documented dead ends.
