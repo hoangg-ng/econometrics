@@ -15,10 +15,62 @@ calendar window, **merged and closed-unmerged**. Universe screened to ≥40
 contributors, non-fork. Authors: human 236,386, dependency bot 48,412, AI coding
 agent 1,795. Plus `mergedBy` for 3,452 merged PRs.
 
-## Main finding
+## Findings
 
-**1. Review allocation among humans does not detectably change.** Six outcomes,
-all null, Holm-corrected, properly identified:
+### 1. Agent acceptance improved discretely around November 2025
+
+The headline result. Agent-authored pull requests went from being accepted far
+less often than comparable human contributions to roughly parity, in a **step**
+rather than a trend.
+
+| quarter | agent | human outsider | human insider | agent − outsider |
+|---|---|---|---|---|
+| 2025 Q2 | 39.4% | 62.3% | 86.8% | **−22.9** |
+| 2025 Q3 | 38.9% | 58.4% | 86.9% | −19.5 |
+| 2025 Q4 | 55.7% | 58.6% | 87.5% | −2.9 |
+| 2026 Q1 | 58.2% | 53.6% | 86.7% | **+4.6** |
+| 2026 Q2 | 62.9% | 55.9% | 88.4% | **+7.0** |
+| 2026 Q3 | 60.5% | 58.4% | 88.5% | +2.0 |
+
+Both human baselines are flat; only agents move. Formally, at PR level with
+repository-clustered errors and size controlled: `agent × month` = **+0.0216**
+(t = +3.08), or in step form `agent × after-2025-11` = **+0.2254** (t = +4.63),
+against a null general period term. These are **alternative specifications of
+one shift, not additive**; the step fits better (residual SS 716 vs 1,024).
+
+**It is a change in the producing system, not in reviewer behaviour.** Three
+things co-move at the boundary:
+
+- **Within the same 30 repositories** present in both periods, acceptance goes
+  40.0% → **61.4%** (+21.4 points), so it is not repository composition. Of 14
+  repos with ≥3 agent PRs per period, 10 improved and 4 worsened, median +18.8.
+- **Within one fixed tool** (`copilot-swe-agent`), acceptance goes 37.1% → 62.3%,
+  so it is not only the agent mix shifting (copilot 62%→97%, devin 36%→3%).
+- **Agent output itself changes**: median change size 70 → 50 lines, changed files
+  3 → 2, while commits, review events and reviewer counts stay flat. Volume
+  roughly triples (74 Oct, 144 Nov, 204 Dec).
+
+Maintainers adapting would not shrink the changes being submitted. What the data
+cannot supply is the cause: no field records the backing model, so matching the
+break to a vendor release is corroboration, never identification.
+
+### 2. Standing, not authorship type, determines acceptance
+
+| group | n | accepted | P(merge \| reviewed) | P(merge \| no review) |
+|---|---|---|---|---|
+| agent | 1,795 | 52.0% | 80.2% | 17.6% |
+| human **outsider** (never reviews in that repo) | 79,431 | 55.0% | 82.9% | 38.2% |
+| human **insider** (reviews in that repo) | 156,955 | **85.1%** | 92.8% | 71.3% |
+
+Within repository-month, size-adjusted, agent vs human outsider: **−0.0053
+(t = −0.10)**. Indistinguishable. AI agents enter at the outsider position and are
+treated accordingly — neither deferred to nor singled out. The operative category
+is write access, not who or what wrote the code.
+
+### 3. Review allocation among humans does not change
+
+Six outcomes, all null, Holm-corrected, identified against mean reversion in a
+bounded outcome:
 
 | outcome | baseline | ATT | 95% interval | p |
 |---|---|---|---|---|
@@ -29,73 +81,36 @@ all null, Holm-corrected, properly identified:
 | review events per PR | 1.42 | +0.077 | — | 0.355 |
 | median hours to merge | 59.8 | −9.93 | — | 0.622 |
 
-**2. But machine-authored pull requests face a much harder gate.** Share of
-*opened* PRs reaching each outcome:
+Baseline gap closed from −0.0712 to −0.0057, zero pairs at the measure's
+ceiling, pre-period leads jointly null (p = 0.962), and the sign does not depend
+on the matching rule (−0.0046 covariates-only, −0.0194 outcome-matched).
 
-| author | reviewed → merged | reviewed → closed | no review → merged | no review → closed | **merged** |
-|---|---|---|---|---|---|
-| **agent** (1,795) | 44.1% | 10.9% | 7.9% | **37.0%** | **52.0%** |
-| human (236,386) | 49.9% | 5.2% | **25.0%** | 19.8% | **75.0%** |
-| dependency bot (48,412) | 42.7% | 1.9% | 26.8% | 28.6% | 69.5% |
+### 4. Comparison-group and sampling choices dominate findings here
 
-Within repository-month, size-adjusted: agent PRs are **25.7 points** less likely
-to merge (t = −8.61). Agents are rejected *more* than dependency bots.
+Demonstrated three times on one dataset, each reversing a conclusion:
 
-**3. The same observable means opposite things.** Marginal review rates are nearly
-identical (agent 55.0%, human 55.2%), so agent code is not globally less
-reviewed. What differs is the consequence of going unreviewed:
+| # | choice | apparent effect | after correction |
+|---|---|---|---|
+| 1 | matched on covariates but not the baseline outcome, in a bounded mean-reverting measure | concentration **+2.43pp** (p = 0.005) | identified null, −0.0194 |
+| 2 | merged-only panel | agent code gets **more** review (+0.225 reviewers) | reverses once the opening cohort is observed |
+| 3 | comparison group pooling insiders with outsiders | agent acceptance **−25.7pp** (t = −8.61) | **−0.0053 (t = −0.10)** |
 
-| author | P(merge \| **no** review) | P(merge \| reviewed) |
-|---|---|---|
-| agent | **17.6%** | 80.2% |
-| human | **55.8%** | 90.6% |
+For (1), a placebo with zero true effect by construction returns +0.0111 at the
+original baseline imbalance and +0.0002 at ours. Unit fixed effects do not catch
+it — they absorb *levels* while reversion makes the expected *change* depend on
+the level — and pre-trend tests do not either, since they examine *slopes*. A
+specification carrying that imbalance passes its pre-trend test at p = 0.44.
 
-**4. Why — measured, not inferred.** From `mergedBy`: **0 of 934** agent PRs were
-self-merged; **58.3%** of unreviewed human merges were merged by their own author.
-A human author carries merge authority; an agent carries none. Review is not one
-quality gate among several for machine-authored code — it is the only route in.
+### Retired claims
 
-**5. Routing to the core exists but is invisible in aggregate.** Conditional on
-review, agent PRs are **+20.3 points** more likely to be reviewed by the
-repository's baseline core (t = +2.16). That cannot move a monthly share because
-agent work is **0.63%** of opened PRs. The mechanism is in place; the volume is
-not. If volume reaches 10% and the elasticity holds, aggregate concentration
-rises about +0.02 — the magnitude an unidentified design already reports.
+Reported earlier, not supported: review concentrates after adoption; machine-
+authored code faces a harder gate; machine-authored code receives more human
+review. The agent-vs-human self-merge contrast (0 of 934 vs 58.3%) is also void
+as evidence — a bot account cannot merge, so it restates a definition.
 
-## What we claimed before, and why it failed
-
-The original claim was the opposite: that review **concentrates** after AI
-adoption, top-two share +2.43pp (p = 0.005), on 300 matched pairs.
-
-It failed for two reasons, both about sampling rather than analysis.
-
-**The concentration estimate was not identified.** Matching balanced stars,
-contributors and language but never the baseline outcome, leaving adopters 7.1
-points less concentrated than controls. Top-two share is simultaneously capped at
-1.0 and strongly mean-reverting (control-arm slope −0.298), so the arms converge
-with no treatment at all. Repository fixed effects do not help — they absorb
-*levels*, while reversion makes the expected *change* depend on the level — and
-pre-trend tests do not detect it, because they examine *slopes*. A specification
-carrying that imbalance passes its pre-trend test at p = 0.44.
-
-**The old panel could not support the fix.** It was windowed around each
-repository's own adoption date, leaving a median of 5 calendar months per
-repository, so no control could be re-paired with a different adopter. Matching
-on the baseline outcome was impossible. Re-collecting on one shared calendar
-window (donor coverage 5 → 15 months) made it possible; the gap closed to −0.0057
-with zero pairs at the ceiling, and the estimate is a null.
-
-**An honest note on attribution.** The original +0.0243 does not replicate under
-*any* matching rule on the new panel (covariates-only gives −0.0046), so the
-reversal is attributable to panel construction, not to baseline imbalance. The
-reversion hazard is real and separately demonstrated; it does not explain the
-original number.
-
-**And the merged-only panel inverted the gate result.** On merged PRs alone,
-agent code appeared to draw *more* reviewers (+0.225) with no unreviewed
-difference (−0.006). Collecting closed-unmerged PRs reversed both. That is the
-second sampling choice that flips a conclusion, and it is why the gate is now the
-paper's subject.
+**Suggestive only:** routing of agent PRs to the baseline core, +0.0655 at top-2
+(t = +2.18) against outsiders, but null at top-1 and on every share measure, on
+177 cells over 65 clusters. Cannot carry an argument.
 
 ## Treatment signal: still the original one
 
