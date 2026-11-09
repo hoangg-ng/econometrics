@@ -120,6 +120,54 @@ composition of the comparison group, not the treatment of machine-authored code.
 Against humans lacking the same merge authority, agent pull requests are accepted
 at an **indistinguishable** rate.
 
+## Theoretical contribution
+
+**What is already established.** On GitHub, a submitter's *social standing*
+predicts whether their pull request is accepted more strongly than the
+*technical* properties of the contribution itself — the central result of
+[Tsay, Dabbish and Herbsleb (ICSE 2014)](https://www.jsntsay.com/publications/tsay-icse2014.pdf).
+The companion account of how standing is acquired is the **onion model**: a
+newcomer enters at the periphery, contributes, accumulates reputation, and
+migrates inward toward the core. Our own standing result — insiders accepted at
+87.4% against outsiders at 58.2% — is a **replication** of that literature, not
+a contribution.
+
+**What is new.** An AI coding agent is a contributor category for which the
+onion model has no mechanism. It has no persistent identity across projects, no
+reputation that accrues, and no path from periphery to core. *It is permanently
+peripheral by construction.* Our data confirm it sits at the outsider acceptance
+rate (52.0% against 58.2%, indistinguishable within repository-month) and stays
+there.
+
+**Why that is useful rather than merely true.** Tsay et al. could observe social
+and technical factors only as they co-vary: contributors who are more skilled
+tend also to be better connected, so separating the two is hard. The agent case
+breaks that entanglement. Standing is pinned at zero by construction, and the
+November 2025 capability step moved technical quality *discretely* while
+standing did not move at all. Acceptance rose by 21.4 points inside the same
+repositories.
+
+So the setting yields a cleaner test of the social-versus-technical question
+than observational human data allows:
+
+> Social standing governs the *level* of acceptance — an agent cannot earn its
+> way inward, and remains at outsider rates indefinitely. But technical
+> capability governs *changes* in acceptance, and does so sharply, even when
+> standing is held at zero.
+
+**What follows for theory.** The onion model describes a route to standing that
+some contributors structurally cannot take. As automated contributors become a
+material share of submissions, a community's gatekeeping either admits work
+purely on technical merit for that class, or excludes it regardless of merit.
+Our evidence points to the former: the gate responded to capability, not to
+status, for a contributor type that has no status to offer. That is a claim
+about how an established governance mechanism absorbs a category it was not
+designed for.
+
+**Scope.** This concerns contribution acceptance, not code quality, developer
+welfare, or productivity. We do not measure learning, and we do not claim that
+agents should or should not be treated as outsiders.
+
 ## Findings
 
 ### 1. Agent acceptance rose discretely around November 2025
@@ -266,6 +314,46 @@ Both are standard practice. The first is why collecting closed-unmerged pull
 requests was necessary rather than optional: 26% of rows never merged, and a
 merged-only panel cannot see the gate at all. The second is why the comparison
 group is stated before any result in this file.
+
+### 4. Agent pull requests do not displace human contribution
+
+Repository-month panel, 11,532 cells, outcomes are pull requests *opened* by
+each group.
+
+| specification | outsider PRs | insider PRs | total human |
+|---|---|---|---|
+| repository + month FE | −0.429 (−1.11) | **+1.081\*\*\*** (+6.78) | +0.652\*\* (+2.37) |
+| + other activity controlled | −0.568 (−1.43) | **+1.162\*\*\*** (+4.80) | — |
+| **DiD around the 2025-11 step** | **+0.086 (+1.64)** | −0.078 (−1.13) | **+0.007 (+0.13)** |
+
+No displacement in any specification. In the quasi-experimental one, total human
+volume is flat and outsider volume if anything rises. What *is* robust is roughly
+one additional **insider** pull request per agent pull request — endogenous,
+since insiders are the people who deploy agents, and reported as an association
+rather than an effect. The simplest substitution story is ruled out.
+
+### 5. Post-merge quality: not measurable here
+
+Titles and linked issues were collected for 45,168 merged pull requests. Reverts
+were detected via GitHub's `Revert "<title>"` convention.
+
+| group | merged PRs | reverted |
+|---|---|---|
+| agent | 934 | **0.000%** |
+| outsider | 19,832 | 0.126% |
+| insider | 24,402 | 0.139% |
+
+**Recorded as infeasible, not as a finding.** The base rate is 0.13%, so the
+expected revert count among 934 agent pull requests is about one and observing
+zero is consistent with anything up to roughly 0.3%. Detection is also
+conservative: squashed reverts, force-pushed rewrites and corrective commits
+outside a pull request leave no titled pull request. Proper measurement needs
+revert commits from git history.
+
+Linked-issue counts *are* significant — agent 0.442 against insider 0.184
+(t = +4.54) — but measure **task assignment**, not quality: an agent is
+dispatched at a tracked issue, whereas humans also open refactors and dependency
+work that close nothing.
 
 ## Robustness: the looser insider definition
 
