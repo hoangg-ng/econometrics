@@ -3215,3 +3215,28 @@ The human-outsider trend is flat (−0.0007, t=−0.27) and the general post-202
 **Why this matters for interpretation.** The step-versus-slope distinction discriminates between two mechanisms that the pooled trend cannot separate. Gradual organisational learning -- projects working out how to handle agent contributions -- predicts a slope. A discrete capability change predicts a step. The data favour the step, which is evidence for a capability change around October--November 2025 rather than for maintainers progressively adapting.
 
 **What still cannot be claimed.** The break is detected from the data, not from a release calendar, and no record in the panel identifies which model backed `copilot-swe-agent` at any date. So the finding is that a discrete capability improvement occurred around 2025-11, not that any particular model version caused it. Binning by published release dates would not change this: it would relabel the same calendar variation and risk presenting an assumption as an observation. The breakpoint was also selected by minimising residual sum of squares over the observed series, so its date is estimated rather than prespecified and its p-value is optimistic.
+
+## What co-moved at the 2025-11 break (2026-11-09)
+
+Decomposing the step. Three things change at the same boundary, and they are not all the same kind of thing.
+
+**Agent population shifts.** Pre-break the agent mix is copilot-swe-agent 62% / devin-ai-integration 36%; post-break it is copilot 97% / devin 3%. Devin, whose acceptance ran 37-49%, largely exits. Part of the aggregate step is therefore composition across tools.
+
+**Repository population also shifts, but this is not what drives it.** 50 repositories have agent PRs pre-break, 113 post-break, with only 30 in both; 73% of post-break repositories are new. The decisive test is within the 30 repositories present in both periods:
+
+| | n | accepted |
+|---|---|---|
+| pre-break, repos in both | 622 | 40.0% |
+| post-break, repos in both | 780 | **61.4%** |
+
+The step is **+21.4 points within the same repositories**, so it is not repository composition. Post-only repositories accept at 55.0%, below the 61.4% of continuing ones, so new entrants if anything dilute rather than create the step.
+
+**It is broad rather than a few projects.** Of 14 repositories with at least three agent PRs in each period, 10 improved, 4 worsened, median change +18.8 points. Broad-based, though on a thin base of 14.
+
+**Agent behaviour changes too.** Median change size falls from 70 to 50 lines and median changed files from 3 to 2, while commits, review events and distinct reviewers are unchanged at 3, 1 and 1. Agent pull requests become smaller and more narrowly scoped, which is a behavioural signature of the producing system rather than of reviewer response.
+
+**Volume roughly triples.** Agent PRs per month: 67 (Sep), 74 (Oct), **144 (Nov)**, 204 (Dec), 189, 200, then declining through 2026 as the panel's calendar coverage thins. Adoption and acceptance rise together.
+
+Interpretation and its limit. Simultaneous increases in volume, decreases in change size, and a within-repository acceptance jump are the signature of a change in the producing system -- a capability or product change in the Copilot coding agent around October-November 2025 -- rather than of maintainers adapting, which would not alter the size of the changes being submitted. Combined with the earlier within-tool result (copilot-swe-agent alone rising 37.1% to 62.3%), both composition across tools and improvement within the dominant tool contribute, and the within-repository and within-tool tests establish that the latter is real.
+
+What the data cannot supply is the cause. No field records the backing model, and attributing the break to a specific release requires an external source. The honest statement is that a discrete change in the agent-authored stream occurred around 2025-11, visible simultaneously in volume, change size and acceptance, and that identifying which product or model change produced it would require checking the vendor's release record against the detected break date -- which should be reported as corroboration, never as the identification itself.
