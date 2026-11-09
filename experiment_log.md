@@ -2972,3 +2972,26 @@ The interim look on 691 repositories gave -0.0215 (p=0.051); the complete panel 
 Direction of the point estimate. The negative sign is consistent with the project's other evidence: newcomer incidences +2.03, other-baseline-reviewer incidences +0.98 against a flat fixed core, and agent-authored pull requests being roughly half the size of human ones while attracting more reviewers. All point to broadening participation. The data do not establish broadening either, since the interval includes zero; they establish that concentration does not rise.
 
 Status of the claim: the concentration hypothesis is not supported. The defensible results are a precise identified null on concentration, the demonstration that a conventional matched design returns the wrong sign on this outcome, and the differential-scrutiny finding, which is positive and significant.
+
+## Correction: baseline imbalance does NOT explain the reversal (2026-11-09)
+
+The entries above, and the paper rewrite committed as 9a51523, claimed that the original +0.0243 arose from baseline imbalance in a bounded reverting outcome, and that matching on the baseline outcome removes it. A direct test rejects that attribution.
+
+Holding the new panel, window, outcome definition and estimator fixed and varying ONLY the matching rule:
+
+| matching rule | baseline gap | top-two ATT | SE | p |
+|---|---|---|---|---|
+| conventional, covariates only, no reviewer screen | -0.0299 | -0.0046 | 0.0104 | 0.657 |
+| covariates only, plus the >=3 reviewer screen | -0.0299 | -0.0046 | 0.0104 | 0.657 |
+| matched on baseline outcome, plus reviewer screen | -0.0057 | -0.0194 | 0.0108 | 0.072 |
+| original, OLD panel and old matching | -0.0712 | +0.0243 | 0.0087 | 0.005 |
+
+On the new panel the conventional design already returns approximately zero. Outcome matching moves the estimate by -0.0148, in the same direction it already pointed, and does not flip a sign. The swing from +0.0243 to -0.0046 is therefore attributable to the change in data construction -- calendar window, reviewer definition excluding automation and self-reviews, the 40-contributor screen, the 2025-09..2026-02 t0 band, and the 0..5 rather than 0..11 horizon -- and not to baseline imbalance.
+
+Two reasons the new panel's conventional arm is also better balanced: the donor pool is far larger, and donors are matched within t0 using a shared calendar window, so even covariate-only matching achieves a gap of -0.030 rather than -0.071. The mechanical channel is therefore smaller in the conventional arm here than it was in the original design.
+
+What survives. The mean-reversion mechanism is real and separately demonstrated: the control-arm reversion slope is -0.298 (SE 0.054), top-two share sits at the 1.0 bound in 41% of treated and 53% of control pre-adoption months, and a placebo calibrated to a -0.071 gap returns +0.0111 while the same placebo at the achieved gap of -0.006 returns +0.0002. Those are valid statements about the estimator's behaviour under imbalance, and they remain a legitimate methodological contribution. What is NOT established is that this mechanism accounts for the original estimate, because the original estimate does not survive the data change either.
+
+What this does to the claims. RQ1 is unaffected and is in fact strengthened: concentration does not rise, and the sign is negative under both matching rules on the new panel (-0.005 and -0.019), so the conclusion is not an artefact of the matching choice. RQ2 as written is withdrawn. The defensible version is narrower: the original positive estimate does not replicate on a panel built with a shared calendar window and a cleaner reviewer definition, and separately, baseline imbalance in a bounded reverting outcome is a demonstrable hazard for this class of estimator, for which we supply a diagnostic. The two statements must not be welded into a causal account of the original result.
+
+Honest accounting of looks at the data: the main estimate, the h=-1 test, the five-lead test, and this matching-rule comparison are four analyses of the same 141-154 pair sample. The matching-rule comparison was prompted by a confound the author had already flagged, not by an unfavourable result.
