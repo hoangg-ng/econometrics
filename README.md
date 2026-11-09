@@ -123,6 +123,7 @@ at an **indistinguishable** rate.
 ## Positioning against prior work
 
 Read in full, not summarised: see [`literature_review.md`](literature_review.md).
+The extension argument is stated in [`contribution.md`](contribution.md).
 
 **What is already published, and is therefore not our contribution:**
 
@@ -137,22 +138,37 @@ Our insider 87.4% vs outsider 58.2% **replicates** Tsay. Our standing correction
 **applies** a confound Yoshioka et al. already quantified. Both are worth
 reporting; neither is a discovery.
 
-**What is new.** Every study above is cross-sectional, and the largest
-([arXiv 2607.21832](https://arxiv.org/html/2607.21832v1), 220,612 PRs) explicitly
-looked for a time trend and found none — quarterly merge rates 65.4%, 63.7%,
-68.2%, 67.7%, *"none of the pairwise comparisons is statistically significant"*.
+**The paper we extend.**
+[*Habituation at the Gate*](https://arxiv.org/html/2606.22721v1) (arXiv
+2606.22721) shows that across 11,429 reviews by 400 repeat reviewers, approval of
+agent code rose (30.1% → 36.8%) while scrutiny fell (inline comments −22%,
+change-requests −5.6 pp). They state plainly that they cannot tell **habituation**
+from **genuine agent improvement**:
 
-**Their data ends 20 November 2025 — within days of the break we detect.** Our
-window runs nine months beyond it. That is why we see a change they could not.
+> *"we lack a direct measure of agent code quality over time; if agents genuinely
+> improved, rising approval would be rational rather than habituative."*
 
-> **The contribution: agent acceptance is not a fixed property of agents. It
-> moved discretely, and the movement came from the agent, not from maintainers
-> becoming more permissive.**
+**We supply that measure**, for a period four months after their data ends. The
+two explanations predict opposite things about scrutiny:
 
-This matters beyond the number. The literature treats the agent-versus-human
-acceptance gap as a measure of agent quality. It is in fact the joint product of
-agent capability and reviewer standards, and those two components can move
-independently. We separate them.
+| explanation | predicts |
+|---|---|
+| habituation | acceptance ↑ **and** scrutiny ↓ |
+| capability | acceptance ↑ **with scrutiny unchanged**, agent output visibly changes |
+
+We observe acceptance stepping up, agent output measurably changing, and
+**scrutiny flat**. For this episode the rise is **capability, not habituation** —
+the alternative they could not rule out.
+
+We do *not* claim to refute them: their clock is reviewer experience, ours is
+calendar time, and both can hold. Full positioning, including what we
+deliberately do not claim, in [`contribution.md`](contribution.md).
+
+Separately, [arXiv 2607.21832](https://arxiv.org/html/2607.21832v1) (220,612 PRs)
+looked for a time trend and found none — quarterly 65.4%, 63.7%, 68.2%, 67.7%,
+*"none of the pairwise comparisons is statistically significant"* — but **their
+data ends 20 November 2025, within days of our break.** Our window runs nine
+months beyond it.
 
 ## Findings
 
