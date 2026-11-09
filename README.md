@@ -71,6 +71,19 @@ code keeps the outsider group purely people never trusted with anyone else's
 work — exactly the position an agent occupies. The looser alternative is
 reported in [Robustness](#robustness-the-looser-insider-definition), not here.
 
+**The proxy checks out.** Of insiders' merged pull requests that received no
+human review, **86.4%** were merged by the author themselves (355 of 411,
+from the collected `mergedBy` field) — which is what write access looks like.
+The same figure for outsiders is 2.9% (6 of 207) and for agents 0% (0 of 142).
+
+Note that an outsider's pull request merging does **not** imply they have write
+access: 21.0% of outsider pull requests merge with no review because somebody
+with access merged it for them, without filing a formal review. The 2.9%
+self-merge rate is instead a measure of residual **proxy error** — a few
+people who do hold write access but never happened to review anyone else's
+work, and are therefore misclassified as outsiders. On that dimension the proxy
+is about 97% clean.
+
 ### Why the comparison group matters
 
 | contrast (within repo × month, size-adjusted) | acceptance | t |
@@ -159,19 +172,13 @@ still merges 75.1% of the time, an outsider's 38.2%, an agent's 17.6%. Review is
 close to the only route in for machine-authored code and merely one route among
 several for someone with write access.
 
-**The mechanism, measured.** From the collected `mergedBy` field — share of
-merges performed by the pull request's own author:
-
-| group | unreviewed merges | self-merged | share |
-|---|---|---|---|
-| human **insider** | 411 | 355 | **86.4%** |
-| human **outsider** | 207 | 6 | **2.9%** |
-| **agent** | 142 | 0 | **0.0%** |
-
-This is the clearest validation of the framing. Insiders merge their own
-unreviewed work 86.4% of the time. Outsiders essentially never do (2.9%), and
-agents never do (0 of 142) — **the two groups facing the same constraint behave
-the same way.** The asymmetry is about authority, not about machines.
+**Why the no-review column differs so much.** An insider whose pull request
+receives no review usually merges it themselves — measured at 86.4% from the
+collected `mergedBy` field (see the definition above). An outsider or an agent
+cannot do that, so their unreviewed pull request needs someone with write access
+to act on it, and most often nobody does. The asymmetry is about authority, not
+about machines: outsiders and agents face the same constraint and show the same
+pattern.
 
 **All standing contrasts**, within repository × month, size-adjusted, clustered by repository:
 
