@@ -3096,3 +3096,30 @@ This yields a falsifiable forward prediction the aggregate null does not: if mac
 **4. Heterogeneity unavailable in this panel.** The 40-contributor screen removed small teams, so only the large stratum estimates (acceptance -0.2049, t=-7.40; reviewed -0.1217, t=-3.84) and the small/large contrast found on the old panel cannot be reproduced here. Agent identity is also too concentrated for comparison: Copilot 1,234 PRs at 57.9% acceptance, Devin 44 at 47.7%, against humans at 73.9%. No agent-type claim is supportable.
 
 Net addition to the paper: one substantial new result (core routing, with the volume reconciliation and the forward prediction), one descriptive pattern (narrowing gap), and two documented dead ends.
+
+## The acceptance gap is insider/outsider status, not machine authorship (2026-11-09)
+
+Prompted by the objection that comparing the human self-merge rate (58.3% of unreviewed merges) against the agent rate (0 of 934) is meaningless, because a bot account cannot merge. The objection is correct, and pursuing it overturns the headline result.
+
+If the mechanism is "no author with standing to vouch for the change", then human authors who also cannot self-merge should behave like agents. Insider status is proxied by whether the author ever appears as a reviewer in that repository: people who review others' work there are maintainers with write access, while outside contributors open PRs without reviewing and cannot self-merge, which is the same structural constraint an agent faces.
+
+| group | n | accepted | P(merge given reviewed) | P(merge given NO review) |
+|---|---|---|---|---|
+| agent | 1,795 | 52.0% | 80.2% | 17.6% |
+| human OUTSIDER (never reviews in repo) | 79,431 | 55.0% | 82.9% | 38.2% |
+| human INSIDER (reviews in repo) | 156,955 | 85.1% | 92.8% | 71.3% |
+
+Within repository-month, size-adjusted:
+
+| contrast | acceptance | unreviewed |
+|---|---|---|
+| agent vs ALL humans | **-0.257** (t=-8.61) | +0.185 (t=+5.34) |
+| agent vs human OUTSIDERS | **-0.0053** (t=-0.10) | +0.0653 (t=+1.43) |
+
+**The acceptance gap is not a machine-authorship effect.** It is almost entirely attributable to the comparison group: the full human pool is 66% insiders (156,955 of 236,386), who are accepted at 85.1% because they can merge their own work. Set against humans facing the same lack of merge authority, agent pull requests are accepted at an indistinguishable rate, and the unreviewed difference is not significant either.
+
+What survives, restated. The operative category is standing in the project, not who or what wrote the code. Insider acceptance is 85.1% against outsider 55.0%, a thirty-point gap, and AI agents enter at the outsider position and are treated accordingly -- neither penalised for being machines nor given special scrutiny. The "no one to vouch for it" mechanism is correct but generalises: merge authority determines acceptance, and machine authorship is merely one way of lacking it.
+
+This is the third instance in this project of a comparison or sampling choice producing a large apparent effect that does not survive the right contrast. The first was baseline imbalance in a bounded reverting outcome (concentration). The second was merged-only sampling (scrutiny direction). The third is an uncontrolled comparison group (acceptance). The pattern is now the most defensible contribution the project has: in this literature, findings are dominated by comparison-group and sampling construction rather than by the treatment.
+
+Consequences for the claims. The README and the deck both report -25.7pp as a machine-authorship effect and must be corrected. The core-routing result (+20.3pp) was also estimated against all humans and has to be re-run against outsiders before it can be retained. Items retired: "machine-authored code faces a harder gate", and the self-merge contrast as evidence of anything.
