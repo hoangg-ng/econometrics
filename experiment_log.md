@@ -3463,3 +3463,28 @@ The old capped-panel analysis reported more review submissions per PR and faster
 This is a second positive finding, from the identified design, at the repository level around adoption -- distinct in unit and in question from the pull-request-level agent results. It also connects the two halves of the project: adoption raises review effort per change while leaving the distribution of reviewers unchanged.
 
 Disclosure: these are three further outcomes estimated on the same 141 matched pairs, bringing the total number of analyses of that sample to nine. Holm correction is applied within this family of three; it is not applied across families, and the count of looks is recorded here rather than buried.
+
+## The paper to extend: "Habituation at the Gate" (2026-11-10)
+
+Searched for temporal work on agent acceptance. Two papers matter.
+
+**arXiv 2602.08915 (MSR 2026), task-stratified acceptance.** 7,156 AIDev PRs, five agents. Devin rises +0.77% per week (R-squared 0.34), roughly 60% to 80%; all other agents hold stable rates. So temporal analysis is not unexplored and "we study change over time" is not itself a contribution. Their pattern is a linear trend in Devin with others flat; ours is a discrete step in Copilot in a later window.
+
+**arXiv 2606.22721, "Habituation at the Gate".** 11,429 reviews by 400 repeat reviewers, January to July 2025, agents Copilot Autofix, Devin, Codex CLI, Cursor. Approval rises 30.1% to 36.8% (+6.7 points, +14.5 across experience deciles), inline comments per review fall 22% (1.01 to 0.79), change-request rate falls 5.6 points. The running variable is reviewer EXPERIENCE, not calendar time, which they state explicitly.
+
+Their limitation is our opening, and they write it plainly: "we cannot establish causality: agent code may genuinely improve over the observation window (all four agents received updates during 2025), confounding reviewer behavior change with rational re-calibration", and "we lack a direct measure of agent code quality over time; if agents genuinely improved, rising approval would be rational rather than habituative".
+
+They cannot separate habituation from agent improvement because they have no measure of agent output quality over time. We have one, for a later period:
+
+| what they lack | what we have |
+|---|---|
+| agent output quality over time | median churn 70 to 50 lines, changed files 3 to 2 at the break |
+| scrutiny across a capability change | unreviewed 47.6 to 43.4%, reviewers 0.89 to 0.90, events 2.06 to 2.16, flat |
+| a period containing a discrete shift | the 2025-11 break, four months after their data ends |
+| coverage past July 2025 | window to 2026-08, extending to 2026-10 |
+
+If habituation drove rising acceptance, scrutiny would fall. Across our break it does not, while agent output measurably changes. For this episode the rise is capability, not habituation.
+
+The measures differ and the paper must say so rather than claiming refutation: theirs is approval, a review state, on a reviewer-experience clock; ours is merge on a calendar clock. Both can hold simultaneously, since individuals may habituate with experience while aggregate scrutiny at a calendar break stays flat.
+
+This is the strongest positioning the project has found. Extending a named paper's explicitly stated limitation is more defensible than claiming unexplored territory, and it survives the fact that temporal analysis already exists.

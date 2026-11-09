@@ -136,9 +136,101 @@ roughly nine further months on the far side of the break.
 That is a defensible novelty claim with a concrete explanation for why earlier
 work missed it, which is the strongest form such a claim can take.
 
-### Honest summary
 
-Two contributions survive contact with the literature: **the capability step**
-and **the crowding-out null**. The standing correction is worth reporting as a
-measured quantity, but must be framed as applying a correction the field has
-already identified — not as discovering the confound.
+---
+
+## 6. Temporal work — and the paper this project should extend
+
+### 6a. A trend already exists, for a different agent
+
+**[read, summary] "Comparing AI Coding Agents: A Task-Stratified Analysis of Pull
+Request Acceptance"** (arXiv 2602.08915, MSR 2026). 7,156 AIDev PRs, five agents.
+
+- **Devin rises +0.77% per week (R² = 0.34), roughly 60% → 80%**
+- **all other agents hold stable acceptance rates**
+- task specialisation: Claude Code leads docs (92.3%) and features (72.6%);
+  Cursor leads fixes (80.4%)
+
+> **Implication.** Temporal analysis of agent acceptance is *not* unexplored, so
+> "we study change over time" is not by itself a contribution. But their pattern
+> is a **linear trend in Devin** with others flat; ours is a **discrete step in
+> Copilot**, in a later period. Different agent, different functional form,
+> different window.
+
+### 6b. The paper we should extend — "Habituation at the Gate"
+
+**[read] "Habituation at the Gate: Rising Approval and Declining Scrutiny in
+Human Review of AI Agent Code"** (arXiv 2606.22721). 11,429 reviews by 400
+repeat reviewers (≥10 agent PR reviews each), repos >100 stars, **January–July
+2025**. Agents: Copilot Autofix, Devin, Codex CLI, Cursor.
+
+Findings:
+
+| measure | change |
+|---|---|
+| approval rate | 30.1% → 36.8% (**+6.7 pp**; +14.5 pp across experience deciles) |
+| inline comments per review | 1.01 → 0.79 (**−22%**) |
+| change-request rate | 11.2% → 5.6% (**−5.6 pp**) |
+| approval rise vs comment decline | ρ = −0.556, p < 10⁻⁴ |
+
+Running variable is **reviewer experience** (cumulative reviews), not calendar
+time: *"experience carries the signal (mean coefficient +0.11…) while calendar
+time contributes little (mean −0.007)."*
+
+**Their stated limitation is precisely our opening:**
+
+> *"we cannot establish causality: agent code may genuinely improve over the
+> observation window (all four agents received updates during 2025), confounding
+> reviewer behavior change with rational re-calibration."*
+>
+> *"we lack a direct measure of agent code quality over time; if agents genuinely
+> improved, rising approval would be rational rather than habituative."*
+
+### Why this is the strongest available positioning
+
+They identify rising approval and declining scrutiny, and say outright they
+cannot tell **habituation** from **genuine agent improvement** because they have
+no measure of agent code quality over time.
+
+We have what they lack, for a later period:
+
+| what they need | what we have |
+|---|---|
+| a measure of agent output quality over time | median churn 70 → 50 lines, changed files 3 → 2 at the break |
+| scrutiny measured across a capability change | unreviewed 47.6% → 43.4%, reviewers 0.89 → 0.90, review events 2.06 → 2.16 — **flat** |
+| a period containing a discrete capability shift | the 2025-11 break, four months after their data ends |
+| coverage past July 2025 | our window runs to 2026-08, extending to 2026-10 |
+
+**The resolution.** If habituation drove rising acceptance, scrutiny would fall.
+Across our break it does not, while agent output measurably changes. For this
+episode the rise is **capability, not habituation** — the alternative they could
+not rule out.
+
+Note the measures differ: theirs is *approval* (a review state) on a
+reviewer-experience clock; ours is *merge* on a calendar clock. The two are
+complementary rather than contradictory, and both can hold — individuals may
+habituate with experience while aggregate scrutiny at a calendar break stays
+flat. The paper must say so rather than claiming a refutation.
+
+
+---
+
+## 7. Honest summary
+
+Three contributions survive contact with the literature:
+
+1. **The discrete capability step** (2025-11) — prior temporal work finds a
+   linear trend in Devin and flatness elsewhere, and the largest cross-sectional
+   study's data ends 20 November 2025, within days of our break.
+2. **Resolving the habituation-versus-capability ambiguity** that arXiv 2606.22721
+   explicitly leaves open, by supplying the agent-quality measure they lack and
+   showing scrutiny flat across a capability change. **This is the strongest
+   positioning available: extending a named paper's stated limitation.**
+3. **No crowding out** — not addressed anywhere surveyed.
+
+Plus one recovered repository-level result: **review intensity rises ~22% per
+change after adoption** (+0.4335 review events per PR, p = 0.0025) with reviewer
+counts unchanged — intensification per change, not broadening.
+
+Not contributions: the acceptance level, the agent ranking, standing predicting
+acceptance, and the existence of temporal variation.
