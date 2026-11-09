@@ -15,6 +15,53 @@ calendar window, **merged and closed-unmerged**. Universe screened to ≥40
 contributors, non-fork. Authors: human 236,386, dependency bot 48,412, AI coding
 agent 1,795. Plus `mergedBy` for 3,452 merged PRs.
 
+## Who is compared with whom
+
+Every acceptance result compares pull requests by **who opened them**. Getting
+this comparison right reversed one of our findings, so the groups come first.
+Full detail in [`group_definitions.md`](group_definitions.md).
+
+| group | who they are | can they merge their own PR? | n |
+|---|---|---|---|
+| **human insider** | a person with write access to that repository | **yes** | 156,955 |
+| **human outsider** | a person without write access | no | 79,431 |
+| **agent** | an AI coding agent's account | no | 1,795 |
+
+**The logic.** An agent and a human outsider face the *same* constraint: neither
+can merge their own work, so someone else has to act. A human insider can simply
+merge. **The agent must therefore be compared with the outsider, not with
+"humans" in general** — and the insider/outsider distinction is about write
+access, not about skill or code quality.
+
+*Identification:* agents by author login (`copilot-swe-agent`,
+`devin-ai-integration`, `cursor[bot]`, `claude[bot]`, `codex*`, …), kept separate
+from dependency bots, which open mechanical version bumps and are carried as a
+benchmark for perfunctory review. Insider status is currently a proxy — a human
+who ever reviews in that repository — and is being replaced with GitHub's
+`authorAssociation` field, which records standing directly.
+
+**Why it mattered.** Pooling insiders with outsiders inflates the human baseline,
+because insiders are 66% of human PRs and are accepted at 85.1% largely by
+self-merging:
+
+| contrast (within repo × month, size-adjusted) | difference | t |
+|---|---|---|
+| agent vs **all humans** | −25.7 points | −8.61 |
+| agent vs **human outsiders** | **−0.5 points** | **−0.10** |
+
+The apparent 25.7-point penalty on machine-authored code was the comparison
+group, not the code. Against humans lacking the same merge authority, agent PRs
+are accepted at an indistinguishable rate.
+
+**What standing actually buys** — probability a PR merges with **no human review
+at all**: insider **71.3%**, outsider **38.2%**, agent **17.6%**. Review is close
+to the only route in for machine-authored work, and merely one route among
+several for someone with write access.
+
+*One contrast that is void:* 0 of 934 agent PRs were self-merged against 58.3% of
+unreviewed human merges. A bot account generally cannot merge, so this compares a
+behaviour with an impossibility and restates a definition. It is not evidence.
+
 ## Findings
 
 ### 1. Agent acceptance improved discretely around November 2025
