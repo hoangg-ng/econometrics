@@ -3123,3 +3123,42 @@ What survives, restated. The operative category is standing in the project, not 
 This is the third instance in this project of a comparison or sampling choice producing a large apparent effect that does not survive the right contrast. The first was baseline imbalance in a bounded reverting outcome (concentration). The second was merged-only sampling (scrutiny direction). The third is an uncontrolled comparison group (acceptance). The pattern is now the most defensible contribution the project has: in this literature, findings are dominated by comparison-group and sampling construction rather than by the treatment.
 
 Consequences for the claims. The README and the deck both report -25.7pp as a machine-authorship effect and must be corrected. The core-routing result (+20.3pp) was also estimated against all humans and has to be re-run against outsiders before it can be retained. Items retired: "machine-authored code faces a harder gate", and the self-merge contrast as evidence of anything.
+
+## Agent capability drift survives the correct baseline (2026-11-09)
+
+The quarterly acceptance trend was previously computed against all humans, which the insider/outsider correction invalidates. Re-run against human outsiders, the people who face the same lack of merge authority:
+
+| quarter | agent n | agent | outsider | insider | agent − outsider |
+|---|---|---|---|---|---|
+| 2025Q2 | 218 | 39.4% | 62.3% | 86.8% | **−22.9** |
+| 2025Q3 | 357 | 38.9% | 58.4% | 86.9% | **−19.5** |
+| 2025Q4 | 422 | 55.7% | 58.6% | 87.5% | −2.9 |
+| 2026Q1 | 519 | 58.2% | 53.6% | 86.7% | **+4.6** |
+| 2026Q2 | 194 | 62.9% | 55.9% | 88.4% | **+7.0** |
+| 2026Q3 | 81 | 60.5% | 58.4% | 88.5% | +2.0 |
+
+Both human baselines are flat across the period (outsider 62.3 to 58.4, insider 86.8 to 88.5) while agent acceptance rises from 39.4% to roughly 60%. The agent-minus-outsider gap crosses zero between 2025Q3 and 2026Q1 and does not return. This is therefore agent-specific improvement measured against a stable human comparison, not a general shift in project behaviour.
+
+This is the one substantive AI finding that survives every correction applied so far: **machine-authored pull requests moved from being accepted markedly less often than comparable outside human contributions to being accepted at least as often, within five quarters.**
+
+Core routing re-run against outsiders, since it too had been estimated against all humans:
+
+| core definition | core-reviewed | core share |
+|---|---|---|
+| top-1 | +0.0238 (t=+0.69) | −0.0178 (t=−0.58) |
+| top-2 | +0.0655 (t=+2.18) | +0.0176 (t=+0.69) |
+| top-3 | +0.0732 (t=+2.59) | +0.0323 (t=+1.28) |
+
+Against all humans the top-2 estimate was +0.2026 (t=+2.16); against outsiders it is +0.0655, roughly a third as large, null at top-1, and null on every share measure. Combined with 177 cells over 65 clusters and the cross-project dependence that makes intervals too narrow, core routing is downgraded to suggestive and should not carry a theoretical argument.
+
+Current state of every claim after all corrections:
+
+| claim | status |
+|---|---|
+| Review allocation concentrates after adoption | **identified null**, six outcomes, robust to matching rule |
+| Machine-authored code faces a harder gate | **retired** — −0.005 (t=−0.10) against outsiders; the −25.7pp was comparison-group artefact |
+| Machine-authored code is routed to the core | **suggestive only** — +0.066 at top-2, null at top-1 |
+| Agents are treated like outside contributors | **supported** — 52.0% vs 55.0% acceptance, indistinguishable within repo-month |
+| Agent acceptance improved relative to outsiders | **supported** — gap −22.9 to +4.6 over five quarters |
+| Standing, not authorship type, determines acceptance | **supported** — insider 85.1% vs outsider 55.0% |
+| Comparison-group and sampling choices dominate findings here | **supported three times over** |
