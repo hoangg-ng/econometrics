@@ -1,0 +1,100 @@
+[
+  {
+    "outcome": "merged",
+    "sample": "all opened",
+    "raw": -0.25316,
+    "adj": -0.25707,
+    "se": 0.02987,
+    "t": -8.606,
+    "ci": [
+      -0.31562,
+      -0.19853
+    ],
+    "cells": 375,
+    "clusters": 130
+  },
+  {
+    "outcome": "human_reviewers",
+    "sample": "all opened",
+    "raw": -0.17958,
+    "adj": -0.17689,
+    "se": 0.12939,
+    "t": -1.367,
+    "ci": [
+      -0.4305,
+      0.07672
+    ],
+    "cells": 375,
+    "clusters": 130
+  },
+  {
+    "outcome": "unreviewed",
+    "sample": "all opened",
+    "raw": 0.18414,
+    "adj": 0.18498,
+    "se": 0.03467,
+    "t": 5.336,
+    "ci": [
+      0.11703,
+      0.25294
+    ],
+    "cells": 375,
+    "clusters": 130
+  },
+  {
+    "outcome": "human_reviewers",
+    "sample": "merged only",
+    "raw": 0.2258,
+    "adj": 0.2252,
+    "se": 0.1716,
+    "t": 1.312,
+    "ci": [
+      -0.11113,
+      0.56153
+    ],
+    "cells": 235,
+    "clusters": 92
+  },
+  {
+    "outcome": "unreviewed",
+    "sample": "merged only",
+    "raw": -0.00604,
+    "adj": -0.00623,
+    "se": 0.03372,
+    "t": -0.185,
+    "ci": [
+      -0.07232,
+      0.05987
+    ],
+    "cells": 235,
+    "clusters": 92
+  },
+  {
+    "outcome": "log_hours_to_merge",
+    "sample": "merged only",
+    "raw": -0.01587,
+    "adj": -0.02049,
+    "se": 0.37699,
+    "t": -0.054,
+    "ci": [
+      -0.75938,
+      0.7184
+    ],
+    "cells": 235,
+    "clusters": 92
+  },
+  {
+    "outcome": "log_additions",
+    "sample": "all opened",
+    "raw": -0.14418,
+    "adj": -0.14418,
+    "se": 0.17727,
+    "t": -0.813,
+    "ci": [
+      -0.49163,
+      0.20327
+    ],
+    "cells": 375,
+    "clusters": 130
+  }
+]

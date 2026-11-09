@@ -3025,3 +3025,30 @@ Claim-by-claim verdict against the proposed interpretation:
 The defensible statement is narrower and broader at once: across concentration, reviewer-pool size, incumbent continuity, review intensity and merge latency, first detected AI adoption is not associated with any detectable change in the allocation or process of human review in this population. That is a precise multi-outcome null, not evidence of broadening.
 
 Consequence for the paper. The earlier "more turns but faster" pattern came from the original capped panel (review submissions +0.1804, first review -65.0h, merge time -62.8h). Those estimates are from the design and panel that do not replicate and should not be carried forward as process findings. With this null, the only positive result in the paper is RQ3, differential evaluation by author type, which still rests on the old panel and must be re-estimated before the paper can claim anything positive.
+
+## RQ3 on the new panel: the merged-only finding was survivorship, and it reverses (2026-11-09)
+
+The old panel contained merged PRs only, and the resulting finding -- that agent-authored PRs receive MORE human review -- was flagged throughout as vulnerable to survivorship. The new panel contains closed-unmerged PRs, so the opening cohort can be analysed. It reverses the conclusion.
+
+Identification unchanged: repository-by-month fixed effects on the month the PR was OPENED, so acceptance is not conditioned on the outcome; author type classified as AI coding agent, dependency bot or human; size-adjusted for log additions and changed files; clustered by repository. Placebo on a random split of human PRs returns -0.00013 for acceptance and -0.00030 for reviewer count, so the estimator is unbiased at this scale.
+
+| outcome | sample | size-adjusted diff | SE | t | 95% interval |
+|---|---|---|---|---|---|
+| merged (accepted) | all opened | **-0.257** | 0.030 | **-8.61** | [-0.316, -0.199] |
+| no human review | all opened | **+0.185** | 0.035 | **+5.34** | [+0.117, +0.253] |
+| distinct human reviewers | all opened | -0.177 | 0.129 | -1.37 | [-0.430, +0.077] |
+| distinct human reviewers | merged only | +0.225 | 0.172 | +1.31 | [-0.111, +0.562] |
+| no human review | merged only | -0.006 | 0.034 | -0.18 | [-0.072, +0.060] |
+| log hours to merge | merged only | -0.020 | 0.377 | -0.05 | [-0.759, +0.718] |
+
+Raw acceptance rates across the panel: agent 52.0% (934 of 1,795), dependency bot 69.5%, human 75.0%.
+
+Dependency-bot benchmark in the same cells: acceptance -0.142 (t=-7.28), reviewers -0.212 (t=-5.56), unreviewed +0.081 (t=+3.60). Agents are rejected MORE than dependency bots and are more likely to go unreviewed.
+
+The reversal, stated plainly. Restricted to merged PRs, agent PRs appear to draw more reviewers (+0.225) with no difference in the unreviewed rate (-0.006) -- the direction the old panel reported, now not significant. On the full opening cohort, agent PRs are 25.7 percentage points LESS likely to be merged and 18.5 points MORE likely to receive no human review at all. The earlier finding was an artefact of conditioning on merge: agent PRs that clear the gate are a heavily selected minority, and selecting on them inverted both conclusions.
+
+Substantive reading. Machine-authored pull requests in this population are disproportionately dismissed rather than scrutinised. They are opened, frequently receive no human review, and are closed unmerged at a far higher rate than comparable human-authored changes in the same repository and month. This is not the rubber-stamping the practitioner debate anticipates, nor the heightened scrutiny the old panel suggested; it is triage.
+
+This is the second instance in this project of a sampling or identification choice reversing a conclusion. The first was a bounded, mean-reverting outcome with an unbalanced baseline, which inflated a concentration estimate. The second is merged-only sampling, which inverted the sign of the scrutiny result. Both are common practice in this literature, and both are cheaply diagnosable: the first with an in-space placebo at calibrated imbalance, the second by collecting the opening cohort.
+
+Status of the project's claims: the concentration family is a precise multi-outcome null and should be reported as such. The acceptance-and-triage result is positive, large, highly significant, placebo-validated, benchmarked against dependency bots, and novel because it requires closed-unmerged data that merged-only panels do not contain.
