@@ -3052,3 +3052,29 @@ Substantive reading. Machine-authored pull requests in this population are dispr
 This is the second instance in this project of a sampling or identification choice reversing a conclusion. The first was a bounded, mean-reverting outcome with an unbalanced baseline, which inflated a concentration estimate. The second is merged-only sampling, which inverted the sign of the scrutiny result. Both are common practice in this literature, and both are cheaply diagnosable: the first with an in-space placebo at calibrated imbalance, the second by collecting the opening cohort.
 
 Status of the project's claims: the concentration family is a precise multi-outcome null and should be reported as such. The acceptance-and-triage result is positive, large, highly significant, placebo-validated, benchmarked against dependency bots, and novel because it requires closed-unmerged data that merged-only panels do not contain.
+
+## Decomposing the gate: what "no human review" means (2026-11-09)
+
+Joint distribution of review and merge outcomes over the full opening cohort, which clarifies and partly corrects the previous entry's framing.
+
+| | reviewed, merged | reviewed, closed | no review, merged | no review, closed | reviewed (any) | merged (any) |
+|---|---|---|---|---|---|---|
+| agent (n=1,795) | 44.1% | 10.9% | 7.9% | **37.0%** | 55.0% | 52.0% |
+| human (n=236,386) | 49.9% | 5.2% | 25.0% | 19.8% | 55.2% | 75.0% |
+| dependency bot (n=48,412) | 42.7% | 1.9% | 26.8% | 28.6% | 44.6% | 69.5% |
+
+The decisive conditionals:
+
+| | P(merge given NO human review) | P(merge given reviewed) |
+|---|---|---|
+| agent | **17.6%** | 80.2% |
+| human | **55.8%** | 90.6% |
+| dependency bot | 48.3% | 95.7% |
+
+Answer to the interpretive question. For agent-authored pull requests, receiving no human review does mean being ignored and dropped: 665 of the 807 unreviewed agent PRs, or 82.4%, were closed unmerged, and an unreviewed agent PR merges only 17.6% of the time. For human-authored pull requests the same state means something entirely different: an unreviewed human PR merges 55.8% of the time, because a trusted contributor merging their own work needs no second pair of eyes. The same observable -- zero human reviewers -- therefore encodes self-merge for humans and abandonment for agents. Conversely, review is what carries an agent PR through: reviewed agent PRs merge at 80.2%.
+
+Correction to the previous entry's framing. The raw marginal review rates are nearly identical: 55.0% of agent PRs and 55.2% of human PRs receive at least one human review. The within-repository-month estimate of +18.5 percentage points on the unreviewed indicator is therefore a composition-adjusted quantity, identified off the 133 repositories and 375 cells containing both author types, and it does not describe the population marginally. Both are correct about different comparisons and the distinction must be stated: agent PRs are not globally less reviewed, but within the repository-months where both kinds appear they are, and the consequence of going unreviewed is far worse for them.
+
+The acceptance gap is not a composition artefact: 52.0% versus 75.0% marginally, and -25.7 points within repository-month, agree in direction and rough magnitude.
+
+Revised substantive statement. Machine-authored pull requests are accepted far less often, and the mechanism is concentrated in the unreviewed stratum: when nobody engages with an agent PR it is abandoned, whereas an unengaged human PR is usually merged by its own author. Review functions as the gate for machine-authored work in a way it does not for human-authored work, where authorship itself confers merge authority.
