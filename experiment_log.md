@@ -3193,3 +3193,25 @@ PR-level tool identity does exist, from the authoring account, but it collapses 
 Acceptance within one fixed agent rises from 37.1% to 62.3% between 2025Q3 and 2026Q2, against flat human baselines. The agent mix also changed substantially over the same period, so composition is present too, but the within-agent trend establishes that improvement is not merely the entry of better agents. The early 2025Q2 point (n=47) is out of line and too small to weight.
 
 Model *version* remains unobservable. Neither the authoring account nor the adoption signal records which model produced a change, and Copilot's backing model was replaced repeatedly without per-PR disclosure. Calendar time is the only available proxy, and binning it by release dates would relabel time rather than add identifying information.
+
+## Monthly acceptance: a step at 2025-11, not a smooth trend (2026-11-09)
+
+Formal tests of whether agent acceptance rises over months, at PR level with repository-clustered standard errors and log change size controlled. Month index is 0 at 2025-06.
+
+| specification | term | coef | SE | t | p |
+|---|---|---|---|---|---|
+| agent PRs only | month index | +0.02132 | 0.00552 | +3.86 | 0.0001 |
+| agent vs outsider | agent | −0.16484 | 0.04368 | −3.77 | 0.0002 |
+| | month index (human trend) | −0.00067 | 0.00251 | −0.27 | 0.789 |
+| | **agent × month** | **+0.02163** | 0.00702 | **+3.08** | **0.002** |
+| agent vs outsider, step form | agent | −0.18606 | 0.03676 | −5.06 | 0.0000 |
+| | after 2025-11 | −0.02498 | 0.02151 | −1.16 | 0.246 |
+| | **agent × after 2025-11** | **+0.22541** | 0.04865 | **+4.63** | **0.0000** |
+
+The human-outsider trend is flat (−0.0007, t=−0.27) and the general post-2025-11 term is null (−0.025, t=−1.16), so the movement is agent-specific rather than a period effect. Agent acceptance rises about 2.2 percentage points per month faster than the comparable human baseline, and in step form agents gain 22.5 points after 2025-11, which roughly cancels their initial 18.6-point deficit. 815 repository clusters, 85,139 PRs.
+
+**The step fits better than the slope.** On the monthly series for `copilot-swe-agent` alone, a single breakpoint at 2025-11 gives residual sum of squares 716.2 (44.1% before, 60.1% after) against 1,024.1 for a linear trend of +1.40 points per month. Monthly acceptance for that one fixed tool: 60.0, 46.5, 27.7, 45.8, 40.6, then 56.3, 60.5, 58.1, 59.3, 59.5, 69.6, 56.6, 59.4, 55.8, 65.8. The pre-break months sit in the 28–47 band and every post-break month except one sits in the 56–70 band. Median change size also jumps at the same boundary, from 35 lines in 2025-10 to 92 in 2025-11, before settling near 48.
+
+**Why this matters for interpretation.** The step-versus-slope distinction discriminates between two mechanisms that the pooled trend cannot separate. Gradual organisational learning -- projects working out how to handle agent contributions -- predicts a slope. A discrete capability change predicts a step. The data favour the step, which is evidence for a capability change around October--November 2025 rather than for maintainers progressively adapting.
+
+**What still cannot be claimed.** The break is detected from the data, not from a release calendar, and no record in the panel identifies which model backed `copilot-swe-agent` at any date. So the finding is that a discrete capability improvement occurred around 2025-11, not that any particular model version caused it. Binning by published release dates would not change this: it would relabel the same calendar variation and risk presenting an assumption as an observation. The breakpoint was also selected by minimising residual sum of squares over the observed series, so its date is estimated rather than prespecified and its p-value is optimistic.
