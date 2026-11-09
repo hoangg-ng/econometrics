@@ -63,137 +63,190 @@ rather than inferring it — and we show that doing so demands an
 identification strategy the literature has not been careful about (see the
 methodological contribution).
 
-## Claims
+## Results
+
+All figures below are from the wide-window panel: 286,593 opened pull requests
+across 835 repositories, 2025-03 to 2026-08, merged **and** closed-unmerged.
+
+### The central table: what happens to a pull request
+
+Joint distribution of review and merge outcome over the full opening cohort.
+This table carries most of the paper.
+
+| author | reviewed → merged | reviewed → closed | no review → merged | no review → closed | reviewed (any) | **merged (any)** |
+|---|---|---|---|---|---|---|
+| **agent** (n=1,795) | 44.1% | 10.9% | 7.9% | **37.0%** | 55.0% | **52.0%** |
+| **human** (n=236,386) | 49.9% | 5.2% | **25.0%** | 19.8% | 55.2% | **75.0%** |
+| **dependency bot** (n=48,412) | 42.7% | 1.9% | 26.8% | 28.6% | 44.6% | 69.5% |
+
+The two conditionals that interpret it:
+
+| author | P(merge \| **no** human review) | P(merge \| reviewed) |
+|---|---|---|
+| agent | **17.6%** | 80.2% |
+| human | **55.8%** | 90.6% |
+| dependency bot | 48.3% | 95.7% |
+
+**Read it this way.** The marginal review rate is nearly identical for agents
+and humans (55.0% vs 55.2%), so machine-authored code is not globally less
+reviewed. What differs is the *consequence* of going unreviewed. For an agent
+pull request, no review means abandonment: 665 of 807 unreviewed agent PRs
+(82.4%) are closed, and an unreviewed agent PR merges only 17.6% of the time.
+For a human pull request the identical observable means self-merge by a trusted
+contributor, and merges 55.8% of the time. The same measurement — zero human
+reviewers — encodes two opposite things depending on who wrote the code.
+
+Conversely, review is what carries machine-authored work through: reviewed agent
+PRs merge at 80.2%. Human authorship confers merge authority; machine authorship
+does not, so review is not one quality gate among several for agent code but the
+only route in.
+
+*Caveat: self-merge is inferred from the unreviewed-merge pattern, not observed.
+The collector did not request `mergedBy`. Adding that field would make the
+mechanism measured rather than inferred, and is the highest-value remaining task.*
+
+### Claims
 
 | | Claim | Identification | Status |
 |---|---|---|---|
-| **C1** | **Review concentrates on few reviewers after AI adoption** | matched pairs, re-matched **on the baseline outcome** | **verification in progress** |
-| **C2** | Machine-authored code receives *more* human review, not less | repository x month fixed effects | identified, placebo-validated |
-| **C3** | The review gate rejects machine-authored code at a different rate | same FE, opening cohort | collection in progress |
-| **C4** | DiD with unit fixed effects is not robust to baseline imbalance in a bounded reverting outcome | calibrated in-space placebo | established |
+| **C1** | Review allocation across reviewers does **not** detectably change | matched on the baseline outcome, 141 pairs | **identified null** |
+| **C2** | Machine-authored PRs are accepted far less often | repo × month FE, opening cohort | **−25.7pp, t=−8.61** |
+| **C3** | Conditional on review, machine-authored PRs are routed to the core | same FE, roster window excluded | **+20.3pp, t=+2.16** |
+| **C4** | Two standard sampling choices each reverse a conclusion | placebo; merged-only vs opening cohort | **established twice** |
 
-C1 is the central claim. C2 and C3 establish that the review function is
-actively changing rather than passively inheriting a shift in volume, which
-is what makes concentration an organisational result and not an accounting
-identity. C4 is why C1 can be believed once it is re-estimated.
+### C1 — Allocation does not change (identified null)
 
-### C1 — Concentration (central claim)
+| outcome | baseline | ATT | 95% interval | p |
+|---|---|---|---|---|
+| top-two review share | 0.820 | −0.0194 | [−0.0416, +0.0028] | 0.088 |
+| top-one review share | 0.586 | −0.0189 | [−0.0499, +0.0121] | 0.233 |
+| active reviewers / month | 4.83 | +0.278 | — | 0.152 |
+| incumbent remains leader | 0.737 | +0.005 | — | 0.892 |
+| review events per PR | 1.42 | +0.077 | — | 0.355 |
+| median hours to merge | 59.8 | −9.93 | — | 0.622 |
 
-Monthly share of review activity held by the busiest two reviewers, at the
-repository-month level, around first detected AI adoption, against matched
-controls.
+Nothing reaches 0.05 after Holm correction across the family. Matching reduced
+the baseline gap from −0.0712 to −0.0057 with zero pairs at the measure's upper
+bound, and pre-period leads for h=−5…−1 are individually and jointly null
+(joint p=0.962 for top-two), so anticipation and mis-dated treatment are ruled
+out. The interval excludes the +0.0243 reported earlier.
 
-| Estimate | Top-two share | Verdict |
-|---|---|---|
-| Original, pooled, 300 pairs | +0.0243 | about half mechanical |
-| Placebo, zero true effect | +0.0111 | placebo p = 0.078 |
-| Balanced and free to move, 24 pairs | **+0.0337** | right sign, underpowered |
-| Re-matched design | pending | target 150-200 pairs |
+### C2 — The acceptance gap
 
-**Why the first estimate did not hold, briefly.** Matching used stars,
-contributors, language and year bin but never the baseline outcome, leaving
-treated repositories 0.071 below controls. Top-two share is simultaneously
-capped at 1.0 and strongly mean-reverting (control-arm reversion slope
--0.298, t=-5.6), so the two arms converge mechanically. Repository fixed
-effects do not help: they remove levels, while reversion makes the expected
-*change* depend on the level. Pre-trend tests are blind to it.
+Agent PRs are **25.7 percentage points** less likely to merge than comparable
+human PRs in the same repository-month (SE 0.030, t=−8.61), size-adjusted.
+Raw rates: agent 52.0%, dependency bot 69.5%, human 75.0% — so agents are
+rejected *more* than dependency bots. Placebo on a random split of human PRs
+returns −0.00013.
 
-**Why the claim is still live.** In the only subsample that is both balanced
-and free to move, the estimate is **+0.0337 — larger than the original**,
-with a pre-trend p of 0.84. It is not significant at 24 pairs, but the sign
-and magnitude are intact. The failure was of identification, not necessarily
-of the phenomenon.
+**This reverses the earlier merged-only finding.** Restricted to merged PRs, the
+old sample showed agent PRs drawing *more* reviewers (+0.225, t=1.31) and no
+difference in the unreviewed rate (−0.006, t=−0.18). Conditioning on merge
+inverted both conclusions: agent PRs that clear the gate are a heavily selected
+minority.
 
-### C2 — Differential scrutiny (supporting)
+### C3 — Routing to the core, and why C1 is null anyway
 
-Within the same repository and month, comparing similarly sized pull
-requests, agent-authored PRs draw **+0.177** more distinct human reviewers
-(t=+4.64) and are **9.3pp** less likely to be merged with no human review
-(t=-3.22). Two falsification tests: a random split of human PRs returns
-+0.0007 where the truth is zero, and dependency bots in the same
-repositories show the opposite signature (-0.197 reviewers, +8.4pp
-unreviewed), so the design detects rubber-stamping where it exists.
+Conditional on receiving any human review, agent PRs are **+20.3pp** more likely
+to be reviewed by a member of the repository's baseline core (SE 0.094, t=+2.16;
+core share +9.2pp, t=+1.87). The roster window (2025-03…08) is excluded from
+estimation, so the core is never defined by the PR being scored.
 
-Heterogeneity consistent with Barley's contingency: small teams (<=42
-contributors) show **-22.0pp** unreviewed (t=-4.49); large teams, which
-already mandate review, show **-3.2pp**, not significant.
+This reconciles C1 with C3. Exception-routing to high-knowledge evaluators — what
+a knowledge-hierarchy account predicts — **is** present, but at the pull-request
+level, not the repository-month. It cannot move a monthly share because
+machine-authored work is only **0.63%** of opened PRs (1,795 of 286,593).
+Routing a 0.6% stream to the core is arithmetically invisible in aggregate.
 
-Code: [`analysis/who_reviews_the_agent.py`](analysis/who_reviews_the_agent.py).
+**The mechanism is in place; the volume is not.** This yields a forward
+prediction the null alone cannot make: if agent volume grows and the routing
+elasticity holds, aggregate concentration rises roughly in proportion — about
++0.02 in monthly top-two share at 10% agent volume, which is the magnitude the
+original unidentified analysis reported as already present.
 
-### C3 — The review gate (supporting)
+### C4 — Two sampling choices, two reversals
 
-Acceptance rate on the opening cohort, newly measurable because the running
-collection captures closed-unmerged PRs; roughly 59% of PRs in the window
-are closed unmerged, and the previous panel saw only the merged share.
-Report review-then-reject separately from reject-unreviewed: different gate
-behaviours.
+1. **Bounded, mean-reverting outcome with an unbalanced baseline.** Control-arm
+   reversion slope −0.298 (SE 0.054); top-two share sits at 1.0 in 41% of treated
+   and 53% of control pre-adoption months. A placebo pairing control repositories
+   with each other, where the true effect is zero by construction, returns
+   **+0.0111** at a −0.071 baseline gap and **+0.0002** at ours. Unit fixed
+   effects do not remove this (they absorb levels, while reversion makes the
+   expected *change* depend on the level) and pre-trend tests do not detect it
+   (they examine slopes). A specification carrying a −0.071 gap passes its
+   pre-trend test at p=0.44.
+2. **Merged-only sampling.** Inverts the sign of the scrutiny result, as C2
+   documents.
 
-### C4 — Methodological contribution
+Note on attribution: the original +0.0243 does **not** replicate under *any*
+matching rule on the new panel (covariates-only gives −0.0046). So the swing is
+attributable to panel construction, not to baseline imbalance. The reversion
+hazard is real and separately demonstrated; it does not explain the original
+estimate.
 
-An imputation / difference-in-differences estimator with unit fixed effects
-is not robust to baseline imbalance when the outcome is bounded and
-mean-reverting, and passing a pre-trend test does not establish that it is.
-Every DiD paper using a share, rate or index outcome is exposed. The
-diagnostic is a calibrated in-space placebo that sweeps the baseline gap and
-reads off the mechanical component:
-[`analysis/placebo_reversion.py`](analysis/placebo_reversion.py).
+### Dead ends, recorded so they are not re-walked
 
-## Verifying C1: what the new data does
+- **Adoption as a moderator of the acceptance gap is circular.** Agent PRs are
+  part of the signal by which adoption was detected, so non-adopted repositories
+  have almost no agent PRs (6 cells).
+- **Small-team heterogeneity is unavailable** in this panel: the ≥40-contributor
+  screen removed small teams, so the old panel's small/large contrast cannot be
+  reproduced.
+- **Agent identity comparison is unsupportable**: Copilot 1,234 PRs (57.9%
+  accepted), Devin 44 (47.7%).
+- **Acceptance gap over time** narrows but is non-monotone (−0.27, −0.16, −0.19)
+  and should be reported as descriptive only.
 
-The fix C1 needs is to **match on the baseline outcome**, which the original
-data cannot support — it was windowed per repository around each repository's
-own t0, leaving a median of 5 calendar months each, so no control can be
-re-paired against a different treated repository.
+## How C1 was re-identified
 
-The running collection fixes exactly that:
+The original estimate was not identified. Matching balanced repository
+characteristics but never the baseline outcome, leaving treated repositories
+7.1 points less concentrated than controls, and top-two share is both capped at
+1.0 and strongly mean-reverting. The old data could not support the fix: it was
+windowed per repository around each repository's own t0, leaving a median of 5
+calendar months each, so no control could be re-paired against a different
+treated repository.
 
-- **One calendar window shared by every repository** (2025-03 to 2026-08), so
-  any control can be re-windowed against any treated t0.
-- **Universe screened to >=40 contributors**, where P(>=3 baseline reviewers)
-  runs 69-80% versus 37% below 20 contributors. Three or more baseline
-  reviewers is required for top-two share to be off its 1.0 ceiling at all —
-  this is a design requirement, not a robustness check.
-- **220 treated plus 650 control donors**, about three donors per treated, so
-  balance is achieved by matching rather than by chance. Previously only 24
-  of 300 pairs happened to be balanced and free to move.
-- **Merged and closed-unmerged PRs**, which also serves C2 and C3.
+`collect_wide_window.py` fixed that, and the collection is complete:
 
-Why this should verify rather than merely re-run: the placebo at a zero
-baseline gap returns **-0.004**. Closing the gap by design switches the
-mechanical channel off, so whatever remains is the effect. Power at the
-observed per-pair standard deviation of 0.1205 needs 100 pairs for 80% power
-at +0.034, or 193 at +0.024.
+- **One calendar window shared by every repository** (2025-03 to 2026-08), so any
+  control can be re-windowed against any treated t0. Donors now carry a median of
+  15 calendar months against 5 before.
+- **Universe screened to ≥40 contributors**, where P(≥3 baseline reviewers) runs
+  69–80% versus 37% below 20. Three or more baseline reviewers is required for
+  top-two share to vary at all — a design requirement, not a robustness check.
+  77% of treated repositories cleared it.
+- **Merged and closed-unmerged PRs**, which is what makes C2 and C3 possible.
+- 863 repositories collected, 7 failed, 286,593 PR rows across 835 repositories.
 
-**Honest prior.** The clean-cell interval was [-0.016, +0.083] and includes
-zero. This verifies C1 either way; it cannot make it positive. If it returns
-a null, C1 becomes a precise null and the paper leads on differentiated
-scrutiny instead — but that is the fallback, not the plan.
+Matching on the baseline outcome then closed the gap from −0.0712 to −0.0057
+with zero pairs at the measure's ceiling, and the donor-pairing placebo at that
+balance returns +0.0002, so the mechanical channel is inoperative and the
+estimate needs no bias adjustment.
 
 ## Status
 
-Collection running: 870 repositories, resumable. Re-running
-`collect_wide_window.py` skips repositories already present in the output.
+Collection complete. C1, C2, C3 and C4 estimated. Remaining work, in order:
 
-Then, in order:
+1. **Collect `mergedBy`.** Self-merge is currently inferred from the
+   unreviewed-merge pattern rather than observed. One field, one re-run, and the
+   paper's central mechanism becomes measured instead of inferred. Highest value
+   per unit effort.
+2. **Re-run C3 with the core defined as top-1 and top-3.** It is the weakest of
+   the three main numbers (t=+2.16) and now carries the theoretical
+   reconciliation, so confirm it is not an artefact of the top-2 cut.
+3. **Hand-validate the agent classification** on a sample of PRs. It is
+   login-pattern based and unvalidated; Copilot is 1,234 of 1,795 agent PRs.
+4. **Retry the 7 failed repositories.** Re-running the collector skips what is
+   already present, so this costs minutes.
+5. **Rewrite the paper.** `overleaf/paper/paper.tex` still argues that
+   concentration rises and still reports the merged-only scrutiny result in the
+   wrong direction. Both are now contradicted by the results above.
 
-1. Build repo-months from the wide panel; require >=3 baseline reviewers in
-   both arms.
-2. Match on baseline top-two share plus the existing covariates.
-3. Estimate C1 **once**. Not repeatedly, and not across alternative
-   definitions.
-4. Re-run C2 on the new panel so every claim rests on one consistently
-   measured dataset, and because the old panel is unreliable for
-   bot-reviewer counts after 2026-02.
-5. Estimate C3 on the opening cohort.
-6. Validate the agent classification by hand on a sample of PRs — it is
-   login-pattern based and currently unvalidated, and Copilot is 1,796 of
-   2,926 agent PRs.
-7. Rewrite the abstract and introduction. The current `paper.tex` asserts the
-   causal concentration version without the identification that supports it.
-
-Do **not** defend the original C1 estimate as it stands. A referee who knows
-about reverting bounded outcomes runs the control-only placebo and it is gone
-in a page.
+Analyses of the matched sample so far, for disclosure: the main estimate, the
+h=−1 test, the five-lead test, the matching-rule comparison, the multi-outcome
+family, and the core-routing cut. Six looks, each recorded in
+`experiment_log.md` with what prompted it.
 
 ## Setup
 
