@@ -3320,3 +3320,26 @@ Under the measured split, 24.2% of "outsiders" merged their own pull requests. U
 This inverts the earlier flag that `authorAssociation` would settle the question. It does settle it, but in favour of the proxy. The general lesson is that a measured field is only better than an inference when it measures the same construct, and `authorAssociation` measures standing-by-history rather than standing-by-permission.
 
 Open: the proxy's own residual error is its 1.6% self-merging outsiders, and roughly half its insiders are CONTRIBUTOR by GitHub's record. Both groups are probably right for merge authority and wrong for organisational membership, which are different things and should not be conflated in the paper's language. Prefer "can merge their own work" over "insider" wherever the distinction matters.
+
+## Crowding out: no evidence that agent PRs displace human contribution (2026-11-09)
+
+Experiment ID: G01-crowding-out. Code: analysis/crowding_out.py. Unit is the repository-month; outcomes are counts of pull requests OPENED by each standing group, so this is about contribution volume rather than acceptance. 11,532 repository-months across 835 repositories.
+
+| spec | outcome | coef | SE | t | p |
+|---|---|---|---|---|---|
+| A: agent count, repo + month FE | outsider PRs | -0.4291 | 0.3874 | -1.11 | 0.268 |
+| | insider PRs | **+1.0814** | 0.1595 | **+6.78** | 0.000 |
+| | human PRs | +0.6523 | 0.2751 | +2.37 | 0.018 |
+| B: + other non-agent activity | outsider PRs | -0.5675 | 0.3977 | -1.43 | 0.154 |
+| | insider PRs | **+1.1618** | 0.2422 | **+4.80** | 0.000 |
+| C: DiD around the 2025-11 step | log outsider PRs | +0.0860 | 0.0525 | +1.64 | 0.102 |
+| | log insider PRs | -0.0777 | 0.0690 | -1.13 | 0.260 |
+| | log human PRs | +0.0074 | 0.0552 | +0.13 | 0.893 |
+
+Spec C compares the 133 repositories that ever receive an agent pull request against the 702 that never do, before and after the capability step, with repository and calendar-month fixed effects. The step is common-timed, so this is a two-group before/after rather than a staggered design.
+
+**Conclusion: no credible evidence of crowding out.** Outsider contribution does not fall with agent volume in any specification, and the quasi-experimental specification shows no displacement of any group: outsider PRs if anything rise slightly (+0.086, p=0.10) and total human volume is flat (+0.007, p=0.89).
+
+What is robust is a positive association between agent volume and INSIDER activity, +1.08 to +1.16 additional insider pull requests per agent pull request (t=4.8 to 6.8). This is endogenous and should not be read causally: insiders are the people who deploy agents, so agent pull requests arrive in the repository-months when insiders are most active. It does, however, rule out the simplest substitution story -- agents are not arriving in place of human work.
+
+A bug found and fixed before reporting. Spec B originally controlled for total non-agent activity while the outcome was itself a component of that control, which partials out the outcome and manufactures a negative coefficient. It produced outsider -0.6772 (t=-2.39, p=0.017), an apparently significant displacement. With the control redefined to exclude the outcome group, the estimate is -0.5675 (t=-1.43, p=0.154) and not significant. The displacement finding was an artefact of the specification.
