@@ -2943,3 +2943,32 @@ Reconciliation with earlier entries. The 2026-11-08 entry reported two balanced-
 Internal consistency. This reversal is consistent with the project's own activity decomposition, which found newcomer incidences +2.03 and other-baseline-reviewer incidences +0.98 against a flat fixed core. Both point to broadening participation rather than concentration, and a falling top-two share is what broadening implies. It is also consistent with the differential-scrutiny result: agent-authored pull requests are roughly half the size of human ones and attract more reviewers, so if adoption shifts the change-size distribution downward, review becomes cheaper per change and more people can participate. That is the opposite of the exception-routing mechanism the Garicano framing predicts, and the paper's theory section must be rewritten around cost-of-participation rather than exception-routing if this holds on the complete panel.
 
 Required next steps: re-run once on the complete 870-repository panel; retry the six failed repositories; report this interim look alongside the final estimate so the reader can see both.
+
+## C1 FINAL estimate, complete panel (2026-11-09)
+
+Collection complete: 863 repositories collected, 7 failed, 286,594 PR rows across 835 repositories. This is the single pre-specified estimate on the complete panel, using the design frozen in analysis/rematch_concentration.py. The 2026-11-09 interim entry above recorded the earlier look on 691 repositories; both are reported.
+
+Balance: 141 pairs, mean baseline top-two gap -0.00566 (original design -0.0712), sd 0.0222, max absolute pair gap 0.0482, mean baseline level 0.8200, zero pairs at the 1.0 ceiling. 154 treated repositories cleared the three-reviewer bar. Donor-t0 combinations available: 22,479.
+
+| outcome | ATT | SE | 95% interval | p | pretrend p |
+|---|---|---|---|---|---|
+| top-two share | -0.0194 | 0.0113 | [-0.0416, +0.0028] | 0.088 | 0.783 |
+| top-one share | -0.0189 | 0.0158 | [-0.0499, +0.0121] | 0.233 | 0.162 |
+
+Comparison of the three estimates of the same quantity:
+
+| design | baseline gap | top-two ATT | p |
+|---|---|---|---|
+| original, unbalanced, 300 pairs | -0.0712 | +0.0243 | 0.005 |
+| placebo, zero true effect, calibrated | -0.0700 | +0.0111 | - |
+| re-matched, balanced, 141 pairs | -0.0057 | **-0.0194** | 0.088 |
+
+Conclusion. After the mechanical channel is removed, there is **no statistically significant change in review concentration in either direction**. The point estimate is a decline of about 1.9 percentage points, not significant at conventional levels.
+
+This is stronger than a failure to replicate. The 95% interval of the identified estimate, [-0.0416, +0.0028], **excludes the original estimate of +0.0243**. The original finding is therefore rejected by the identified design, not merely left unconfirmed. The pre-period diagnostic for top-two passes comfortably (p=0.783), and the donor-pairing placebo at this balance returns +0.0002, so neither imprecision nor residual bias explains the difference: the original positive estimate was an artefact of baseline imbalance in a bounded, reverting outcome.
+
+The interim look on 691 repositories gave -0.0215 (p=0.051); the complete panel gives -0.0194 (p=0.088). The difference is small and the complete-panel figure supersedes it. No design parameter was altered between the two runs.
+
+Direction of the point estimate. The negative sign is consistent with the project's other evidence: newcomer incidences +2.03, other-baseline-reviewer incidences +0.98 against a flat fixed core, and agent-authored pull requests being roughly half the size of human ones while attracting more reviewers. All point to broadening participation. The data do not establish broadening either, since the interval includes zero; they establish that concentration does not rise.
+
+Status of the claim: the concentration hypothesis is not supported. The defensible results are a precise identified null on concentration, the demonstration that a conventional matched design returns the wrong sign on this outcome, and the differential-scrutiny finding, which is positive and significant.

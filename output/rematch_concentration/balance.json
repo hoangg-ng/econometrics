@@ -1,9 +1,9 @@
 {
-  "pairs": 142,
-  "mean_baseline_gap": -0.00516,
-  "sd_baseline_gap": 0.02244,
+  "pairs": 141,
+  "mean_baseline_gap": -0.00566,
+  "sd_baseline_gap": 0.02221,
   "max_abs_gap": 0.04817,
-  "mean_baseline_level": 0.81783,
+  "mean_baseline_level": 0.81995,
   "pairs_at_ceiling": 0,
   "original_gap_for_reference": -0.0712
 }
