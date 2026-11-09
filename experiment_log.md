@@ -2995,3 +2995,33 @@ What survives. The mean-reversion mechanism is real and separately demonstrated:
 What this does to the claims. RQ1 is unaffected and is in fact strengthened: concentration does not rise, and the sign is negative under both matching rules on the new panel (-0.005 and -0.019), so the conclusion is not an artefact of the matching choice. RQ2 as written is withdrawn. The defensible version is narrower: the original positive estimate does not replicate on a panel built with a shared calendar window and a cleaner reviewer definition, and separately, baseline imbalance in a bounded reverting outcome is a demonstrable hazard for this class of estimator, for which we supply a diagnostic. The two statements must not be welded into a causal account of the original result.
 
 Honest accounting of looks at the data: the main estimate, the h=-1 test, the five-lead test, and this matching-rule comparison are four analyses of the same 141-154 pair sample. The matching-rule comparison was prompted by a confound the author had already flagged, not by an unfavourable result.
+
+## Testing the broader interpretation: nothing detectably changes (2026-11-09)
+
+A proposed reading of the negative concentration point estimate was that review work spreads more widely, becomes easier to enter and easier to rotate, with the process unchanged but involving more turns and faster merges. Each component is testable on the identified 141-pair design. All five were estimated in one run, with Holm correction across the family.
+
+| outcome | baseline | ATT | SE | p | Holm p | pretrend p |
+|---|---|---|---|---|---|---|
+| active human reviewers per month | 4.829 | +0.278 | 0.194 | 0.152 | 0.608 | 0.191 |
+| share of incidences by reviewers outside the baseline roster | 0.000 | +0.043 | 0.017 | 0.013 | 0.062 | **0.000** |
+| incumbent remains monthly leader | 0.737 | +0.005 | 0.035 | 0.892 | 1.000 | 0.052 |
+| human review events per merged PR | 1.418 | +0.077 | 0.084 | 0.355 | 1.000 | 0.282 |
+| median hours to merge | 59.784 | -9.926 | 20.118 | 0.622 | 1.000 | 0.011 |
+
+Nothing reaches 0.05 after correction for five comparisons, and two of the five fail their pre-period diagnostic.
+
+The outside-roster outcome is invalid as specified and must not be reported as a finding. The roster is defined from the baseline window, so by construction no reviewer can be outside it during that window: the baseline value is exactly 0.000, the lower bound of the measure. The outcome can therefore only move upward, which is why the estimate is nominally positive and why the pre-trend test rejects at p=0.000. This is the same class of error as the one that produced the original concentration result -- a bounded outcome whose baseline level is mechanically determined -- appearing in a different guise. Measuring entry properly requires a roster frozen in a window that is excluded from estimation, as the earlier activity decomposition did.
+
+Median hours to merge also fails its pre-trend diagnostic (p=0.011) and cannot be interpreted.
+
+Claim-by-claim verdict against the proposed interpretation:
+
+- "concentration lower": not established. The point estimate is -0.0194 with interval [-0.0416, +0.0028], which includes zero. What the data support is that concentration does not rise, not that it falls.
+- "task spread more diverse": not supported. Active reviewers per month +0.278, p=0.152, Holm 0.608.
+- "easier to enter": not testable as specified; see above.
+- "easier to rotate": contradicted. Incumbent monthly leadership is +0.005 with p=0.892 against a baseline of 0.737, which is flat, not more fluid.
+- "more turns but faster": not supported. Review events per merged PR +0.077, p=0.355; median hours to merge -9.926, p=0.622 and the pre-trend fails.
+
+The defensible statement is narrower and broader at once: across concentration, reviewer-pool size, incumbent continuity, review intensity and merge latency, first detected AI adoption is not associated with any detectable change in the allocation or process of human review in this population. That is a precise multi-outcome null, not evidence of broadening.
+
+Consequence for the paper. The earlier "more turns but faster" pattern came from the original capped panel (review submissions +0.1804, first review -65.0h, merge time -62.8h). Those estimates are from the design and panel that do not replicate and should not be carried forward as process findings. With this null, the only positive result in the paper is RQ3, differential evaluation by author type, which still rests on the old panel and must be re-estimated before the paper can claim anything positive.
