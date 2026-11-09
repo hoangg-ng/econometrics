@@ -3418,3 +3418,28 @@ Note their 77.51% agentic same_user cannot be reconciled with our measured 0% ag
 **Why the step survives scrutiny.** arXiv 2607.21832 looked for a time trend and found none, but their data ends 20 November 2025, within days of our detected break. They could not have observed it. Our window runs to 2026-08 and extends to 2026-10, giving roughly nine months on the far side. A novelty claim with a concrete explanation for why earlier work missed it is the strongest form available.
 
 **Consequence.** The paper's centre must move to the step and the crowding-out null. The standing correction is reported as a measured quantity applying a known correction, not as a discovery. The theoretical-contribution section in README.md overstates novelty on standing and needs revising accordingly.
+
+## What changed at the 2025-11 break: supply side, not demand side (2026-11-10)
+
+External corroboration first. GitHub's changelog shows a cluster of Copilot coding-agent changes in late October 2025, immediately before the detected break: Claude Sonnet 4.5 and Haiku 4.5 became available as backing models, Mission Control for assigning and steering coding-agent tasks (28 Oct), self-hosted runner support (28 Oct), custom agents and delegation in Copilot CLI (28 Oct), plus planning capabilities and repository-aware "memories". Several changes shipped together, so the date aligns but no single cause can be identified, and this is corroboration rather than identification.
+
+Within the data, four tests of what moved.
+
+**1. The step is not selection into fewer attempts.** Volume rose while the rate rose: 653 agent PRs opened pre-break at 39.2% merged, against 1,142 opened post-break at 59.4% merged. Had agents simply submitted less and better, volume would have fallen.
+
+**2. Reviewer behaviour did NOT change, and this is the central result.**
+
+| | unreviewed | mean human reviewers | mean review events |
+|---|---|---|---|
+| pre-break | 47.6% | 0.89 | 2.06 |
+| post-break | 43.4% | 0.90 | 2.16 |
+
+Scrutiny is flat across the break. Maintainers did not start waving agent work through: the same share goes unreviewed, the same number of people look at it, and the same number of review events occur. **The gate did not loosen; what arrived at it changed.**
+
+**3. Merged work moves faster.** Median time to merge falls from 23.7 to 17.1 hours (means 178.9 to 144.0), consistent with smaller and more self-contained changes rather than with reviewers spending less effort, since review counts are unchanged.
+
+**4. Agent output itself changed**, as recorded earlier: median churn 70 to 50 lines, median changed files 3 to 2.
+
+Taken together these locate the change on the supply side. A demand-side explanation -- maintainers becoming more permissive toward agent work -- predicts falling review intensity, and review intensity is flat. A supply-side explanation -- the agent producing smaller, better-scoped, more mergeable changes -- predicts exactly what is observed: more submissions, higher acceptance, smaller diffs, faster merges, unchanged scrutiny.
+
+**An invalid cut, recorded so it is not repeated.** Task mix by conventional-commit prefix and acceptance by task type were computed and are NOT reportable. Titles are available only from merged_by.csv, which by construction contains merged pull requests only, so every PR with a title is merged and acceptance by task type is 100% for any category with enough observations. The apparent "fix 100%, feat 100%" is pure selection. Measuring task mix across the gate requires collecting titles for closed-unmerged pull requests as well, which the current collection does not do.
