@@ -75,9 +75,15 @@ reported in [Robustness](#robustness-the-looser-insider-definition), not here.
 
 | contrast (within repo × month, size-adjusted) | acceptance | t |
 |---|---|---|
-| agent vs **all humans pooled** | **−25.7 points** | −8.61 |
-| agent vs **human insiders** | −33.9 points | −12.27 |
+| agent vs **all humans pooled** | **−25.7 points** | −8.61\*\*\* |
+| agent vs **human insiders** | −33.9 points | −12.27\*\*\* |
 | agent vs **human outsiders** | **−4.4 points** | **−0.93** |
+
+
+Significance from clustered *t*: \*\*\* |*t*| > 2.58 (*p* < 0.01), \*\* |*t*| > 1.96
+(*p* < 0.05), \* |*t*| > 1.65 (*p* < 0.10). Absence of stars means not
+significant at 10%, which for the agent-versus-outsider acceptance contrast is
+the point being made.
 
 The pooled figure is a weighted average of the other two, and the weights are an
 artefact of how many insiders happen to be in the panel (57%). It measures the
@@ -100,8 +106,8 @@ at an **indistinguishable** rate.
 
 Both human baselines are flat; only agents move, crossing from 23 points below
 comparable outsiders to roughly parity. At PR level, repository-clustered and
-size-adjusted: `agent × month` = **+0.0237** (t = +4.30), or in step form
-`agent × after-2025-11` = **+0.2432** (t = +5.63), with the general period term
+size-adjusted: `agent × month` = **+0.0237**\*\*\* (t = +4.30), or in step form
+`agent × after-2025-11` = **+0.2432**\*\*\* (t = +5.63), with the general period term
 null. **These are alternative specifications of one shift, not additive**; the
 step fits better (residual SS 716 vs 1,024).
 
@@ -167,9 +173,21 @@ unreviewed work 86.4% of the time. Outsiders essentially never do (2.9%), and
 agents never do (0 of 142) — **the two groups facing the same constraint behave
 the same way.** The asymmetry is about authority, not about machines.
 
-Within repository-month, size-adjusted, agent vs human outsider on acceptance:
-**−0.0440 (t = −0.93)**. Indistinguishable. AI agents are neither deferred to nor
-singled out; they occupy the outsider position in a project's existing hierarchy.
+**All standing contrasts**, within repository × month, size-adjusted, clustered by repository:
+
+| contrast | accepted | no human review | distinct reviewers |
+|---|---|---|---|
+| agent vs outsider | -0.0440 (-0.93) | +0.1211\*\*\* (+2.81) | -0.1601 (-1.34) |
+| agent vs insider | -0.3391\*\*\* (-12.27) | +0.1954\*\*\* (+5.11) | -0.1801 (-1.28) |
+| outsider vs insider | -0.2705\*\*\* (-19.27) | +0.0453\*\* (+2.57) | -0.0444\*\* (-2.00) |
+| dependency bot vs outsider | -0.0232 (-1.19) | +0.1655\*\*\* (+7.18) | -0.2934\*\*\* (-10.27) |
+
+The first row is the paper's point: on **acceptance**, agent versus comparable
+outsider carries no stars — indistinguishable. AI agents are neither deferred to
+nor singled out; they occupy the outsider position in a project's existing
+hierarchy. Note also that outsider versus insider on acceptance is
+−0.2705\*\*\* (t = −19.27), the largest and most robust contrast in the panel:
+standing dominates everything else measured here.
 
 The one contrast that **is** definition-sensitive is whether agents go unreviewed
 more often than outsiders: **+0.1211 (t = +2.81)** under the strict definition,
@@ -196,7 +214,7 @@ It reclassifies 21,230 pull requests (insider 156,954 / outsider 79,432).
 
 | | agent vs outsider, acceptance | agent vs outsider, unreviewed |
 |---|---|---|
-| **strict** (self-reviews excluded) — used above | **−0.0440 (t = −0.93)** | **+0.1211 (t = +2.81)** |
+| **strict** (self-reviews excluded) — used above | **−0.0440 (t = −0.93)** | **+0.1211 (t = +2.81)\*\*\*** |
 | looser (self-reviews counted) | **−0.0059 (t = −0.11)** | +0.0654 (t = +1.43) |
 
 **The acceptance conclusion holds under both** — agents indistinguishable from
