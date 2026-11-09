@@ -68,10 +68,15 @@ def human_reviewers(reviewer_logins, author_login):
 # request there. Reviewing another person's code generally requires review
 # privileges; opening a pull request does not.
 #
-# Self-reviews are deliberately excluded. GitHub permits an author to leave a
-# review on their own pull request, and anyone can do that, so it is no evidence
-# of standing. Counting self-reviews would move 21,230 pull requests from
-# outsider to insider and flips one secondary result (see validity_checks.md).
+# PRIMARY DEFINITION: self-reviews excluded. GitHub permits an author to leave a
+# review on their own pull request and anyone can do that, so it is no evidence
+# of standing; requiring a review of someone else's code keeps the outsider group
+# purely people never trusted with another person's work.
+#
+# Setting this True reproduces the ROBUSTNESS variant, which is reported but never
+# used as a headline. It reclassifies 21,230 PRs and flips the agent-vs-outsider
+# unreviewed result from significant to null. The acceptance result holds either
+# way. See README.md and validity_checks.md.
 INSIDER_COUNTS_SELF_REVIEW = False
 
 

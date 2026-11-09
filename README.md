@@ -38,22 +38,46 @@ access, not about skill or code quality.
 from dependency bots, which open mechanical version bumps and are carried as a
 benchmark for perfunctory review.
 
-**Insider status is a proxy, and the paper is sensitive to how it is drawn.** A
-human counts as an insider if they have reviewed *someone else's* pull request in
-that repository. An earlier variant also counted self-reviews, which moves 21,230
-pull requests between groups (insider 156,955 / outsider 79,431 under that
-variant). The acceptance conclusion survives either way, but one secondary result
-does not:
+### Insider status: one primary definition, one robustness check
 
-| insider defined as… | agent vs outsider, acceptance | agent vs outsider, unreviewed |
+Insider status is a proxy for write access, so it has to be defined explicitly.
+There are two reasonable ways to draw it, and **we adopt the stricter one as
+primary.**
+
+> **PRIMARY (used for every reported result): self-reviews excluded.**
+> A human is an insider of a repository if they have reviewed **someone else's**
+> pull request there.
+>
+> **ROBUSTNESS ONLY (reported, never used as the headline): self-reviews
+> counted.** A human is an insider if they appear in any reviewer list there,
+> including on their own pull request.
+
+**Why the stricter definition is correct.** GitHub lets anyone leave a review on
+their own pull request. Doing so demonstrates nothing about standing, so it
+cannot be evidence of write access. Requiring a review of *another person's*
+code means the outsider group is purely people who have never been trusted with
+anyone else's work — which is exactly the group an AI agent belongs to.
+
+The choice is not cosmetic: it reclassifies 21,230 pull requests (primary gives
+insider 135,725 / outsider 100,661; the robustness variant gives 156,955 /
+79,431). Both are reported so the reader can see what turns on it:
+
+| | agent vs outsider, acceptance | agent vs outsider, unreviewed |
 |---|---|---|
-| reviewed someone else's PR (**used here**) | −0.0440 (t = −0.93) | **+0.1211 (t = +2.81)** |
-| ever appears as a reviewer, self-reviews included | −0.0053 (t = −0.10) | +0.0653 (t = +1.43) |
+| **PRIMARY** — self-reviews excluded | **−0.0440 (t = −0.93)** | **+0.1211 (t = +2.81)** |
+| robustness — self-reviews counted | −0.0053 (t = −0.10) | +0.0653 (t = +1.43) |
 
-So "agents are accepted like outsiders" is robust, while "agents go unreviewed
-more often than outsiders" holds only under the stricter definition and must not
-be reported without it. GitHub's `authorAssociation` field, which records standing
-directly rather than inferring it, is being collected to settle this.
+**What this means for each claim.** The acceptance conclusion — agents are
+accepted at a rate indistinguishable from comparable human outsiders — holds
+under *both* definitions and is safe to state without qualification. The
+unreviewed result is **definition-dependent**: significant under the primary
+definition, not under the robustness variant. It must therefore always be
+reported with the definition named, and never as a standalone finding.
+
+Both proxies become unnecessary once GitHub's `authorAssociation` field is
+collected, which records standing directly per pull request (OWNER / MEMBER /
+COLLABORATOR → insider; CONTRIBUTOR / FIRST_TIME_CONTRIBUTOR / NONE → outsider).
+That collection is in progress and will replace this section.
 
 **Why it mattered.** Pooling insiders with outsiders inflates the human baseline,
 because insiders are 66% of human PRs and are accepted at 85.1% largely by
