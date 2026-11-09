@@ -97,6 +97,23 @@ difference (−0.006). Collecting closed-unmerged PRs reversed both. That is the
 second sampling choice that flips a conclusion, and it is why the gate is now the
 paper's subject.
 
+## Treatment signal: still the original one
+
+Detected adoption (`adopted`, `t0`) comes from the original signal in
+[`adoption_signal_validation.md`](adoption_signal_validation.md), validated
+against three published papers. Its implementation (`src/adoption_signal.py`)
+was never committed and is lost, so current work reads the already-computed
+columns in `output/candidate_pool.csv` rather than recomputing them.
+
+The signal **is tool-specific** — `claude_trailer`, `codex_branch`,
+`copilot_trailer`, `cursor_*`, `devin_*`, `jules_*`, `GEMINI.md`, `aider_trailer`
+— so vendor families are partly observable. But it is a **repository-level
+trace**, not PR-level attribution: it says a repo shows evidence of tool X
+somewhere, not that a given PR came from tool X, and repos routinely signal
+several tools at once. Combined with PR-level agent identity collapsing onto one
+tool (Copilot is 97–100% of agent PRs from 2025Q4), **no vendor or model-family
+comparison is supportable**, and model *version* is not recorded anywhere.
+
 ## Cases we have handled and tested
 
 Full detail and numbers in [`validity_checks.md`](validity_checks.md).

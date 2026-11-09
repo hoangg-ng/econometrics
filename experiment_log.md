@@ -3162,3 +3162,34 @@ Current state of every claim after all corrections:
 | Agent acceptance improved relative to outsiders | **supported** — gap −22.9 to +4.6 over five quarters |
 | Standing, not authorship type, determines acceptance | **supported** — insider 85.1% vs outsider 55.0% |
 | Comparison-group and sampling choices dominate findings here | **supported three times over** |
+
+## Is the drift capability or composition, and can the signal identify the tool? (2026-11-09)
+
+Two questions: new agents appeared continuously over the window, so the acceptance improvement could be composition rather than capability; and the stored adoption signal may identify which tool, and hence which vendor's model family.
+
+**The stored signal does name tools.** `output/candidate_pool.csv` retains the signal types produced by the lost `src/adoption_signal.py`, and they are tool-specific:
+
+- Layer A (autonomous): codex_branch 2,233; copilot_pr_author 817; cursor_branch 335; copilot_branch 128; devin_branch 52; devin_pr_author 43; cursor_pr_author 23; jules_pr_author 17
+- Layer B (assisted): copilot_trailer 1,240; claude_trailer 934; claude_code_footer 679; cursor_trailer 181; devin_trailer 92; jules_trailer 59; codex_footer 10; aider_trailer 3
+- Config files: AGENTS.md 1,452; CLAUDE.md 1,221; .claude 726; .agents 422; copilot-instructions.md 285; .cursor 236; GEMINI.md 55
+
+So vendor families (Anthropic, OpenAI, Google, Cursor, Cognition) are partially observable, which is more than was previously recorded.
+
+**But the signal cannot attribute a pull request to a tool.** It is a repository-level trace: it says this repository shows evidence of tool X somewhere, not that this pull request was produced by tool X. Repositories commonly signal several tools at once, so the categories overlap heavily. Acceptance of agent PRs by the repository's signalled family is accordingly uninformative as a tool comparison: Copilot-signalled 52.6% (n=1,767), OpenAI/Codex 55.1% (n=572), Claude 57.0% (n=349), Cursor 54.9% (n=288), Devin 45.1% (n=319). These differ by at most twelve points across overlapping sets of mostly Copilot-authored pull requests, and should not be read as relative tool performance.
+
+PR-level tool identity does exist, from the authoring account, but it collapses onto one tool: the agent mix moves from devin 77% in 2025Q2 to copilot 97-100% from 2025Q4 onward. No vendor or model-family comparison is supportable at the pull-request level.
+
+**The drift is capability, not only composition.** Within `copilot-swe-agent` alone, holding the tool fixed:
+
+| quarter | n | accepted |
+|---|---|---|
+| 2025Q2 | 47 | 46.8% |
+| 2025Q3 | 286 | 37.1% |
+| 2025Q4 | 411 | 55.7% |
+| 2026Q1 | 492 | 58.9% |
+| 2026Q2 | 191 | 62.3% |
+| 2026Q3 | 81 | 60.5% |
+
+Acceptance within one fixed agent rises from 37.1% to 62.3% between 2025Q3 and 2026Q2, against flat human baselines. The agent mix also changed substantially over the same period, so composition is present too, but the within-agent trend establishes that improvement is not merely the entry of better agents. The early 2025Q2 point (n=47) is out of line and too small to weight.
+
+Model *version* remains unobservable. Neither the authoring account nor the adoption signal records which model produced a change, and Copilot's backing model was replaced repeatedly without per-PR disclosure. Calendar time is the only available proxy, and binning it by release dates would relabel time rather than add identifying information.
