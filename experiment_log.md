@@ -3443,3 +3443,23 @@ Scrutiny is flat across the break. Maintainers did not start waving agent work t
 Taken together these locate the change on the supply side. A demand-side explanation -- maintainers becoming more permissive toward agent work -- predicts falling review intensity, and review intensity is flat. A supply-side explanation -- the agent producing smaller, better-scoped, more mergeable changes -- predicts exactly what is observed: more submissions, higher acceptance, smaller diffs, faster merges, unchanged scrutiny.
 
 **An invalid cut, recorded so it is not repeated.** Task mix by conventional-commit prefix and acceptance by task type were computed and are NOT reportable. Titles are available only from merged_by.csv, which by construction contains merged pull requests only, so every PR with a title is merged and acceptance by task type is 100% for any category with enough observations. The apparent "fix 100%, feat 100%" is pure selection. Measuring task mix across the gate requires collecting titles for closed-unmerged pull requests as well, which the current collection does not do.
+
+## Process outcomes re-estimated on the identified design: rounds recover, speed does not (2026-11-10)
+
+The old capped-panel analysis reported more review submissions per PR and faster review and merge after adoption. Those came from the design that failed to replicate, so they were retired. Re-estimating the same constructs on the identified design -- matched on the baseline outcome, >=3 baseline human reviewers, 141 pairs, same estimator and bootstrap -- separates which were real.
+
+| outcome | baseline | ATT | SE | p | Holm p (3) | pretrend p |
+|---|---|---|---|---|---|---|
+| review events per merged PR | 1.986 | **+0.4335** | 0.1431 | **0.0025** | **0.0075** | 0.207 |
+| distinct human reviewers per PR | 0.908 | +0.0068 | 0.0315 | 0.830 | 1.000 | 0.516 |
+| log median hours to merge | 2.850 | +0.1017 | 0.1142 | 0.373 | 1.000 | 0.290 |
+
+**Review intensity recovers and is larger than the original estimate.** Repositories that adopt AI see +0.43 more review events per merged pull request against a baseline of 1.99, roughly a 22% increase, significant after Holm correction across the three outcomes and with the pre-period diagnostic passing comfortably. The original capped-panel figure was +0.1804.
+
+**The reviewer count does not move** (+0.007, p=0.83). So the same number of people conduct more rounds on each change. This is intensification of review per unit of work, not broadening of participation, and it is consistent with the earlier allocation null: who reviews does not change, how much they review each change does.
+
+**The speed claim does not replicate and must be retired permanently.** Time to merge is +0.10 in logs with p=0.37, not significant and pointing the wrong way against the original -62.8 hours. Time to first review is not reconstructible from the current panel, which records review counts rather than per-review timestamps, so that claim cannot be tested at all and should simply be dropped.
+
+This is a second positive finding, from the identified design, at the repository level around adoption -- distinct in unit and in question from the pull-request-level agent results. It also connects the two halves of the project: adoption raises review effort per change while leaving the distribution of reviewers unchanged.
+
+Disclosure: these are three further outcomes estimated on the same 141 matched pairs, bringing the total number of analyses of that sample to nine. Holm correction is applied within this family of three; it is not applied across families, and the count of looks is recorded here rather than buried.
