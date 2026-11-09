@@ -2907,3 +2907,39 @@ Extractor validation before launch, against repositories already present in the 
 One bug found and fixed during validation: the first version read d['data']['repository'] although GitHubClient.graphql already unwraps the data envelope, so every repository returned no_repository. Caught by validation rather than by the self-test, which did not exercise the network path.
 
 Status: running in the background, 870 repositories, roughly 12 to 15 hours at the observed rate of about one repository per minute. Writes output/wide_window/pr_level_wide.csv incrementally and is resumable; re-running skips repositories already present. Not yet analysed. The analysis step, once collection finishes, is to build repo-months, require at least three baseline reviewers in both arms, match on baseline top-two share, and re-estimate; the placebo at zero baseline gap returned -0.004, so a balanced design removes the mechanical channel.
+
+## C1 re-identified on the wide-window panel: the sign reverses (2026-11-09)
+
+Experiment ID: C1-rematch. Status: INTERIM look, recorded as such. Collection was at 691 repositories of 870 (treated arm effectively complete at 218 of 220; donors 473 of 650), so the final estimate must be re-run once on the complete panel. This entry exists so that the number of looks at the data is on the record.
+
+Design, frozen in analysis/rematch_concentration.py before the estimate was read: repository-month unit; outcome the share of monthly human review incidences held by the two busiest reviewers, one incidence per human reviewer per merged PR with bots and self-reviews excluded; population restricted to at least three distinct human reviewers in the baseline window in both arms; baseline h=-6..-2, follow-up h=0..5; 1:1 greedy matching without replacement on standardized baseline top-two share (triple weight, being the bias channel), log baseline PR volume and log contributors; caliper 0.05 on the baseline gap; two-way FE imputation estimator trained on untreated observations; 1000 matched-pair bootstrap draws, seed 20261109.
+
+Balance achieved, which is the point of the redesign:
+
+| | original design | re-matched design |
+|---|---|---|
+| mean baseline top-two gap | -0.0712 | **-0.0052** |
+| sd of pair gap | - | 0.0224 |
+| max absolute pair gap | - | 0.0482 |
+| mean baseline level | 0.80 | 0.8178 |
+| pairs at the 1.0 ceiling | 41-53% of months | **0** |
+| pairs | 300 | 142 |
+
+The gap is closed by a factor of about fourteen, and no pair sits at the ceiling, so the outcome is free to move in both directions. 154 treated repositories cleared the three-reviewer bar; 142 matched within caliper.
+
+Estimator validation at the balance actually achieved. Pairing donor repositories with each other, where the true effect is zero by construction, matched the same way and tuned to the same residual gap, gives top-two +0.00021 (sd 0.01045) and top-one +0.00031 (sd 0.01322) over 60 draws. The mechanical channel is therefore off at this balance, and the estimate below needs no bias subtraction.
+
+Result:
+
+| outcome | ATT | SE | 95% interval | p | pretrend p | baseline |
+|---|---|---|---|---|---|---|
+| top-two share | **-0.0215** | 0.0110 | [-0.0431, +0.0001] | 0.051 | 0.544 | 0.813 |
+| top-one share | -0.0230 | 0.0162 | [-0.0547, +0.0086] | 0.154 | 0.100 | 0.586 |
+
+**The sign reverses.** The original unbalanced estimate was +0.0243; the identified estimate is -0.0215, a swing of 4.6 percentage points, and the placebo confirms the estimator is unbiased at this balance. Concentration does not rise after first detected AI adoption in this population; the point estimate is a decline of about 2.2 percentage points, marginally significant, with the pre-period diagnostic passing comfortably for top-two.
+
+Reconciliation with earlier entries. The 2026-11-08 entry reported two balanced-subsample estimates: -0.0077 on 104 pairs balanced but largely ceiling-pinned, and +0.0337 on the 24 pairs that were balanced and free to move. The present design is balanced and free to move with 142 pairs, roughly six times the latter, and agrees in sign with the 104-pair estimate rather than the 24-pair one. The +0.0337 figure was the noisiest cell available at the time and should not have been described as evidence the claim was still live; that reading is withdrawn.
+
+Internal consistency. This reversal is consistent with the project's own activity decomposition, which found newcomer incidences +2.03 and other-baseline-reviewer incidences +0.98 against a flat fixed core. Both point to broadening participation rather than concentration, and a falling top-two share is what broadening implies. It is also consistent with the differential-scrutiny result: agent-authored pull requests are roughly half the size of human ones and attract more reviewers, so if adoption shifts the change-size distribution downward, review becomes cheaper per change and more people can participate. That is the opposite of the exception-routing mechanism the Garicano framing predicts, and the paper's theory section must be rewritten around cost-of-participation rather than exception-routing if this holds on the complete panel.
+
+Required next steps: re-run once on the complete 870-repository panel; retry the six failed repositories; report this interim look alongside the final estimate so the reader can see both.
