@@ -47,7 +47,7 @@ does not:
 
 | insider defined as… | agent vs outsider, acceptance | agent vs outsider, unreviewed |
 |---|---|---|
-| reviewed someone else's PR (**used here**) | −0.0447 (t = −0.94) | **+0.1211 (t = +2.81)** |
+| reviewed someone else's PR (**used here**) | −0.0440 (t = −0.93) | **+0.1211 (t = +2.81)** |
 | ever appears as a reviewer, self-reviews included | −0.0053 (t = −0.10) | +0.0653 (t = +1.43) |
 
 So "agents are accepted like outsiders" is robust, while "agents go unreviewed
@@ -62,14 +62,14 @@ self-merging:
 | contrast (within repo × month, size-adjusted) | difference | t |
 |---|---|---|
 | agent vs **all humans** | −25.7 points | −8.61 |
-| agent vs **human outsiders** | **−4.5 points** | **−0.94** |
+| agent vs **human outsiders** | **−4.4 points** | **−0.93** |
 
 The apparent 25.7-point penalty on machine-authored code was the comparison
 group, not the code. Against humans lacking the same merge authority, agent PRs
 are accepted at an indistinguishable rate.
 
 **What standing actually buys** — probability a PR merges with **no human review
-at all**: insider **71.3%**, outsider **38.2%**, agent **17.6%**. Review is close
+at all**: insider **75.1%**, outsider **38.2%**, agent **17.6%**. Review is close
 to the only route in for machine-authored work, and merely one route among
 several for someone with write access.
 
@@ -143,12 +143,21 @@ The same quantities as conditionals:
 |---|---|---|---|---|
 | agent | 1,795 | 52.0% | 80.2% | **17.6%** |
 | human outsider | 100,661 | 58.2% | 82.9% | **38.2%** |
-| human insider | 135,725 | **87.4%** | 92.8% | **71.3%** |
+| human insider | 135,725 | **87.4%** | 92.8% | **75.1%** |
 | dependency bot | 48,412 | 69.5% | 95.7% | 48.3% |
 
-Within repository-month, size-adjusted, agent vs human outsider: **−0.0447
-(t = −0.94)**, and −0.0053 (t = −0.10) under the looser insider definition.
-Indistinguishable under either. AI agents enter at the outsider position and are
+Within repository-month, size-adjusted, agent vs human outsider: **−0.0440
+(t = −0.93)**, and −0.0053 (t = −0.10) under the looser insider definition.
+Indistinguishable under either.
+
+The standing effect itself is the largest and most robust contrast in the panel:
+outsider vs insider acceptance is **−0.2705 (t = −19.27)** across 6,331
+repository-months and 610 repositories.
+
+*Reproducibility:* every number in this section comes from
+[`analysis/gate_results.py`](analysis/gate_results.py), which imports all
+classification from [`analysis/common.py`](analysis/common.py) so one definition
+governs every result. AI agents enter at the outsider position and are
 treated accordingly — neither deferred to nor singled out. The operative category
 is write access, not who or what wrote the code.
 
