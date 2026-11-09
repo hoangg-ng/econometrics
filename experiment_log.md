@@ -3363,3 +3363,28 @@ Detection is also conservative by construction. Squashed reverts, force-pushed h
 **The linked-issue count is informative but not about quality.** Agent pull requests close 0.442 issues on average against 0.202 for outsiders and 0.184 for insiders, with agent versus insider at +0.282 (t=+4.54) and agent versus outsider at +0.128 (t=+1.67). This almost certainly reflects how agents are dispatched rather than what their output is worth: an agent is typically pointed at a tracked issue, whereas humans open pull requests for refactors, dependency work and improvements that close nothing. It should be reported as a task-assignment difference, and must not be presented as corrective-work quality.
 
 Status: post-merge quality is recorded as not feasible with pull-request-level data. It stays an open extension requiring revert commits from git history.
+
+## Prior-work check: most of the acceptance finding is already published (2026-11-10)
+
+Searched for existing work on agent-authored pull request acceptance before committing to the framing. The field has moved faster than assumed, and the headline comparison is not new.
+
+**Already published.** Agent-versus-human acceptance rates are reported across several 2026 studies. One large-scale analysis of 33,000+ GitHub pull requests reports agentic merge rates of 71.5% against 87.6% for humans. Agent-specific rates are also published: Codex 82.6%, Cursor 65.2%, Claude Code 59.0%, Devin 53.8%, Copilot 43.0%, with task-stratified breakdowns (documentation 84%, CI 79%, build 74%). Related work covers failed agentic pull requests, why fix-related agent pull requests remain unmerged, human-versus-agentic bug fixing, security properties of agentic pull requests, and how agents modify code. Note that the AIDev dataset underlying several of these is already cited in our own adoption_signal_validation.md, so this literature was partly known and its implications for novelty were not drawn.
+
+**The standing confound has been flagged, though not corrected.** At least one study observes that 77.51% of merged agentic pull requests share submitter and integrator against 57.63% for human pull requests, and states explicitly that "author association and core maintainer status could be important confounding variables when comparing agentic and human-generated PRs". Their 77.51% figure is not comparable to our measured 0% agent self-merge, which indicates a different agent definition -- probably human-submitted agent-generated work rather than agent-account-authored pull requests -- but the conceptual point is on record. Matching in that literature is done on repository and quarter to equalise volume, not on contributor standing.
+
+**What this leaves.** Claims in this project, reassessed:
+
+| claim | status against prior work |
+|---|---|
+| Agents accepted less than humans | **published** -- not a contribution |
+| Agent-type differences | **published**, and our sample cannot support it anyway |
+| Standing is a confound in this comparison | **flagged** by prior work, not quantified |
+| The gap disappears against humans with the same merge authority (-25.7pp to -4.4pp) | **plausibly novel** -- this executes the correction others only noted |
+| Discrete capability step around 2025-11 | **plausibly novel** -- no time-series step appears in the surveyed work |
+| Agent pull requests do not displace human contribution | **plausibly novel** -- crowding-out is not addressed in the surveyed work |
+| Replication of standing to acceptance (Tsay 2014) | established long ago |
+| Bounded reverting outcome, merged-only sampling reversals | generic methodological points |
+
+**Consequence for the paper.** The acceptance level cannot be the contribution. Three things survive as candidate contributions: the standing-corrected null, which converts a flagged confound into a measured one and overturns the published magnitude; the capability step, which is a dynamic result the cross-sectional literature does not have; and the crowding-out null. Of these the standing correction is currently underpowered at a 13.3-point detectable effect, which is precisely what the running agent-sample collection is meant to fix.
+
+Required before writing: read the 33,000-pull-request study and the study reporting the submitter-integrator confound in full, rather than from search summaries, and position against their actual specifications. Our contribution must be framed as a correction to a specific published magnitude, which requires knowing exactly how that magnitude was estimated.
