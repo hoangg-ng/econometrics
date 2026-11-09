@@ -194,6 +194,44 @@ more often than outsiders: **+0.1211 (t = +2.81)** under the strict definition,
 but +0.0654 (t = +1.43) under the looser one. It must always be reported with the
 definition named, and never as a standalone finding.
 
+### How much the agent sample can actually support
+
+The agent group is small, and the precision of each contrast differs by more
+than an order of magnitude. Only cells containing both groups identify a
+contrast, so these are the samples that do the work:
+
+| contrast | agent / treated n | base n | ratio | effective n | repositories | **detectable at 80% power** |
+|---|---|---|---|---|---|---|
+| agent vs outsider | 1,706 | 8,865 | 5:1 | 5,723 | **128** | **13.3 pp** |
+| agent vs insider | 1,769 | 17,361 | 10:1 | 6,422 | 124 | 7.7 pp |
+| outsider vs insider | 81,938 | 130,435 | 2:1 | 201,298 | **610** | **3.9 pp** |
+
+Effective *n* uses the harmonic mean, since with imbalanced groups the variance
+is set by the minority side.
+
+**This qualifies the headline null.** Agent versus outsider acceptance is
+−0.0440 with a 95% interval of **[−13.7, +4.9] percentage points**. So the result
+rules out the −25.7 point pooled figure decisively, but it does **not** rule out a
+true penalty of up to about 13 points. "Agents are accepted like comparable
+outsiders" should be read as *no difference larger than roughly 13 points is
+detectable here* — not as a demonstration of equal treatment.
+
+**The asymmetry across findings matters for how much weight each carries.**
+
+- The **standing effect** (outsider vs insider, −0.2705\*\*\*) is well powered:
+  610 repositories, 3.9-point resolution, and the estimate is seven times the
+  detectable minimum. This is the panel's most secure result.
+- The **time findings** are also well powered despite the small agent group,
+  because they use the time dimension rather than cross-sectional contrast:
+  `agent × month` t = +4.30, step t = +5.63, and the within-repository step is
+  +21.4 points, far above any plausible noise floor.
+- The **agent-versus-outsider null** is the weakest claim in the file. It is a
+  wide null, not a precise one.
+
+Growing the agent sample is the only fix, and it is bounded by reality rather
+than effort: agent-authored pull requests are 0.63% of the panel because that is
+how much of this population used agents during the window.
+
 ### 3. Two sampling choices each reverse a conclusion
 
 | choice | apparent effect | after correction |

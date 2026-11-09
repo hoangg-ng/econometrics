@@ -3260,3 +3260,26 @@ The choice matters, and not uniformly:
 The acceptance conclusion is robust: agents are accepted at a rate indistinguishable from comparable human outsiders under either definition, and far above the -25.7 points obtained against the pooled human baseline. But the unreviewed result is definition-dependent, moving from insignificant to significant at the 1% level, and therefore cannot be reported without stating which definition produces it.
 
 This is the fourth instance of a classification or comparison choice materially moving a result, and it is the reason the `authorAssociation` collection matters rather than being a nicety: it replaces the proxy with GitHub's own record of standing. Collection is in progress.
+
+## Power: what the agent sample can and cannot support (2026-11-09)
+
+Only repository-months containing both groups identify a contrast, so the samples that matter are smaller than the group totals.
+
+| contrast | treated n | base n | ratio | effective n | repositories | MDE at 80% power |
+|---|---|---|---|---|---|---|
+| agent vs outsider | 1,706 | 8,865 | 5:1 | 5,723 | 128 | **0.133** |
+| agent vs insider | 1,769 | 17,361 | 10:1 | 6,422 | 124 | 0.077 |
+| outsider vs insider | 81,938 | 130,435 | 2:1 | 201,298 | 610 | 0.039 |
+| depbot vs outsider | - | - | - | - | 432 | 0.055 |
+
+Effective n is the harmonic mean 4·n₁·n₂/(n₁+n₂), since with imbalanced groups the variance is governed by the minority side. MDE is 2.80 × SE for 80% power at a two-sided 5% level.
+
+**This materially qualifies the agent-versus-outsider null.** The estimate is -0.0440 with a 95% interval of [-0.1367, +0.0487], so it rules out the -25.7 point pooled figure decisively but does not rule out a true penalty of up to roughly 13 points. The claim that agents are accepted like comparable outsiders must be stated as "no difference larger than about 13 points is detectable", not as evidence of equal treatment. Earlier descriptions of this result as "indistinguishable" were accurate but conveyed more precision than the design supports.
+
+The findings are unequal in how much weight they can bear, and this should govern the paper's emphasis:
+
+- Outsider versus insider acceptance, -0.2705 (t=-19.27), is the most secure result in the panel: 610 repository clusters, 3.9-point resolution, an estimate seven times the detectable minimum.
+- The time findings survive the small agent group because they exploit the time dimension rather than a cross-sectional contrast: differential trend t=+4.30, step t=+5.63, within-repository step +21.4 points. Small cross-sectional samples do not preclude a well-identified before/after movement.
+- The agent-versus-outsider null is the weakest claim recorded and should be presented as a bounded null with its interval stated inline.
+
+No remedy is available within this population: agent-authored pull requests are 0.63% of the panel because that is the share of these repositories using agents during the window. Expanding would require sampling repositories on observed agent activity, which changes the population and forfeits comparability with everything else here.
