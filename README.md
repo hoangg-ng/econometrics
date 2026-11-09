@@ -23,8 +23,8 @@ Full detail in [`group_definitions.md`](group_definitions.md).
 
 | group | who they are | can they merge their own PR? | n |
 |---|---|---|---|
-| **human insider** | a person with write access to that repository | **yes** | 156,955 |
-| **human outsider** | a person without write access | no | 79,431 |
+| **human insider** | a person with write access to that repository | **yes** | 135,725 |
+| **human outsider** | a person without write access | no | 100,661 |
 | **agent** | an AI coding agent's account | no | 1,795 |
 
 **The logic.** An agent and a human outsider face the *same* constraint: neither
@@ -36,9 +36,24 @@ access, not about skill or code quality.
 *Identification:* agents by author login (`copilot-swe-agent`,
 `devin-ai-integration`, `cursor[bot]`, `claude[bot]`, `codex*`, …), kept separate
 from dependency bots, which open mechanical version bumps and are carried as a
-benchmark for perfunctory review. Insider status is currently a proxy — a human
-who ever reviews in that repository — and is being replaced with GitHub's
-`authorAssociation` field, which records standing directly.
+benchmark for perfunctory review.
+
+**Insider status is a proxy, and the paper is sensitive to how it is drawn.** A
+human counts as an insider if they have reviewed *someone else's* pull request in
+that repository. An earlier variant also counted self-reviews, which moves 21,230
+pull requests between groups (insider 156,955 / outsider 79,431 under that
+variant). The acceptance conclusion survives either way, but one secondary result
+does not:
+
+| insider defined as… | agent vs outsider, acceptance | agent vs outsider, unreviewed |
+|---|---|---|
+| reviewed someone else's PR (**used here**) | −0.0447 (t = −0.94) | **+0.1211 (t = +2.81)** |
+| ever appears as a reviewer, self-reviews included | −0.0053 (t = −0.10) | +0.0653 (t = +1.43) |
+
+So "agents are accepted like outsiders" is robust, while "agents go unreviewed
+more often than outsiders" holds only under the stricter definition and must not
+be reported without it. GitHub's `authorAssociation` field, which records standing
+directly rather than inferring it, is being collected to settle this.
 
 **Why it mattered.** Pooling insiders with outsiders inflates the human baseline,
 because insiders are 66% of human PRs and are accepted at 85.1% largely by
@@ -47,7 +62,7 @@ self-merging:
 | contrast (within repo × month, size-adjusted) | difference | t |
 |---|---|---|
 | agent vs **all humans** | −25.7 points | −8.61 |
-| agent vs **human outsiders** | **−0.5 points** | **−0.10** |
+| agent vs **human outsiders** | **−4.5 points** | **−0.94** |
 
 The apparent 25.7-point penalty on machine-authored code was the comparison
 group, not the code. Against humans lacking the same merge authority, agent PRs
@@ -131,8 +146,9 @@ The same quantities as conditionals:
 | human insider | 135,725 | **87.4%** | 92.8% | **71.3%** |
 | dependency bot | 48,412 | 69.5% | 95.7% | 48.3% |
 
-Within repository-month, size-adjusted, agent vs human outsider: **−0.0053
-(t = −0.10)**. Indistinguishable. AI agents enter at the outsider position and are
+Within repository-month, size-adjusted, agent vs human outsider: **−0.0447
+(t = −0.94)**, and −0.0053 (t = −0.10) under the looser insider definition.
+Indistinguishable under either. AI agents enter at the outsider position and are
 treated accordingly — neither deferred to nor singled out. The operative category
 is write access, not who or what wrote the code.
 

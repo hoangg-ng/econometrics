@@ -3240,3 +3240,23 @@ The step is **+21.4 points within the same repositories**, so it is not reposito
 Interpretation and its limit. Simultaneous increases in volume, decreases in change size, and a within-repository acceptance jump are the signature of a change in the producing system -- a capability or product change in the Copilot coding agent around October-November 2025 -- rather than of maintainers adapting, which would not alter the size of the changes being submitted. Combined with the earlier within-tool result (copilot-swe-agent alone rising 37.1% to 62.3%), both composition across tools and improvement within the dominant tool contribute, and the within-repository and within-tool tests establish that the latter is real.
 
 What the data cannot supply is the cause. No field records the backing model, and attributing the break to a specific release requires an external source. The honest statement is that a discrete change in the agent-authored stream occurred around 2025-11, visible simultaneously in volume, change size and acceptance, and that identifying which product or model change produced it would require checking the vendor's release record against the detected break date -- which should be reported as corroboration, never as the identification itself.
+
+## Insider definition sensitivity, and an internal inconsistency corrected (2026-11-09)
+
+The README carried two incompatible insider/outsider splits, 156,955/79,431 in one section and 135,725/100,661 in another. Both are correct computations of different definitions, and having both in one document was an error.
+
+- D1: insider if the author ever appears in a reviewer list for that repository, self-reviews included. Gives insider 156,955 / outsider 79,431.
+- D2: insider if the author has reviewed someone else's pull request there, self-reviews excluded. Gives insider 135,725 / outsider 100,661.
+
+The two differ on 21,230 pull requests. D2 is adopted throughout, since reviewing another person's code is better evidence of review privileges than reviewing one's own.
+
+The choice matters, and not uniformly:
+
+| definition | agent vs outsider, acceptance | agent vs outsider, unreviewed |
+|---|---|---|
+| D2 (adopted) | -0.0447 (SE 0.0474, t=-0.94) | **+0.1211 (SE 0.0430, t=+2.81)** |
+| D1 | -0.0053 (SE 0.0557, t=-0.10) | +0.0653 (SE 0.0457, t=+1.43) |
+
+The acceptance conclusion is robust: agents are accepted at a rate indistinguishable from comparable human outsiders under either definition, and far above the -25.7 points obtained against the pooled human baseline. But the unreviewed result is definition-dependent, moving from insignificant to significant at the 1% level, and therefore cannot be reported without stating which definition produces it.
+
+This is the fourth instance of a classification or comparison choice materially moving a result, and it is the reason the `authorAssociation` collection matters rather than being a nicety: it replaces the proxy with GitHub's own record of standing. Collection is in progress.
