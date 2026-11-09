@@ -103,11 +103,33 @@ break to a vendor release is corroboration, never identification.
 
 ### 2. Standing, not authorship type, determines acceptance
 
-| group | n | accepted | P(merge \| reviewed) | P(merge \| no review) |
+**What happens to a pull request.** Joint distribution of review outcome and
+merge outcome, over the full opening cohort. This table carries most of the
+paper.
+
+| author | reviewed → merged | reviewed → closed | no review → merged | no review → closed | **merged** |
+|---|---|---|---|---|---|
+| **agent** (1,795) | 44.1% | 10.9% | **7.9%** | **37.0%** | **52.0%** |
+| **human outsider** (100,661) | 37.2% | 7.8% | 21.0% | 34.0% | 58.2% |
+| **human insider** (135,725) | 59.4% | **3.3%** | **28.0%** | **9.3%** | **87.4%** |
+| dependency bot (48,412) | 42.7% | 1.9% | 26.8% | 28.6% | 69.5% |
+
+Rows sum to 100%. Note that the human columns here are **split by standing** —
+pooling them, as an earlier version of this table did, is the error that
+manufactured a 25.7-point machine-authorship penalty.
+
+Read down the last two columns. Going unreviewed is near-fatal for an agent
+(37.0% closed against 7.9% merged) and almost harmless for an insider (9.3%
+closed against 28.0% merged). An outsider sits between.
+
+The same quantities as conditionals:
+
+| group | n | accepted | P(merge \| reviewed) | P(merge \| **no** review) |
 |---|---|---|---|---|
-| agent | 1,795 | 52.0% | 80.2% | 17.6% |
-| human **outsider** (never reviews in that repo) | 79,431 | 55.0% | 82.9% | 38.2% |
-| human **insider** (reviews in that repo) | 156,955 | **85.1%** | 92.8% | 71.3% |
+| agent | 1,795 | 52.0% | 80.2% | **17.6%** |
+| human outsider | 100,661 | 58.2% | 82.9% | **38.2%** |
+| human insider | 135,725 | **87.4%** | 92.8% | **71.3%** |
+| dependency bot | 48,412 | 69.5% | 95.7% | 48.3% |
 
 Within repository-month, size-adjusted, agent vs human outsider: **−0.0053
 (t = −0.10)**. Indistinguishable. AI agents enter at the outsider position and are
