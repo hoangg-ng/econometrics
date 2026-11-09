@@ -3388,3 +3388,33 @@ Searched for existing work on agent-authored pull request acceptance before comm
 **Consequence for the paper.** The acceptance level cannot be the contribution. Three things survive as candidate contributions: the standing-corrected null, which converts a flagged confound into a measured one and overturns the published magnitude; the capability step, which is a dynamic result the cross-sectional literature does not have; and the crowding-out null. Of these the standing correction is currently underpowered at a 13.3-point detectable effect, which is precisely what the running agent-sample collection is meant to fix.
 
 Required before writing: read the 33,000-pull-request study and the study reporting the submitter-integrator confound in full, rather than from search summaries, and position against their actual specifications. Our contribution must be framed as a correction to a specific published magnitude, which requires knowing exactly how that magnitude was estimated.
+
+## Literature read in full: two contributions survive (2026-11-10)
+
+Two papers read rather than summarised. Written up in literature_review.md.
+
+**arXiv 2607.21832, "How Do AI Coding Agents Contribute to Software Development?"** 220,612 closed PRs, 489 Python repositories, 9,428 agentic PRs, five agents, data through 20 November 2025. Merge rates Claude 84.3%, Codex 73.5%, Cursor 63.9%, Copilot 59.6%, Devin 43.0% against a human baseline near 85%. Comparison is balanced samples of 2,275 merged agentic and 2,275 merged human PRs, with NO matching or control on contributor standing, author association, maintainer status or write access. Quarterly merge rates 65.4%, 63.7%, 68.2%, 67.7%, and none of the pairwise comparisons is statistically significant.
+
+Their human baseline of roughly 85% is close to our INSIDER rate of 87.4% and far from our outsider rate of 58.2%, which is consistent with their human sample being dominated by contributors holding write access. That is indirect support for our comparison-group argument.
+
+**Yoshioka et al., MSR '26, "Let's Make Every Pull Request Meaningful".** 40,214 AIDev PRs: 6,618 human and 33,596 agentic (Codex 21,799, Copilot 4,970, Devin 4,827, Cursor 1,541, Claude Code 459), 64 features, logistic regression. Submitter attributes dominate merge outcomes for both groups, relative importance 69.00% human and 76.15% agentic. The same-person submitter/integrator feature raises merge odds about 219x for human PRs and 5,419x for agentic PRs, and 57.63% of merged human PRs have same_user=1 against 77.51% of merged agentic PRs (z=-29.38, p<0.001).
+
+This is the finding that most affects our positioning. The standing confound is not merely flagged in this literature, it is quantified and published. They include same_user as a predictor but do not estimate an agent-versus-human gap net of standing, since their research questions concern which feature families predict merging. So our correction remains unexecuted but is **incremental, not novel**.
+
+Note their 77.51% agentic same_user cannot be reconciled with our measured 0% agent self-merge. Theirs must attribute agentic PRs to the dispatching human; ours are authored by the bot account. Different populations, and the figures must never be compared directly.
+
+**Revised claim status:**
+
+| claim | verdict |
+|---|---|
+| Agents accepted less than humans | published (Li et al. AIDev; arXiv 2607.21832) |
+| Agent-type ranking | published; our sample cannot support it regardless |
+| Standing dominates acceptance | published (Tsay 2014; Yoshioka et al. 2026) |
+| Agent gap net of merge authority | incremental -- applies a correction others quantified |
+| **Discrete capability step around 2025-11** | **novel** |
+| **No displacement of human contribution** | **novel** |
+| Post-merge quality | infeasible here |
+
+**Why the step survives scrutiny.** arXiv 2607.21832 looked for a time trend and found none, but their data ends 20 November 2025, within days of our detected break. They could not have observed it. Our window runs to 2026-08 and extends to 2026-10, giving roughly nine months on the far side. A novelty claim with a concrete explanation for why earlier work missed it is the strongest form available.
+
+**Consequence.** The paper's centre must move to the step and the crowding-out null. The standing correction is reported as a measured quantity applying a known correction, not as a discovery. The theoretical-contribution section in README.md overstates novelty on standing and needs revising accordingly.
