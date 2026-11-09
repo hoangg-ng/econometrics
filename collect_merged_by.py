@@ -79,8 +79,10 @@ def select_targets(broad=False):
 
 def build_query(numbers):
     parts = '\n'.join(
-        f'  p{i}: pullRequest(number: {n}) {{ number author {{ login }} '
-        f'mergedBy {{ login }} }}' for i, n in enumerate(numbers))
+        f'  p{i}: pullRequest(number: {n}) {{ number title author {{ login }} '
+        f'mergedBy {{ login }} '
+        f'closingIssuesReferences(first:5) {{ totalCount }} }}'
+        for i, n in enumerate(numbers))
     return ('query($owner:String!, $name:String!) {\n'
             '  repository(owner:$owner, name:$name) {\n' + parts + '\n  }\n}')
 
@@ -92,6 +94,7 @@ def selftest():
     q = build_query([7, 9])
     assert 'p0: pullRequest(number: 7)' in q and 'p1: pullRequest(number: 9)' in q
     assert 'mergedBy' in q and q.count('pullRequest(') == 2
+    assert 'title' in q and 'closingIssuesReferences' in q
 
 
 def main():
@@ -107,7 +110,8 @@ def main():
     if TARGET.exists():
         for r in csv.DictReader(open(TARGET)):
             done.add((r['repo'], int(r['pr_number'])))
-    fields = ['repo', 'pr_number', 'kind', 'author_login', 'merged_by', 'self_merged']
+    fields = ['repo', 'pr_number', 'kind', 'author_login', 'merged_by',
+              'self_merged', 'title', 'closes_issues']
     new = TARGET.exists()
     f = open(TARGET, 'a', newline='')
     w = csv.DictWriter(f, fieldnames=fields)
@@ -145,7 +149,13 @@ def main():
                 w.writerow({'repo': repo, 'pr_number': node['number'],
                             'kind': kinds.get(node['number'], ''),
                             'author_login': a, 'merged_by': m,
-                            'self_merged': int(bool(m) and m == a)})
+                            'self_merged': int(bool(m) and m == a),
+                            # Title enables revert detection ("Revert \"...\"" is the
+                            # GitHub convention); closingIssuesReferences counts
+                            # linked issues, a proxy for corrective work.
+                            'title': (node.get('title') or '').replace('\n',' ')[:300],
+                            'closes_issues': ((node.get('closingIssuesReferences')
+                                               or {}).get('totalCount') or 0)})
             f.flush()
         if i % 20 == 0:
             print(f'[{i}/{len(per_repo)}] repos, {(time.time()-t0)/60:.1f}m elapsed',
