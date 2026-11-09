@@ -120,53 +120,39 @@ composition of the comparison group, not the treatment of machine-authored code.
 Against humans lacking the same merge authority, agent pull requests are accepted
 at an **indistinguishable** rate.
 
-## Theoretical contribution
+## Positioning against prior work
 
-**What is already established.** On GitHub, a submitter's *social standing*
-predicts whether their pull request is accepted more strongly than the
-*technical* properties of the contribution itself — the central result of
-[Tsay, Dabbish and Herbsleb (ICSE 2014)](https://www.jsntsay.com/publications/tsay-icse2014.pdf).
-The companion account of how standing is acquired is the **onion model**: a
-newcomer enters at the periphery, contributes, accumulates reputation, and
-migrates inward toward the core. Our own standing result — insiders accepted at
-87.4% against outsiders at 58.2% — is a **replication** of that literature, not
-a contribution.
+Read in full, not summarised: see [`literature_review.md`](literature_review.md).
 
-**What is new.** An AI coding agent is a contributor category for which the
-onion model has no mechanism. It has no persistent identity across projects, no
-reputation that accrues, and no path from periphery to core. *It is permanently
-peripheral by construction.* Our data confirm it sits at the outsider acceptance
-rate (52.0% against 58.2%, indistinguishable within repository-month) and stays
-there.
+**What is already published, and is therefore not our contribution:**
 
-**Why that is useful rather than merely true.** Tsay et al. could observe social
-and technical factors only as they co-vary: contributors who are more skilled
-tend also to be better connected, so separating the two is hard. The agent case
-breaks that entanglement. Standing is pinned at zero by construction, and the
-November 2025 capability step moved technical quality *discretely* while
-standing did not move at all. Acceptance rose by 21.4 points inside the same
-repositories.
+| established | source |
+|---|---|
+| Social standing predicts acceptance more than technical properties | Tsay, Dabbish & Herbsleb (ICSE 2014) |
+| Agent-authored PRs are accepted less than human PRs | Li et al. (AIDev); arXiv 2607.21832 |
+| Agent-type ranking (Claude 84.3% … Devin 43.0%) | arXiv 2607.21832 |
+| Submitter attributes **dominate** merge outcomes (69% / 76% relative importance); same-person submit-and-merge raises odds ~219× human, ~5,419× agentic | Yoshioka et al. (MSR '26) |
 
-So the setting yields a cleaner test of the social-versus-technical question
-than observational human data allows:
+Our insider 87.4% vs outsider 58.2% **replicates** Tsay. Our standing correction
+**applies** a confound Yoshioka et al. already quantified. Both are worth
+reporting; neither is a discovery.
 
-> Social standing governs the *level* of acceptance — an agent cannot earn its
-> way inward, and remains at outsider rates indefinitely. But technical
-> capability governs *changes* in acceptance, and does so sharply, even when
-> standing is held at zero.
+**What is new.** Every study above is cross-sectional, and the largest
+([arXiv 2607.21832](https://arxiv.org/html/2607.21832v1), 220,612 PRs) explicitly
+looked for a time trend and found none — quarterly merge rates 65.4%, 63.7%,
+68.2%, 67.7%, *"none of the pairwise comparisons is statistically significant"*.
 
-**What follows for theory.** The onion model describes a route to standing that
-some contributors structurally cannot take. As automated contributors become a
-material share of submissions, a community's gatekeeping either admits work
-purely on technical merit for that class, or excludes it regardless of merit.
-Our evidence points to the former: the gate responded to capability, not to
-status, for a contributor type that has no status to offer. That is a claim
-about how an established governance mechanism absorbs a category it was not
-designed for.
+**Their data ends 20 November 2025 — within days of the break we detect.** Our
+window runs nine months beyond it. That is why we see a change they could not.
 
-**Scope.** This concerns contribution acceptance, not code quality, developer
-welfare, or productivity. We do not measure learning, and we do not claim that
-agents should or should not be treated as outsiders.
+> **The contribution: agent acceptance is not a fixed property of agents. It
+> moved discretely, and the movement came from the agent, not from maintainers
+> becoming more permissive.**
+
+This matters beyond the number. The literature treats the agent-versus-human
+acceptance gap as a measure of agent quality. It is in fact the joint product of
+agent capability and reviewer standards, and those two components can move
+independently. We separate them.
 
 ## Findings
 
@@ -203,12 +189,32 @@ co-move at the boundary:
   3 → 2, while review events and reviewer counts stay flat.
 - **Volume roughly triples**: 74 (Oct) → 144 (Nov) → 204 (Dec).
 
-Maintainers adapting would not shrink the changes being submitted. What the data
-cannot supply is the cause: no field records the backing model, so matching the
-break to a vendor release is corroboration, never identification. The break date
-was also **selected by minimising residual sum of squares**, so it is estimated
-rather than prespecified and its significance is optimistic; the differential
-trend test does not share that problem.
+**The decisive test: reviewer behaviour did not change.**
+
+| | unreviewed | mean human reviewers | mean review events |
+|---|---|---|---|
+| pre-break | 47.6% | 0.89 | 2.06 |
+| post-break | 43.4% | 0.90 | 2.16 |
+
+Scrutiny is flat across the break. A **demand-side** explanation — maintainers
+becoming more permissive toward machine-authored work — predicts falling review
+intensity, and review intensity does not fall. A **supply-side** explanation —
+the agent producing smaller, better-scoped, more mergeable changes — predicts
+exactly what is observed: more submissions, higher acceptance, smaller diffs,
+faster merges (median time to merge 23.7h → 17.1h), and unchanged scrutiny.
+
+**The gate did not loosen. What arrived at it changed.**
+
+*External corroboration, not identification.* GitHub's changelog shows a cluster
+of Copilot coding-agent changes in late October 2025 — Claude Sonnet 4.5 and
+Haiku 4.5 as backing models, Mission Control, self-hosted runners, CLI
+delegation, planning, repository-aware memories. Several shipped together, so the
+date aligns but no single cause is identifiable. No field records the backing
+model per pull request.
+
+*Caveat.* The break date was **selected by minimising residual sum of squares**,
+so it is estimated rather than prespecified and its significance is optimistic.
+The differential trend test does not share that problem.
 
 ### 2. Standing, not authorship type, decides acceptance
 
