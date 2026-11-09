@@ -1,0 +1,142 @@
+{
+  "git_commit": "33abe34d1f4ff276034747a22f8999456d388020",
+  "inputs": {
+    "output/wide_window/pr_level_wide.csv": {
+      "sha256": "4cb9960c7d996bf0fc541bbf1f88c4f05c743c67a1679c612a96b5c80c49b2ed",
+      "rows": 286593,
+      "bytes": 42772100
+    },
+    "output/wide_window/merged_by.csv": {
+      "sha256": "7c43afb1440d6394b8787b87c358d822c4e28f5ed4fa31d5b0e57a19a9ccf338",
+      "rows": 3452,
+      "bytes": 200186
+    },
+    "output/candidate_pool.csv": {
+      "sha256": "26d3083b05ac047c7962b19306a792f43669d311670ff8f37a81b0f6f60f0535",
+      "rows": 8976,
+      "bytes": 1110122
+    },
+    "output/pr_level_data.csv": {
+      "sha256": "4f55b9206a6cacfa713367aff11f58a2d7ba2358a2dd7abe86bf55980840575d",
+      "rows": 293097,
+      "bytes": 47865929
+    }
+  },
+  "stages": {
+    "gate_results": {
+      "status": "ok",
+      "seconds": 5.2,
+      "describes": "Cross-tab, standing contrasts, acceptance by quarter"
+    },
+    "agent_dynamics": {
+      "status": "ok",
+      "seconds": 7.7,
+      "describes": "Acceptance trend, step at the break, break decomposition"
+    },
+    "rematch_concentration": {
+      "status": "ok",
+      "seconds": 27.2,
+      "describes": "Allocation: matched on the baseline outcome"
+    }
+  },
+  "headline": {
+    "acceptance_pct": {
+      "agent": 52.0,
+      "outsider": 58.2,
+      "insider": 87.4,
+      "depbot": 69.5
+    },
+    "p_merge_given_no_review_pct": {
+      "agent": 17.6,
+      "outsider": 38.2,
+      "insider": 75.1,
+      "depbot": 48.3
+    },
+    "agent vs outsider | merged": {
+      "diff": -0.044,
+      "t": -0.93,
+      "clusters": 128
+    },
+    "agent vs outsider | unreviewed": {
+      "diff": 0.1211,
+      "t": 2.81,
+      "clusters": 128
+    },
+    "agent vs outsider | n_human_reviewers": {
+      "diff": -0.1601,
+      "t": -1.34,
+      "clusters": 128
+    },
+    "agent vs insider | merged": {
+      "diff": -0.3391,
+      "t": -12.27,
+      "clusters": 124
+    },
+    "agent vs insider | unreviewed": {
+      "diff": 0.1954,
+      "t": 5.11,
+      "clusters": 124
+    },
+    "agent vs insider | n_human_reviewers": {
+      "diff": -0.1801,
+      "t": -1.28,
+      "clusters": 124
+    },
+    "outsider vs insider | merged": {
+      "diff": -0.2705,
+      "t": -19.27,
+      "clusters": 610
+    },
+    "outsider vs insider | unreviewed": {
+      "diff": 0.0453,
+      "t": 2.57,
+      "clusters": 610
+    },
+    "outsider vs insider | n_human_reviewers": {
+      "diff": -0.0444,
+      "t": -2.0,
+      "clusters": 610
+    },
+    "depbot vs outsider | merged": {
+      "diff": -0.0232,
+      "t": -1.19,
+      "clusters": 432
+    },
+    "depbot vs outsider | unreviewed": {
+      "diff": 0.1655,
+      "t": 7.18,
+      "clusters": 432
+    },
+    "depbot vs outsider | n_human_reviewers": {
+      "diff": -0.2934,
+      "t": -10.27,
+      "clusters": 432
+    },
+    "agent_x_month": {
+      "coef": 0.0237,
+      "t": 4.3001
+    },
+    "agent_x_after_break": {
+      "coef": 0.2432,
+      "t": 5.6295
+    },
+    "break": {
+      "month": "2025-11",
+      "before_pct": 44.1,
+      "after_pct": 60.1,
+      "step_fits_better": true
+    },
+    "within_repo_step_pp": 21.4,
+    "within_repo_n": 30,
+    "allocation | top1": {
+      "att": -0.0189,
+      "p": 0.2325,
+      "pairs": "141"
+    },
+    "allocation | top2": {
+      "att": -0.0194,
+      "p": 0.0875,
+      "pairs": "141"
+    }
+  }
+}

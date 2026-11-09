@@ -1,0 +1,371 @@
+{
+  "A_trends": {
+    "agent_only": [
+      {
+        "term": "intercept",
+        "coef": 0.3633253063752015,
+        "se": 0.040048944018466086,
+        "t": 9.072032116693928,
+        "p": 1.1681765710777316e-19
+      },
+      {
+        "term": "month",
+        "coef": 0.021580410169009495,
+        "se": 0.004578771483267981,
+        "t": 4.713144180239157,
+        "p": 2.4392347662943156e-06
+      },
+      {
+        "term": "log_churn",
+        "coef": 0.009400297288975299,
+        "se": 0.008463802659982093,
+        "t": 1.1106470302552147,
+        "p": 0.2667203107054652
+      },
+      {
+        "term": "_meta",
+        "clusters": 133,
+        "n": 1795
+      }
+    ],
+    "differential": [
+      {
+        "term": "intercept",
+        "coef": 0.715523464770475,
+        "se": 0.03327418427968358,
+        "t": 21.503861935613443,
+        "p": 1.4325635477756317e-102
+      },
+      {
+        "term": "agent",
+        "coef": -0.1844156696098163,
+        "se": 0.035264266890095375,
+        "t": -5.229533629171032,
+        "p": 1.6993818819936418e-07
+      },
+      {
+        "term": "month",
+        "coef": -0.0034001843835921326,
+        "se": 0.00148227746204625,
+        "t": -2.2938919808564426,
+        "p": 0.02179670416017582
+      },
+      {
+        "term": "agent_x_month",
+        "coef": 0.023678259784271245,
+        "se": 0.005506486901689103,
+        "t": 4.300066486493955,
+        "p": 1.707468753414227e-05
+      },
+      {
+        "term": "log_churn",
+        "coef": -0.03138662326640046,
+        "se": 0.006872849788144455,
+        "t": -4.566755310226892,
+        "p": 4.953316445395475e-06
+      },
+      {
+        "term": "_meta",
+        "clusters": 828,
+        "n": 102456
+      }
+    ],
+    "step": [
+      {
+        "term": "intercept",
+        "coef": 0.7203885575001724,
+        "se": 0.033271949299807146,
+        "t": 21.6515284694891,
+        "p": 5.87977111932172e-104
+      },
+      {
+        "term": "agent",
+        "coef": -0.20397673450219184,
+        "se": 0.03327478251447724,
+        "t": -6.130069653000597,
+        "p": 8.784060782926504e-10
+      },
+      {
+        "term": "after_break",
+        "coef": -0.04303933646803723,
+        "se": 0.01589926046793624,
+        "t": -2.707002414032647,
+        "p": 0.006789376368587764
+      },
+      {
+        "term": "agent_x_after",
+        "coef": 0.2431621780024598,
+        "se": 0.043194252384366805,
+        "t": 5.629503107002887,
+        "p": 1.807295172244704e-08
+      },
+      {
+        "term": "log_churn",
+        "coef": -0.03135056880787828,
+        "se": 0.0068814722704397336,
+        "t": -4.555793815016702,
+        "p": 5.218810974632035e-06
+      },
+      {
+        "term": "_meta",
+        "clusters": 828,
+        "n": 102456
+      }
+    ]
+  },
+  "B_step_vs_slope": {
+    "tool": "copilot-swe-agent",
+    "series": [
+      {
+        "month": "2025-06",
+        "n": 30,
+        "accepted": 60.0,
+        "median_churn": 77.5,
+        "median_files": 3.0
+      },
+      {
+        "month": "2025-07",
+        "n": 86,
+        "accepted": 46.5,
+        "median_churn": 44.5,
+        "median_files": 2.5
+      },
+      {
+        "month": "2025-08",
+        "n": 141,
+        "accepted": 27.7,
+        "median_churn": 29.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2025-09",
+        "n": 59,
+        "accepted": 45.8,
+        "median_churn": 53.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2025-10",
+        "n": 69,
+        "accepted": 40.6,
+        "median_churn": 35.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2025-11",
+        "n": 142,
+        "accepted": 56.3,
+        "median_churn": 91.5,
+        "median_files": 3.0
+      },
+      {
+        "month": "2025-12",
+        "n": 200,
+        "accepted": 60.5,
+        "median_churn": 48.5,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-01",
+        "n": 172,
+        "accepted": 58.1,
+        "median_churn": 63.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-02",
+        "n": 194,
+        "accepted": 59.3,
+        "median_churn": 48.5,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-03",
+        "n": 126,
+        "accepted": 59.5,
+        "median_churn": 48.5,
+        "median_files": 3.0
+      },
+      {
+        "month": "2026-04",
+        "n": 69,
+        "accepted": 69.6,
+        "median_churn": 44.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-05",
+        "n": 53,
+        "accepted": 56.6,
+        "median_churn": 100.0,
+        "median_files": 3.0
+      },
+      {
+        "month": "2026-06",
+        "n": 69,
+        "accepted": 59.4,
+        "median_churn": 40.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-07",
+        "n": 43,
+        "accepted": 55.8,
+        "median_churn": 16.0,
+        "median_files": 2.0
+      },
+      {
+        "month": "2026-08",
+        "n": 38,
+        "accepted": 65.8,
+        "median_churn": 49.0,
+        "median_files": 2.0
+      }
+    ],
+    "linear_slope_pp_per_month": 1.395,
+    "linear_ss": 1024.1,
+    "best_break_month": "2025-11",
+    "break_ss": 716.2,
+    "before": 44.1,
+    "after": 60.1,
+    "step_fits_better": true
+  },
+  "C_break_decomposition": {
+    "n_pre": 653,
+    "n_post": 1142,
+    "agent_mix_pre": {
+      "copilot": 62.0,
+      "devin": 36.0,
+      "aicodex": 0.0
+    },
+    "agent_mix_post": {
+      "copilot": 97.0,
+      "devin": 3.0,
+      "aikido": 0.0
+    },
+    "repos_pre": 50,
+    "repos_post": 113,
+    "repos_both": 30,
+    "within_both_pre": 40.0,
+    "within_both_post": 61.4,
+    "within_both_step": 21.4,
+    "post_only_acc": 55.0,
+    "breadth_n": 14,
+    "breadth_improved": 10,
+    "breadth_worsened": 4,
+    "breadth_median_pp": 18.8,
+    "median_churn_pre": 70.0,
+    "median_churn_post": 50.0,
+    "median_files_pre": 3.0,
+    "median_files_post": 2.0,
+    "monthly_volume": {
+      "2025-03": 4,
+      "2025-04": 55,
+      "2025-05": 99,
+      "2025-06": 64,
+      "2025-07": 135,
+      "2025-08": 155,
+      "2025-09": 67,
+      "2025-10": 74,
+      "2025-11": 144,
+      "2025-12": 204,
+      "2026-01": 189,
+      "2026-02": 200,
+      "2026-03": 130,
+      "2026-04": 71,
+      "2026-05": 53,
+      "2026-06": 70,
+      "2026-07": 43,
+      "2026-08": 38
+    }
+  },
+  "E_merged_by": {
+    "agent|reviewed": {
+      "n": 792,
+      "self_merged": 0,
+      "by_other": 792,
+      "self_pct": 0.0
+    },
+    "outsider|no_review": {
+      "n": 207,
+      "self_merged": 6,
+      "by_other": 201,
+      "self_pct": 2.9
+    },
+    "outsider|reviewed": {
+      "n": 564,
+      "self_merged": 6,
+      "by_other": 558,
+      "self_pct": 1.1
+    },
+    "agent|no_review": {
+      "n": 142,
+      "self_merged": 0,
+      "by_other": 142,
+      "self_pct": 0.0
+    },
+    "insider|no_review": {
+      "n": 411,
+      "self_merged": 355,
+      "by_other": 56,
+      "self_pct": 86.4
+    },
+    "insider|reviewed": {
+      "n": 1336,
+      "self_merged": 811,
+      "by_other": 525,
+      "self_pct": 60.7
+    }
+  },
+  "F_insider_sensitivity": {
+    "primary_self_review_excluded": {
+      "counts": {
+        "outsider": 100661,
+        "insider": 135725,
+        "agent": 1795,
+        "depbot": 48412
+      },
+      "merged": {
+        "diff": -0.044,
+        "se": 0.0474,
+        "t": -0.9283,
+        "cells": 369,
+        "clusters": 128,
+        "n": 10571
+      },
+      "unreviewed": {
+        "diff": 0.1211,
+        "se": 0.043,
+        "t": 2.8135,
+        "cells": 369,
+        "clusters": 128,
+        "n": 10571
+      }
+    },
+    "robustness_self_review_counted": {
+      "counts": {
+        "outsider": 79432,
+        "insider": 156954,
+        "agent": 1795,
+        "depbot": 48412
+      },
+      "merged": {
+        "diff": -0.0059,
+        "se": 0.0558,
+        "t": -0.1061,
+        "cells": 360,
+        "clusters": 125,
+        "n": 7801
+      },
+      "unreviewed": {
+        "diff": 0.0654,
+        "se": 0.0458,
+        "t": 1.4281,
+        "cells": 360,
+        "clusters": 125,
+        "n": 7801
+      }
+    }
+  },
+  "break_month": "2025-11"
+}

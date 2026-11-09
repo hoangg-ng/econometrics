@@ -15,6 +15,38 @@ calendar window, **merged and closed-unmerged**. Universe screened to ≥40
 contributors, non-fork. Authors: human 236,386, dependency bot 48,412, AI coding
 agent 1,795. Plus `mergedBy` for 3,452 merged PRs.
 
+## Reproducing every number
+
+```
+python3 reproduce.py
+```
+
+Hashes the input panels, runs all three analysis stages, and writes
+`output/REPRODUCE.json` with the input hashes, the git commit, per-stage
+timings and the headline figures. **Any number in this file that is not
+reachable from `reproduce.py` is not reproducible and should not be reported.**
+
+| stage | produces |
+|---|---|
+| [`analysis/gate_results.py`](analysis/gate_results.py) | cross-tab, standing contrasts, acceptance by quarter |
+| [`analysis/agent_dynamics.py`](analysis/agent_dynamics.py) | acceptance trend, step at the break, break decomposition, `mergedBy`, insider sensitivity |
+| [`analysis/rematch_concentration.py`](analysis/rematch_concentration.py) | allocation, matched on the baseline outcome |
+
+All three import classification from
+[`analysis/common.py`](analysis/common.py) — author kind, bot reviewers, human
+reviewers, insider standing — so one definition governs every result rather than
+each script carrying its own. Every stage carries an assert-based `selftest()`
+that `reproduce.py` runs before the stage itself.
+
+An audit on 2026-11-09 found this was **not** previously true: two scripts held
+bot lists differing by one entry, the committed gate analysis still read the
+superseded panel while the reported numbers came from ad-hoc scripts on the wide
+one, and the insider rule existed only in uncommitted inline code. Those are
+fixed, and three reported figures changed as a result — insider
+P(merge | no review) was 75.1% rather than 71.3%, and the trend and step
+coefficients moved once the size control and insider definition were made
+consistent.
+
 ## Who is compared with whom
 
 Every acceptance result compares pull requests by **who opened them**. Getting
@@ -119,8 +151,8 @@ rather than a trend.
 | 2026 Q3 | 60.5% | 58.4% | 88.5% | +2.0 |
 
 Both human baselines are flat; only agents move. Formally, at PR level with
-repository-clustered errors and size controlled: `agent × month` = **+0.0216**
-(t = +3.08), or in step form `agent × after-2025-11` = **+0.2254** (t = +4.63),
+repository-clustered errors and size controlled: `agent × month` = **+0.0237**
+(t = +4.30), or in step form `agent × after-2025-11` = **+0.2432** (t = +5.63),
 against a null general period term. These are **alternative specifications of
 one shift, not additive**; the step fits better (residual SS 716 vs 1,024).
 
