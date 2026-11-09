@@ -3343,3 +3343,23 @@ Spec C compares the 133 repositories that ever receive an agent pull request aga
 What is robust is a positive association between agent volume and INSIDER activity, +1.08 to +1.16 additional insider pull requests per agent pull request (t=4.8 to 6.8). This is endogenous and should not be read causally: insiders are the people who deploy agents, so agent pull requests arrive in the repository-months when insiders are most active. It does, however, rule out the simplest substitution story -- agents are not arriving in place of human work.
 
 A bug found and fixed before reporting. Spec B originally controlled for total non-agent activity while the outcome was itself a component of that control, which partials out the outcome and manufactures a negative coefficient. It produced outsider -0.6772 (t=-2.39, p=0.017), an apparently significant displacement. With the control redefined to exclude the outcome group, the estimate is -0.5675 (t=-1.43, p=0.154) and not significant. The displacement finding was an artefact of the specification.
+
+## Post-merge quality: reverts are too rare to be informative (2026-11-09)
+
+Experiment ID: G02-post-merge. Code: analysis/post_merge_quality.py. Titles and linked-issue counts collected for 45,168 merged pull requests. Reverts are detected by GitHub's convention, a later pull request titled `Revert "<original title>"` matched back to the earlier one by normalised title.
+
+| group | merged PRs | reverted | mean issues closed |
+|---|---|---|---|
+| agent | 934 | **0.000%** | 0.442 |
+| outsider | 19,832 | 0.126% | 0.202 |
+| insider | 24,402 | 0.139% | 0.184 |
+
+Only 193 revert-style pull requests were found and 59 earlier pull requests matched as reverted, a base rate of 0.13%. Every contrast is null: agent versus outsider -0.00134 (t=-1.06), agent versus insider -0.00306 (t=-1.65), outsider versus insider +0.00090 (t=+1.40).
+
+**The outcome is too rare to support any claim.** With a 0.13% base rate and 934 agent pull requests, the expected count is about one, so observing zero is consistent with anything from 0% to roughly 0.3%. This is not evidence that agent code is never reverted; it is evidence that explicit titled reverts cannot measure quality at this sample size. The earlier design notes anticipated exactly this and required assessing base rates before estimation.
+
+Detection is also conservative by construction. Squashed reverts, force-pushed history rewrites, and corrective commits made outside a pull request leave no titled pull request and are invisible. Measuring post-merge quality properly would need linked-fix coding or revert commits from the git history, not pull-request titles.
+
+**The linked-issue count is informative but not about quality.** Agent pull requests close 0.442 issues on average against 0.202 for outsiders and 0.184 for insiders, with agent versus insider at +0.282 (t=+4.54) and agent versus outsider at +0.128 (t=+1.67). This almost certainly reflects how agents are dispatched rather than what their output is worth: an agent is typically pointed at a tracked issue, whereas humans open pull requests for refactors, dependency work and improvements that close nothing. It should be reported as a task-assignment difference, and must not be presented as corrective-work quality.
+
+Status: post-merge quality is recorded as not feasible with pull-request-level data. It stays an open extension requiring revert commits from git history.

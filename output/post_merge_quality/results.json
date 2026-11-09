@@ -1,0 +1,84 @@
+{
+  "n_titles": 45168,
+  "n_revert_prs": 193,
+  "n_reverted": 59,
+  "base_rates": {
+    "agent": {
+      "n": 934,
+      "reverted_pct": 0.0,
+      "mean_closes": 0.442
+    },
+    "outsider": {
+      "n": 19832,
+      "reverted_pct": 0.126,
+      "mean_closes": 0.202
+    },
+    "insider": {
+      "n": 24402,
+      "reverted_pct": 0.139,
+      "mean_closes": 0.184
+    }
+  },
+  "contrasts": [
+    {
+      "contrast": "agent vs outsider",
+      "outcome": "reverted",
+      "diff": -0.00134,
+      "se": 0.00127,
+      "t": -1.05519,
+      "cells": 199,
+      "clusters": 85,
+      "n": 1484
+    },
+    {
+      "contrast": "agent vs outsider",
+      "outcome": "closes_issues",
+      "diff": 0.12779,
+      "se": 0.07672,
+      "t": 1.66573,
+      "cells": 199,
+      "clusters": 85,
+      "n": 1484
+    },
+    {
+      "contrast": "agent vs insider",
+      "outcome": "reverted",
+      "diff": -0.00306,
+      "se": 0.00186,
+      "t": -1.64512,
+      "cells": 220,
+      "clusters": 86,
+      "n": 2659
+    },
+    {
+      "contrast": "agent vs insider",
+      "outcome": "closes_issues",
+      "diff": 0.28194,
+      "se": 0.0621,
+      "t": 4.54023,
+      "cells": 220,
+      "clusters": 86,
+      "n": 2659
+    },
+    {
+      "contrast": "outsider vs insider",
+      "outcome": "reverted",
+      "diff": 0.0009,
+      "se": 0.00064,
+      "t": 1.40333,
+      "cells": 4581,
+      "clusters": 580,
+      "n": 25732
+    },
+    {
+      "contrast": "outsider vs insider",
+      "outcome": "closes_issues",
+      "diff": 0.04614,
+      "se": 0.01152,
+      "t": 4.00513,
+      "cells": 4581,
+      "clusters": 580,
+      "n": 25732
+    }
+  ]
+}
