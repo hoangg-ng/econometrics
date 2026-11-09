@@ -55,6 +55,11 @@ can merge their own work, so somebody else has to act. An insider simply merges.
 **The agent's valid comparison is therefore the outsider, not "humans" in
 general.** The distinction is write access, not skill or code quality.
 
+A note on wording: "insider" here means *can merge their own work*, not
+organisational membership. Roughly half the people this classifies as insiders
+are labelled `CONTRIBUTOR` by GitHub, which tracks contribution history rather
+than permission. Where the distinction matters, read "insider" as "can merge".
+
 ### Insider status: the strict definition is used throughout
 
 Insider status proxies write access, so it must be defined explicitly. Two
@@ -71,10 +76,21 @@ code keeps the outsider group purely people never trusted with anyone else's
 work — exactly the position an agent occupies. The looser alternative is
 reported in [Robustness](#robustness-the-looser-insider-definition), not here.
 
-**The proxy checks out.** Of insiders' merged pull requests that received no
-human review, **86.4%** were merged by the author themselves (355 of 411,
-from the collected `mergedBy` field) — which is what write access looks like.
-The same figure for outsiders is 2.9% (6 of 207) and for agents 0% (0 of 142).
+**The proxy is validated, not assumed.** The construct required is *merge
+authority*: can this author merge their own work? A group lacking it should
+essentially never appear as its own merger. From the collected `mergedBy` field,
+self-merge rates are **66.7% for insiders** and **1.6% for outsiders** — the
+outsider group genuinely cannot merge, which is what the comparison needs.
+
+We also tested GitHub's own `authorAssociation` field as a replacement and
+**rejected it**: its outsider group self-merges **24.2%** of the time, because
+`CONTRIBUTOR` records contribution *history* rather than *permission*, so write
+access held through org membership or direct commit rights lands in the outsider
+group. Using it would reintroduce the confound this split exists to remove, and
+would spuriously turn the agent-versus-outsider null into −0.1969 (t = −6.18).
+Full comparison, confusion matrix and validation table in
+[`experiment_log.md`](experiment_log.md) under *"Measured authorAssociation
+versus the reviewer proxy"*.
 
 Note that an outsider's pull request merging does **not** imply they have write
 access: 21.0% of outsider pull requests merge with no review because somebody
@@ -267,12 +283,12 @@ comparable outsiders either way, and nowhere near the −25.7 points obtained
 against the pooled baseline. **The unreviewed result does not**: significant
 under the strict definition, null under the looser one.
 
-Both proxies become unnecessary once GitHub's `authorAssociation` field is
-collected, which records standing directly per pull request (OWNER / MEMBER /
-COLLABORATOR → insider; CONTRIBUTOR / FIRST_TIME_CONTRIBUTOR / NONE → outsider).
-That collection is in progress and will replace this section.
+GitHub's `authorAssociation` field was collected (30,489 pull requests) and
+tested as a replacement for both proxies. It was **rejected on validation** —
+see the note under the insider definition above. The proxy is retained because
+it measures merge authority, which is the construct these comparisons need.
 
-## Treatment signal: still the original one
+## Treatment signal
 
 Detected adoption (`adopted`, `t0`) comes from the original signal in
 [`adoption_signal_validation.md`](adoption_signal_validation.md), validated
@@ -314,7 +330,7 @@ Full detail in [`validity_checks.md`](validity_checks.md).
 | **Agent identity concentration** — 11 accounts, Copilot 1,508 of 1,795 | No agent-type comparison supportable |
 | **Cross-project reviewer dependence** — one reviewer touches 116 repos; largest component 355 of 740 | Repository clustering understates uncertainty; all intervals too narrow |
 | **Author classification** login-pattern based, not hand-validated | Underpins every gate result |
-| **Insider status is a proxy** pending `authorAssociation` | The unreviewed result turns on it |
+| **Insider status is a proxy**, validated against self-merge behaviour (1.6% vs 24.2% for the rejected alternative) | The unreviewed result still turns on the self-review choice; acceptance does not |
 
 ## Setup
 
