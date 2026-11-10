@@ -3520,3 +3520,23 @@ Unreviewed share rises from roughly 44% to the high 60s across the period and re
 An unexplained reversal to record rather than explain away: the final two months, 2026-09 and 2026-10, move sharply against the trend. Unreviewed falls to 26.8% and 32.9%, reviewers rise to 1.28 and 0.95, and review events rise to 5.54 and 4.96 from a prior range near 2. These months lie outside the wide panel's window and may reflect a collection or lifecycle difference rather than behaviour. They should be investigated before any series spanning them is reported.
 
 **What survives.** Agent acceptance improved substantially across two independently developed agents from different vendors, roughly +1.85 points per month for Copilot and +0.66 for Devin. That is a real and well-powered result. What cannot be claimed on this evidence is that the improvement reflects capability rather than declining reviewer scrutiny, because scrutiny declined too.
+
+## Standing on the large sample: agents are NOT outsiders, they sit between (2026-11-11)
+
+Re-estimated the standing contrasts on the 26,115-agent-PR sample. The wide-panel null does not survive, and the replacement is sharper.
+
+| contrast | outcome | diff | SE | t | 95% interval | clusters |
+|---|---|---|---|---|---|---|
+| agent vs outsider | accepted | **+0.1241** | 0.0450 | **+2.76** | [+0.036, +0.212] | 620 |
+| agent vs insider | accepted | **-0.1801** | 0.0390 | **-4.62** | [-0.257, -0.104] | 577 |
+| outsider vs insider | accepted | **-0.2691** | 0.0171 | **-15.69** | [-0.303, -0.236] | 690 |
+| agent vs outsider | unreviewed | -0.0505 | 0.0294 | -1.72 | [-0.108, +0.007] | 620 |
+| agent vs insider | unreviewed | +0.0084 | 0.0254 | +0.33 | [-0.041, +0.058] | 577 |
+
+The wide panel gave agent versus outsider at -0.0440 (t=-0.93) on 128 clusters with a 13.3-point detectable effect, and that null was reported as "agents are treated like outsiders". On 620 clusters the estimate is **+12.4 points in the agents' favour**, and the earlier interval was simply too wide to see it.
+
+**Agents occupy an intermediate position in the contribution hierarchy.** They are accepted more readily than comparable human outsiders (+12.4 points) and less readily than project members (-18.0 points), with the outsider-to-insider gap itself at -26.9 points and extremely well determined. This is a different claim from anything in the literature, which compares agents against pooled humans and therefore cannot see an intermediate position at all.
+
+A plausible reading, not tested here: an agent dispatched by a maintainer carries part of that maintainer's implicit endorsement even though the agent itself accrues no standing. That would place it above an unknown outside contributor and below a member, which is what is observed.
+
+Correction to the record: the claim "AI agents enter at the outsider position and are treated accordingly", stated in README.md and contribution.md, is **withdrawn**. It rested on an underpowered null. The scrutiny measures remain indistinguishable between agents and both human groups, so the difference is in acceptance rather than in how much review the work attracts.
