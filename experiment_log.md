@@ -3488,3 +3488,35 @@ If habituation drove rising acceptance, scrutiny would fall. Across our break it
 The measures differ and the paper must say so rather than claiming refutation: theirs is approval, a review state, on a reviewer-experience clock; ours is merge on a calendar clock. Both can hold simultaneously, since individuals may habituate with experience while aggregate scrutiny at a calendar break stays flat.
 
 This is the strongest positioning the project has found. Extending a named paper's explicitly stated limitation is more defensible than claiming unexplored territory, and it survives the fact that temporal analysis already exists.
+
+## Agent sample complete: the step dissolves and the habituation claim fails (2026-11-11)
+
+Collection finished: 855 repositories, 31 failed, 468,402 rows, **26,115 agent pull requests** against 1,795 in the wide panel, a 14.5-fold increase. Copilot 19,082, Devin 6,855.
+
+**Finding 1: the discrete step does not survive.**
+
+| agent | PRs | months | linear slope | residual SS | best step | step SS | verdict |
+|---|---|---|---|---|---|---|---|
+| copilot | 19,227 | 18 | +1.85 pp/month | 335.8 | 2026-03 | 553.2 | **SLOPE fits better** |
+| devin | 6,965 | 20 | +0.66 pp/month | 3,227.8 | 2025-12 | 2,680.7 | step, but very noisy |
+
+Copilot's monthly series is a sustained climb from 51% to 85%, not a break: 51, 58, 48, 49, 67, 65, 61, 61, 66, 66, 76, 76, 76, 77, 73, 78, 77, 85. The best single break sits at 2026-03, not 2025-11, and fits worse than a straight line. Devin prefers a step at 2025-12 but with residual sum of squares an order of magnitude larger and an extreme outlier (2026-07 at 39.6% on 879 PRs).
+
+The 2025-11 break was an artefact of the small sample. Both agents improve substantially and that is robust; the discrete-event characterisation is not. Consequently the late-October GitHub release cluster can no longer be offered even as corroboration, since no single date organises the data.
+
+**Finding 2, and it is worse: the habituation claim fails.** The contribution rested on scrutiny staying flat while acceptance rose, which would separate capability from habituation. On 26,115 agent pull requests over 20 months:
+
+| measure | monthly slope | habituation predicts | verdict |
+|---|---|---|---|
+| acceptance | +0.94 pp | rising | consistent |
+| **unreviewed share** | **+0.81 pp** | **rising** | **consistent with habituation** |
+| **human reviewers per PR** | **-0.0152** | **falling** | **consistent with habituation** |
+| review events per PR | +0.1032 | falling | against habituation |
+
+Unreviewed share rises from roughly 44% to the high 60s across the period and reviewers per pull request fall from about 0.79 to 0.36-0.45. Two of the three scrutiny measures move in exactly the direction habituation predicts. The earlier "scrutiny is flat" result came from 653 versus 1,142 pull requests across a narrow window and does not generalise.
+
+**The data do not rule out habituation. If anything they are consistent with it.** The extension of arXiv 2606.22721 as written in contribution.md is not supported and must be withdrawn.
+
+An unexplained reversal to record rather than explain away: the final two months, 2026-09 and 2026-10, move sharply against the trend. Unreviewed falls to 26.8% and 32.9%, reviewers rise to 1.28 and 0.95, and review events rise to 5.54 and 4.96 from a prior range near 2. These months lie outside the wide panel's window and may reflect a collection or lifecycle difference rather than behaviour. They should be investigated before any series spanning them is reported.
+
+**What survives.** Agent acceptance improved substantially across two independently developed agents from different vendors, roughly +1.85 points per month for Copilot and +0.66 for Devin. That is a real and well-powered result. What cannot be claimed on this evidence is that the improvement reflects capability rather than declining reviewer scrutiny, because scrutiny declined too.
