@@ -3540,3 +3540,55 @@ The wide panel gave agent versus outsider at -0.0440 (t=-0.93) on 128 clusters w
 A plausible reading, not tested here: an agent dispatched by a maintainer carries part of that maintainer's implicit endorsement even though the agent itself accrues no standing. That would place it above an unknown outside contributor and below a member, which is what is observed.
 
 Correction to the record: the claim "AI agents enter at the outsider position and are treated accordingly", stated in README.md and contribution.md, is **withdrawn**. It rested on an underpowered null. The scrutiny measures remain indistinguishable between agents and both human groups, so the difference is in acceptance rather than in how much review the work attracts.
+
+## Consolidated state after the large agent sample (2026-11-11)
+
+All results below are on the agent sample (26,115 agent PRs, 468,402 rows, 855 repositories) unless marked otherwise. Claims withdrawn during this project are listed at the end so the record is unambiguous.
+
+### Standing and acceptance
+
+| contrast | accepted | t | clusters |
+|---|---|---|---|
+| agent vs outsider | **+0.1241** | +2.76 | 620 |
+| agent vs insider | **-0.1801** | -4.62 | 577 |
+| outsider vs insider | **-0.2691** | -15.69 | 690 |
+
+Agents occupy an intermediate position: accepted more readily than comparable human outsiders, less readily than project members. Scrutiny measures do not differ between agents and either human group, so the difference is in acceptance rather than in review attracted.
+
+### The insider proxy, validated on this panel
+
+Self-closing rate (closed_by equals author): insider 76.4%, outsider 21.1%, agent 1.8%, dependency bot 26.2%. The proxy separates the groups on the behaviour that defines merge authority. Against GitHub's authorAssociation, 43% of proxy-insiders are labelled CONTRIBUTOR and 7% of proxy-outsiders are MEMBER or COLLABORATOR; the proxy was retained because authorAssociation's outsider group self-merges 24.2% of the time, CONTRIBUTOR recording contribution history rather than permission.
+
+The 21.1% outsider self-closing rate is residual measurement error, and it biases AGAINST the agent-versus-outsider result: a cleaner outsider group would have a lower acceptance baseline, making the +12.4 point gap larger.
+
+### Acceptance over time, by agent
+
+| agent | PRs | months | slope | best single break | fits better |
+|---|---|---|---|---|---|
+| copilot | 19,227 | 18 | **+1.85 pp/month** (51% to 85%) | 2026-03 | **slope** |
+| devin | 6,965 | 20 | +0.66 pp/month | 2025-12 | step, but noisy |
+
+### Scrutiny over time (habituation)
+
+Monthly slopes over 20 months: acceptance +0.94 pp, unreviewed share **+0.81 pp**, human reviewers per PR **-0.0152**, review events +0.1032. Two of three scrutiny measures move as habituation predicts. This replicates arXiv 2606.22721 on a different clock (calendar rather than reviewer experience) and a different outcome (merge rather than approval), over a later and larger sample.
+
+### Results from the wide-window panel, not re-estimated here
+
+- No crowding out: DiD around 2025-11 gives +0.007 (t=0.13) on total human volume.
+- Review intensifies after adoption: +0.4335 review events per merged PR (p=0.0025, Holm 0.0075, pre-trend 0.207), reviewer count unchanged (+0.007, p=0.83).
+- Allocation null: top-two share -0.0194 (p=0.088) and five further outcomes, none significant after Holm.
+
+### Claims withdrawn during this project
+
+| claim | why |
+|---|---|
+| Review concentration rises +2.43pp after adoption | baseline imbalance in a bounded reverting outcome; identified estimate is a null |
+| Agent PRs receive more human review | merged-only sampling; reverses on the opening cohort |
+| Agent acceptance penalty of -25.7pp | comparison group pooled insiders with outsiders |
+| Agents are treated like outsiders | underpowered null; on 620 clusters agents are +12.4pp ABOVE outsiders |
+| A discrete capability step at 2025-11 | small-sample artefact; Copilot prefers a linear slope on 19,227 PRs |
+| Rising acceptance is capability, not habituation | scrutiny declines on the large sample, so the two cannot be separated here |
+| Agent code is reverted less | revert base rate 0.13%, too rare to measure |
+| Agent PRs displace outsider contribution | specification bug; control contained the outcome |
+
+Eight reversals, each with the corrected version established on better data. That pattern is itself a candidate contribution for a literature publishing monthly on this dataset.

@@ -32,350 +32,128 @@ All stages import classification from [`analysis/common.py`](analysis/common.py)
 — author kind, bot reviewers, human reviewers, insider standing — so one
 definition governs every result instead of each script carrying its own.
 
-## Data
-
-286,593 opened pull requests, 835 repositories, 2025-03 to 2026-08, on one
-shared calendar window, **merged and closed-unmerged**. Universe screened to ≥40
-contributors, non-fork. Plus `mergedBy` for 3,452 merged pull requests.
-
-## Who is compared with whom
-
-Every result compares pull requests by **who opened them**. Getting this right
-reversed a finding, so it comes before any number.
-
-| group | who they are | can they merge their own PR? | n |
-|---|---|---|---|
-| **human insider** | has write access to that repository | **yes** | 135,725 |
-| **human outsider** | no write access | no | 100,661 |
-| **agent** | an AI coding agent's account | no | 1,795 |
-| dependency bot | mechanical version bumps; benchmark only | no | 48,412 |
-
-**The logic.** An agent and a human outsider face the same constraint: neither
-can merge their own work, so somebody else has to act. An insider simply merges.
-**The agent's valid comparison is therefore the outsider, not "humans" in
-general.** The distinction is write access, not skill or code quality.
-
-A note on wording: "insider" here means *can merge their own work*, not
-organisational membership. Roughly half the people this classifies as insiders
-are labelled `CONTRIBUTOR` by GitHub, which tracks contribution history rather
-than permission. Where the distinction matters, read "insider" as "can merge".
-
-### Insider status: the strict definition is used throughout
-
-Insider status proxies write access, so it must be defined explicitly. Two
-definitions are reasonable and **the strict one is used for every result in this
-file**:
-
-> **STRICT (primary, used everywhere below): self-reviews excluded.** A human is
-> an insider of a repository if they have reviewed **someone else's** pull
-> request there.
-
-GitHub lets anyone leave a review on their own pull request, so doing so
-demonstrates nothing about standing. Requiring a review of *another person's*
-code keeps the outsider group purely people never trusted with anyone else's
-work — exactly the position an agent occupies. The looser alternative is
-reported in [Robustness](#robustness-the-looser-insider-definition), not here.
-
-**The proxy is validated, not assumed.** The construct required is *merge
-authority*: can this author merge their own work? A group lacking it should
-essentially never appear as its own merger. From the collected `mergedBy` field,
-self-merge rates are **66.7% for insiders** and **1.6% for outsiders** — the
-outsider group genuinely cannot merge, which is what the comparison needs.
-
-We also tested GitHub's own `authorAssociation` field as a replacement and
-**rejected it**: its outsider group self-merges **24.2%** of the time, because
-`CONTRIBUTOR` records contribution *history* rather than *permission*, so write
-access held through org membership or direct commit rights lands in the outsider
-group. Using it would reintroduce the confound this split exists to remove, and
-would spuriously turn the agent-versus-outsider null into −0.1969 (t = −6.18).
-Full comparison, confusion matrix and validation table in
-[`experiment_log.md`](experiment_log.md) under *"Measured authorAssociation
-versus the reviewer proxy"*.
-
-Note that an outsider's pull request merging does **not** imply they have write
-access: 21.0% of outsider pull requests merge with no review because somebody
-with access merged it for them, without filing a formal review. The 2.9%
-self-merge rate is instead a measure of residual **proxy error** — a few
-people who do hold write access but never happened to review anyone else's
-work, and are therefore misclassified as outsiders. On that dimension the proxy
-is about 97% clean.
-
-### Why the comparison group matters
-
-| contrast (within repo × month, size-adjusted) | acceptance | t |
-|---|---|---|
-| agent vs **all humans pooled** | **−25.7 points** | −8.61\*\*\* |
-| agent vs **human insiders** | −33.9 points | −12.27\*\*\* |
-| agent vs **human outsiders** | **−4.4 points** | **−0.93** |
-
-
-Significance from clustered *t*: \*\*\* |*t*| > 2.58 (*p* < 0.01), \*\* |*t*| > 1.96
-(*p* < 0.05), \* |*t*| > 1.65 (*p* < 0.10). Absence of stars means not
-significant at 10%, which for the agent-versus-outsider acceptance contrast is
-the point being made.
-
-The pooled figure is a weighted average of the other two, and the weights are an
-artefact of how many insiders happen to be in the panel (57%). It measures the
-composition of the comparison group, not the treatment of machine-authored code.
-Against humans lacking the same merge authority, agent pull requests are accepted
-at an **indistinguishable** rate.
-
 ## Positioning against prior work
 
-Read in full, not summarised: see [`literature_review.md`](literature_review.md).
-The extension argument is stated in [`contribution.md`](contribution.md).
+Read in full, not summarised: [`literature_review.md`](literature_review.md).
 
-**What is already published, and is therefore not our contribution:**
+**Already published — not our contribution:**
 
 | established | source |
 |---|---|
 | Social standing predicts acceptance more than technical properties | Tsay, Dabbish & Herbsleb (ICSE 2014) |
-| Agent-authored PRs are accepted less than human PRs | Li et al. (AIDev); arXiv 2607.21832 |
-| Agent-type ranking (Claude 84.3% … Devin 43.0%) | arXiv 2607.21832 |
-| Submitter attributes **dominate** merge outcomes (69% / 76% relative importance); same-person submit-and-merge raises odds ~219× human, ~5,419× agentic | Yoshioka et al. (MSR '26) |
+| Agent PRs accepted less than human PRs; agent ranking | Li et al. (AIDev); arXiv 2607.21832 |
+| Submitter attributes dominate merge outcomes (69%/76%); same-person submit-and-merge raises odds ~219× human, ~5,419× agentic | Yoshioka et al. (MSR '26) |
+| Agent acceptance rises over time (Devin +0.77%/week) | arXiv 2602.08915 |
+| Reviewers approve more and scrutinise less of agent code with experience | arXiv 2606.22721, *Habituation at the Gate* |
 
-Our insider 87.4% vs outsider 58.2% **replicates** Tsay. Our standing correction
-**applies** a confound Yoshioka et al. already quantified. Both are worth
-reporting; neither is a discovery.
+**What we add.** Prior work compares agents against *pooled* humans. Splitting
+the human side by merge authority reveals a position no pooled comparison can
+see: **agents sit between outsiders and insiders.** We also replicate the
+habituation pattern on a different clock and outcome, and show agent acceptance
+rising across two independently developed agents from different vendors.
 
-**The paper we extend.**
-[*Habituation at the Gate*](https://arxiv.org/html/2606.22721v1) (arXiv
-2606.22721) shows that across 11,429 reviews by 400 repeat reviewers, approval of
-agent code rose (30.1% → 36.8%) while scrutiny fell (inline comments −22%,
-change-requests −5.6 pp). They state plainly that they cannot tell **habituation**
-from **genuine agent improvement**:
+## Data
 
-> *"we lack a direct measure of agent code quality over time; if agents genuinely
-> improved, rising approval would be rational rather than habituative."*
+**Agent sample** (primary): 468,402 opened PRs, 855 repositories, 2025-03 to
+2026-10, merged and closed-unmerged, selected on the adoption signal showing an
+agent opens PRs. **26,115 agent PRs** — Copilot 19,082, Devin 6,855. Carries
+`authorAssociation` and the close actor.
 
-**We supply that measure**, for a period four months after their data ends. The
-two explanations predict opposite things about scrutiny:
+**Wide-window panel** (secondary, restricted population): 286,593 PRs, 835
+repositories screened to ≥40 contributors, 2025-03 to 2026-08. Used for the
+adoption-based results. **Do not pool the two — different populations.**
 
-| explanation | predicts |
-|---|---|
-| habituation | acceptance ↑ **and** scrutiny ↓ |
-| capability | acceptance ↑ **with scrutiny unchanged**, agent output visibly changes |
+## Who is compared with whom
 
-We observe acceptance stepping up, agent output measurably changing, and
-**scrutiny flat**. For this episode the rise is **capability, not habituation** —
-the alternative they could not rule out.
+| group | definition | can merge own work? |
+|---|---|---|
+| **insider** | has reviewed *someone else's* PR in that repo | yes |
+| **outsider** | has not | no |
+| **agent** | an AI coding agent account | no |
 
-We do *not* claim to refute them: their clock is reviewer experience, ours is
-calendar time, and both can hold. Full positioning, including what we
-deliberately do not claim, in [`contribution.md`](contribution.md).
-
-Separately, [arXiv 2607.21832](https://arxiv.org/html/2607.21832v1) (220,612 PRs)
-looked for a time trend and found none — quarterly 65.4%, 63.7%, 68.2%, 67.7%,
-*"none of the pairwise comparisons is statistically significant"* — but **their
-data ends 20 November 2025, within days of our break.** Our window runs nine
-months beyond it.
+Insider status is a **proxy for merge authority**, not a permission read.
+Validated on this panel by self-closing rate: **insider 76.4%, outsider 21.1%,
+agent 1.8%.** GitHub's `authorAssociation` was collected and **rejected** as the
+alternative — its outsider group self-merges 24.2%, because `CONTRIBUTOR` records
+contribution *history*, not permission. The residual 21.1% biases *against* our
+agent result: a cleaner outsider group would have a lower baseline, widening the
+gap.
 
 ## Findings
 
-### 1. Agent acceptance rose discretely around November 2025
+### 1. Agents sit between outsiders and insiders
 
-| quarter | agent n | agent | human outsider | human insider | agent − outsider |
+| contrast | accepted | t | 95% interval | clusters |
+|---|---|---|---|---|
+| agent vs **outsider** | **+12.4 pp** | +2.76 | [+3.6, +21.2] | 620 |
+| agent vs **insider** | **−18.0 pp** | −4.62 | [−25.7, −10.4] | 577 |
+| outsider vs insider | **−26.9 pp** | −15.69 | [−30.3, −23.6] | 690 |
+
+Within repository × month, size-adjusted, clustered by repository. Scrutiny
+measures do not differ between agents and either human group, so the difference
+is in **acceptance**, not in review attracted.
+
+*A plausible reading, untested:* an agent dispatched by a maintainer carries part
+of that maintainer's implicit endorsement while accruing no standing of its own.
+
+### 2. Acceptance rose across two vendors — as a trend, not a step
+
+| agent | PRs | slope | range | best single break | fits better |
 |---|---|---|---|---|---|
-| 2025 Q2 | 218 | 39.4% | 62.3% | 86.8% | **−22.9** |
-| 2025 Q3 | 357 | 38.9% | 58.4% | 86.9% | −19.5 |
-| 2025 Q4 | 422 | 55.7% | 58.6% | 87.5% | −2.9 |
-| 2026 Q1 | 519 | 58.2% | 53.6% | 86.7% | **+4.6** |
-| 2026 Q2 | 194 | 62.9% | 55.9% | 88.4% | **+7.0** |
-| 2026 Q3 | 81 | 60.5% | 58.4% | 88.5% | +2.0 |
+| Copilot | 19,227 | **+1.85 pp/month** | 51% → 85% | 2026-03 | **slope** |
+| Devin | 6,965 | +0.66 pp/month | ~61% → ~86% | 2025-12 | step, but noisy |
 
-Both human baselines are flat; only agents move, crossing from 23 points below
-comparable outsiders to roughly parity. At PR level, repository-clustered and
-size-adjusted: `agent × month` = **+0.0237**\*\*\* (t = +4.30), or in step form
-`agent × after-2025-11` = **+0.2432**\*\*\* (t = +5.63), with the general period term
-null. **These are alternative specifications of one shift, not additive**; the
-step fits better (residual SS 716 vs 1,024).
+An earlier discrete step at 2025-11 was a **small-sample artefact** and does not
+survive 14× more data.
 
-**It is a change in the producing system, not in reviewer behaviour.** Four facts
-co-move at the boundary:
+### 3. Scrutiny declined as acceptance rose
 
-- **Within the same 30 repositories** present in both periods, acceptance goes
-  40.0% → **61.4%** (+21.4 points), so it is not repository composition. Of 14
-  repositories with ≥3 agent PRs per period, 10 improved and 4 worsened, median
-  +18.8. Repositories appearing only after the break accept at 55.0%, *below*
-  continuing ones, so entrants dilute rather than create it.
-- **Within one fixed tool** (`copilot-swe-agent`): 28% in 2025-08 → 56% in
-  2025-11 → 59–70% thereafter. Not only the agent mix shifting (copilot
-  62%→97%, devin 36%→3%).
-- **Agent output itself changes**: median churn 70 → 50 lines, changed files
-  3 → 2, while review events and reviewer counts stay flat.
-- **Volume roughly triples**: 74 (Oct) → 144 (Nov) → 204 (Dec).
+Monthly slopes over 20 months, 26,115 agent PRs:
 
-**The decisive test: reviewer behaviour did not change.**
-
-| | unreviewed | mean human reviewers | mean review events |
+| measure | slope | habituation predicts | verdict |
 |---|---|---|---|
-| pre-break | 47.6% | 0.89 | 2.06 |
-| post-break | 43.4% | 0.90 | 2.16 |
+| acceptance | +0.94 pp | rising | ✓ |
+| **unreviewed share** | **+0.81 pp** | rising | **✓** |
+| **human reviewers per PR** | **−0.0152** | falling | **✓** |
+| review events per PR | +0.1032 | falling | ✗ |
 
-Scrutiny is flat across the break. A **demand-side** explanation — maintainers
-becoming more permissive toward machine-authored work — predicts falling review
-intensity, and review intensity does not fall. A **supply-side** explanation —
-the agent producing smaller, better-scoped, more mergeable changes — predicts
-exactly what is observed: more submissions, higher acceptance, smaller diffs,
-faster merges (median time to merge 23.7h → 17.1h), and unchanged scrutiny.
+Two of three scrutiny measures move as habituation predicts. **This replicates
+[*Habituation at the Gate*](https://arxiv.org/html/2606.22721v1)** on a calendar
+rather than reviewer-experience clock, on merge rather than approval, over a
+later and larger sample.
 
-**The gate did not loosen. What arrived at it changed.**
+**We cannot separate capability from habituation.** Both acceptance and
+permissiveness rose together. An earlier claim to the contrary rested on a narrow
+window and is withdrawn.
 
-*External corroboration, not identification.* GitHub's changelog shows a cluster
-of Copilot coding-agent changes in late October 2025 — Claude Sonnet 4.5 and
-Haiku 4.5 as backing models, Mission Control, self-hosted runners, CLI
-delegation, planning, repository-aware memories. Several shipped together, so the
-date aligns but no single cause is identifiable. No field records the backing
-model per pull request.
+### 4. No crowding out *(wide panel)*
 
-*Caveat.* The break date was **selected by minimising residual sum of squares**,
-so it is estimated rather than prespecified and its significance is optimistic.
-The differential trend test does not share that problem.
+DiD around 2025-11: total human volume **+0.007 (t=0.13)**, outsider volume if
+anything rising. Agent PRs do not displace human contribution.
 
-### 2. Standing, not authorship type, decides acceptance
+### 5. Review intensifies after adoption *(wide panel)*
 
-**What happens to a pull request.** Joint distribution of review outcome and
-merge outcome over the full opening cohort. Rows sum to 100%.
+**+0.4335 review events per merged PR** (p=0.0025, Holm 0.0075, pre-trend 0.207)
+against a baseline of 1.99 — about 22% — with the number of distinct reviewers
+**unchanged** (+0.007, p=0.83). Intensification per change, not broadening across
+people. Consistent with the allocation null: who reviews does not change, how much
+they review each change does.
 
-| author | reviewed → merged | reviewed → closed | no review → merged | no review → closed | **merged** |
-|---|---|---|---|---|---|
-| **agent** (1,795) | 44.1% | 10.9% | **7.9%** | **37.0%** | **52.0%** |
-| **human outsider** (100,661) | 37.2% | 7.8% | 21.0% | 34.0% | 58.2% |
-| **human insider** (135,725) | 59.4% | **3.3%** | **28.0%** | **9.3%** | **87.4%** |
-| dependency bot (48,412) | 42.7% | 1.9% | 26.8% | 28.6% | 69.5% |
+### 6. Methodological: eight sampling and comparison choices that reverse conclusions
 
-The same quantities as conditionals:
-
-| group | accepted | P(merge \| reviewed) | P(merge \| **no** review) |
-|---|---|---|---|
-| agent | 52.0% | 80.2% | **17.6%** |
-| human outsider | 58.2% | 82.6% | **38.2%** |
-| human insider | **87.4%** | 94.8% | **75.1%** |
-| dependency bot | 69.5% | 95.7% | 48.3% |
-
-Read the last column. With **no human review at all**, an insider's pull request
-still merges 75.1% of the time, an outsider's 38.2%, an agent's 17.6%. Review is
-close to the only route in for machine-authored code and merely one route among
-several for someone with write access.
-
-**Why the no-review column differs so much.** An insider whose pull request
-receives no review usually merges it themselves — measured at 86.4% from the
-collected `mergedBy` field (see the definition above). An outsider or an agent
-cannot do that, so their unreviewed pull request needs someone with write access
-to act on it, and most often nobody does. The asymmetry is about authority, not
-about machines: outsiders and agents face the same constraint and show the same
-pattern.
-
-**All standing contrasts**, within repository × month, size-adjusted, clustered by repository:
-
-| contrast | accepted | no human review | distinct reviewers |
-|---|---|---|---|
-| agent vs outsider | -0.0440 (-0.93) | +0.1211\*\*\* (+2.81) | -0.1601 (-1.34) |
-| agent vs insider | -0.3391\*\*\* (-12.27) | +0.1954\*\*\* (+5.11) | -0.1801 (-1.28) |
-| outsider vs insider | -0.2705\*\*\* (-19.27) | +0.0453\*\* (+2.57) | -0.0444\*\* (-2.00) |
-| dependency bot vs outsider | -0.0232 (-1.19) | +0.1655\*\*\* (+7.18) | -0.2934\*\*\* (-10.27) |
-
-The first row is the paper's point: on **acceptance**, agent versus comparable
-outsider carries no stars — indistinguishable. AI agents are neither deferred to
-nor singled out; they occupy the outsider position in a project's existing
-hierarchy. Note also that outsider versus insider on acceptance is
-−0.2705\*\*\* (t = −19.27), the largest and most robust contrast in the panel:
-standing dominates everything else measured here.
-
-The one contrast that **is** definition-sensitive is whether agents go unreviewed
-more often than outsiders: **+0.1211 (t = +2.81)** under the strict definition,
-but +0.0654 (t = +1.43) under the looser one. It must always be reported with the
-definition named, and never as a standalone finding.
-
-### How much the agent sample can actually support
-
-The agent group is small, and the precision of each contrast differs by more
-than an order of magnitude. Only cells containing both groups identify a
-contrast, so these are the samples that do the work:
-
-| contrast | agent / treated n | base n | ratio | effective n | repositories | **detectable at 80% power** |
-|---|---|---|---|---|---|---|
-| agent vs outsider | 1,706 | 8,865 | 5:1 | 5,723 | **128** | **13.3 pp** |
-| agent vs insider | 1,769 | 17,361 | 10:1 | 6,422 | 124 | 7.7 pp |
-| outsider vs insider | 81,938 | 130,435 | 2:1 | 201,298 | **610** | **3.9 pp** |
-
-Effective *n* uses the harmonic mean, since with imbalanced groups the variance
-is set by the minority side.
-
-**This qualifies the headline null.** Agent versus outsider acceptance is
-−0.0440 with a 95% interval of **[−13.7, +4.9] percentage points**. So the result
-rules out the −25.7 point pooled figure decisively, but it does **not** rule out a
-true penalty of up to about 13 points. "Agents are accepted like comparable
-outsiders" should be read as *no difference larger than roughly 13 points is
-detectable here* — not as a demonstration of equal treatment.
-
-**The asymmetry across findings matters for how much weight each carries.**
-
-- The **standing effect** (outsider vs insider, −0.2705\*\*\*) is well powered:
-  610 repositories, 3.9-point resolution, and the estimate is seven times the
-  detectable minimum. This is the panel's most secure result.
-- The **time findings** are also well powered despite the small agent group,
-  because they use the time dimension rather than cross-sectional contrast:
-  `agent × month` t = +4.30, step t = +5.63, and the within-repository step is
-  +21.4 points, far above any plausible noise floor.
-- The **agent-versus-outsider null** is the weakest claim in the file. It is a
-  wide null, not a precise one.
-
-Growing the agent sample is the only fix, and it is bounded by reality rather
-than effort: agent-authored pull requests are 0.63% of the panel because that is
-how much of this population used agents during the window.
-
-### 3. Two sampling choices each reverse a conclusion
-
-| choice | apparent effect | after correction |
+| choice | wrong answer | corrected |
 |---|---|---|
-| **merged-only panel** | agent code receives *more* human review (+0.225 reviewers) | reverses once the opening cohort is observed |
-| **pooling insiders with outsiders** | agent acceptance **−25.7 points** (t = −8.61) | **−4.4 points (t = −0.93)** |
+| baseline imbalance in a bounded reverting outcome | concentration +2.43pp | identified null |
+| merged-only sampling | agents get *more* review | reverses on the opening cohort |
+| pooled comparison group | agent penalty −25.7pp | +12.4pp vs outsiders |
+| underpowered null read as equality | "agents are treated like outsiders" | agents are *above* outsiders |
+| small sample | discrete step at 2025-11 | linear trend |
+| narrow window | "scrutiny is flat" | scrutiny declines |
+| control containing the outcome | agents displace outsiders | null |
+| rare outcome | revert-rate comparison | 0.13% base rate, unmeasurable |
 
-Both are standard practice. The first is why collecting closed-unmerged pull
-requests was necessary rather than optional: 26% of rows never merged, and a
-merged-only panel cannot see the gate at all. The second is why the comparison
-group is stated before any result in this file.
-
-### 4. Agent pull requests do not displace human contribution
-
-Repository-month panel, 11,532 cells, outcomes are pull requests *opened* by
-each group.
-
-| specification | outsider PRs | insider PRs | total human |
-|---|---|---|---|
-| repository + month FE | −0.429 (−1.11) | **+1.081\*\*\*** (+6.78) | +0.652\*\* (+2.37) |
-| + other activity controlled | −0.568 (−1.43) | **+1.162\*\*\*** (+4.80) | — |
-| **DiD around the 2025-11 step** | **+0.086 (+1.64)** | −0.078 (−1.13) | **+0.007 (+0.13)** |
-
-No displacement in any specification. In the quasi-experimental one, total human
-volume is flat and outsider volume if anything rises. What *is* robust is roughly
-one additional **insider** pull request per agent pull request — endogenous,
-since insiders are the people who deploy agents, and reported as an association
-rather than an effect. The simplest substitution story is ruled out.
-
-### 5. Post-merge quality: not measurable here
-
-Titles and linked issues were collected for 45,168 merged pull requests. Reverts
-were detected via GitHub's `Revert "<title>"` convention.
-
-| group | merged PRs | reverted |
-|---|---|---|
-| agent | 934 | **0.000%** |
-| outsider | 19,832 | 0.126% |
-| insider | 24,402 | 0.139% |
-
-**Recorded as infeasible, not as a finding.** The base rate is 0.13%, so the
-expected revert count among 934 agent pull requests is about one and observing
-zero is consistent with anything up to roughly 0.3%. Detection is also
-conservative: squashed reverts, force-pushed rewrites and corrective commits
-outside a pull request leave no titled pull request. Proper measurement needs
-revert commits from git history.
-
-Linked-issue counts *are* significant — agent 0.442 against insider 0.184
-(t = +4.54) — but measure **task assignment**, not quality: an agent is
-dispatched at a tracked issue, whereas humans also open refactors and dependency
-work that close nothing.
+Each with the corrected version established on better data. For a literature
+publishing monthly on this dataset, this is a candidate contribution in itself.
 
 ## Robustness: the looser insider definition
 
