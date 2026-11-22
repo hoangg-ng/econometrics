@@ -220,14 +220,25 @@ an observed check rollup**, governance adoption does not detectably reduce it �
 **−0.014, joint p=0.199**, stable under equal-repository weighting and owner
 exclusion.
 
-**How much that null establishes — stated, not left to the reader.** Adoption and
-agent activity are nearly coincident: the 6 months before adoption hold 1,033
-merged agent PRs (152 repos) against 2,848 (222 repos) after. MDE is ~4.2pp on the
-22.3% lapse base rate (19% of it) and ~2.1pp on the 4.5% corrective-work rate (47%
-of it). So we rule out a *large* improvement, not any improvement. This is a limit
-of the setting, not the measure — every consequence outcome hits the same thin
-pre-window, which is why the 386-repository cross-sectional bound below is the
-stronger statement.
+**How much that null establishes — the interval, clustered, not a rough MDE.**
+
+| stream | estimate | 95% CI | treated | repos | base | rules out reductions > |
+|---|---|---|---|---|---|---|
+| agent | −0.0141 | [−0.119, +0.091] | 2,722 | 212 | 0.223 | 53% of base |
+| **human** | **+0.0011** | **[−0.042, +0.045]** | 9,817 | 280 | 0.154 | **27% of base** |
+
+The human stream is the *better-powered* test here, not a placebo: whether a failing
+check blocks a merge is a **repository-wide policy**, so if monitoring machinery
+changed enforcement it would change it for human-authored work too. (Human PRs are
+a placebo for the *review* outcome, where instructions address the agent — not for
+this one.) The estimate is essentially exactly zero and the bound is half as wide.
+
+Both margins bind: the human stream has 3.6× the PRs *and* 280 vs 212 repositories,
+and its SE is 0.41× the agent stream's — better than the 0.53× independent sampling
+would give. More adopting repositories with check data is the route to a tighter
+bound.
+
+Reproduce: `venv/bin/python analysis/enforcement_power.py`
 
 The reason is visible in the level, not the change: **74.8% of agent PRs with a
 failing gate are merged anyway.** The signal was already there and already ignored.
@@ -391,6 +402,7 @@ venv/bin/python analysis/gate_quality.py          # the enforcement null + the 7
 venv/bin/python analysis/monitoring_enforcement.py # the bounded null across 386 repos
 venv/bin/python analysis/identification_robustness.py # selection, trends, firm-like arm
 venv/bin/python analysis/staggered_estimators.py  # pooled TWFE vs event study vs CS
+venv/bin/python analysis/enforcement_power.py     # clustered bounds on the enforcement nulls
 venv/bin/python analysis/corrective_share.py      # quality ratio -- NOT reportable, see script
 venv/bin/python analysis/enforcement_adoption.py  # enforcement dated on humans, tested on agents
 venv/bin/python analysis/corrective_work.py       # quality bound

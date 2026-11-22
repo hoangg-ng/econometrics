@@ -70,8 +70,25 @@ def main():
     from src.github_client import GitHubClient
 
     repos = sorted({r['repo'] for r in read(COHORT)})
+    if '--pool' in argv:
+        # Expansion pass: the binding constraint on every consequence estimate in
+        # this project is the NUMBER OF REPOSITORIES, because errors cluster at
+        # that level -- more PRs inside the same repositories does not tighten the
+        # bound. The candidate pool holds thousands of repositories that were
+        # never collected, so we date adoption for them first and only pay for PR
+        # collection on the ones that actually adopt.
+        pool = ROOT / 'output/candidate_pool.csv'
+        have = set(repos)
+        extra = [r['repo'] for r in read(pool)
+                 if r['repo'] not in have and r.get('adopted') == 'True']
+        cap = int(argv[argv.index('--pool') + 1]) if len(argv) > argv.index('--pool') + 1 \
+            and argv[argv.index('--pool') + 1].isdigit() else len(extra)
+        repos = sorted(extra)[:cap]
+        print(f'expansion pass: {len(repos)} candidate-pool repositories not in the cohort')
     done = {(r['repo'], r['path']) for r in read(OUT)} if OUT.exists() else set()
-    todo = [(repo, path) for repo in repos for path in PATHS if (repo, path) not in done]
+    paths = (['.github/copilot-instructions.md', 'AGENTS.md'] if '--pool' in argv
+             else PATHS)
+    todo = [(repo, path) for repo in repos for path in paths if (repo, path) not in done]
     if limit:
         todo = todo[:limit]
     print(f'repositories: {len(repos)}  already collected: {len(done)}  to do: {len(todo)}')
