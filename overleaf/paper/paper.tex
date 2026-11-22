@@ -91,13 +91,12 @@ moves the same outcome in the opposite direction, so the effect is specific to
 agent governance rather than to the act of committing configuration.
 
 The channel is review and not production, and that distinction identifies the
-mechanism. Re-estimating on the agent's delivered output, nothing moves: the
-probability a draft is abandoned before review changes by $+0.038$, log patch size
-by $-0.036$, log changed files by $-0.019$, time to readiness by $+0.003$.
-Governance does not make the agent produce different work, nor change how often its
-sponsor discards a draft privately.
+mechanism: what governance changes is the reviewer, not the machine. Patch size,
+file count, time to readiness and the rate at which a sponsor privately discards a
+draft all stay where they were, so the rise in review cannot be explained by the
+agent producing different work.
 
-What does move is how much the work is revised before it is disposed of. Holding
+What does move is how much that work is revised before it is disposed of. Holding
 patch size and changed files fixed, commits on a machine-authored pull request rise
 $+0.049$ in logs ($p=3.1\times10^{-6}$), and $+0.098$ under equal-repository
 weighting ($p=0.043$), on a baseline of 4.93 commits. The same specification leaves
@@ -139,28 +138,18 @@ interval that rules out reductions beyond a quarter of the base rate. What we ru
 out is therefore a substantial gain rather than any gain, and the cross-sectional
 bound below is the stronger version of the claim.
 
-Three further results frame this. First, delegated production passes through two
-organizational stages that public records collapse into one, and separating them
-reverses a published pattern. A coding agent opens its proposal as a draft that
-cannot be merged; the stage ends when a human either promotes it into review or
-abandons it, and both endings are recorded identically. Pooling the stages
-reproduces the literature --- agent proposals are 34.8 points more likely to end in
-a recorded human-nonauthor closure --- but the 39.6\% abandoned before review
-account for all of it. Among proposals that entered review, compared with human
-contributors who likewise cannot merge their own work, agent proposals are 17.3
-points \emph{more} likely to be accepted.
-
-Second, the screener is identifiable. Across 15,221 promotions the human who marks
-a draft ready is a repository insider 96.3\% of the time and is the same person who
-later closes or merges it 90.9\% of the time, having formally reviewed it in only
-37.3\% of cases. Screening is private, upstream, and performed by someone who
-already holds the authority to accept.
-
-Third, on quality we can bound one thing. Machine-authored merges attract no more
-corrective work than comparable human merges: within repository-months containing
-both arms, 4.5\% against 4.5\%, a difference of $-0.02$ points with an interval of
-$[-2.49,+2.29]$ across 19,584 merged PRs. Whether the added review that governance
-brings \emph{reduces} corrective work is not identified here, and we say so.
+One further result belongs here, because it corrects what the published record
+appears to say. Delegated production passes through two organizational stages that
+public traces collapse into one. A coding agent opens its proposal as a draft,
+which cannot be merged; the stage ends when a human either promotes it into review
+or abandons it, and both endings are recorded identically, as a pull request closed
+by someone other than its author. Pooled, we reproduce the literature: agent
+proposals are 34.8 points more likely to end in a recorded human-nonauthor closure.
+The 39.6\% abandoned before review account for all of it. Among proposals that
+actually entered review, compared with human contributors who likewise cannot merge
+their own work, agent proposals are 17.3 points \emph{more} likely to be accepted.
+Reading the pooled record as evidence that machine-authored work meets a harder
+gate inverts the relationship holding among proposals submitted for evaluation.
 
 We make three contributions. The first is theoretical. Agency theory treats ex
 ante rules and ex post inspection as substitutes, and that logic requires the rule
