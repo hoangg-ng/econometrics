@@ -220,6 +220,35 @@ governance therefore raises the informativeness of inspection even when it leave
 production untouched --- and when inspection becomes more informative, its return
 rises rather than falls.
 
+The argument can be stated compactly, and doing so shows exactly which primitive
+each account moves. Let $d \geq 0$ be the expected rate at which the agent's output
+departs from the project's conventions, and let a reviewer choose inspection effort
+$e \geq 0$. Let $\pi(e,\tau)$ be the probability that a departure is detected,
+where $\tau \in \{0,1\}$ records whether the convention is written down. Detection
+is worth $B$ and effort costs $c(e)$, increasing and convex. The reviewer solves
+\begin{equation}
+\max_{e \geq 0}\; d\,\pi(e,\tau)\,B - c(e),
+\label{eq:reviewer}
+\end{equation}
+with interior optimum characterized by $d\,\pi_e(e^{*},\tau)B = c'(e^{*})$.
+
+Writing a rule down can act on two primitives. It can lower $d$, by changing what
+the agent does; and it can raise $\pi_e$, by making a departure from a documented
+convention legible where a departure from an undocumented one is not. Convexity of
+$c$ makes $e^{*}$ increasing in the left-hand side of the first-order condition, so
+the two act in opposite directions: a fall in $d$ reduces optimal inspection, a
+rise in $\pi_e$ increases it.
+
+Agency theory's substitution result is the case in which the first channel
+operates. It requires the rule to change behavior, which for a human agent it does
+through incentives. A machine agent has no incentives to realign, so $d$ is
+unchanged by assumption and only the second channel is available:
+$\partial e^{*} / \partial \tau > 0$. Substitutability is therefore not a general
+property of ex ante and ex post control; it is a property of delegation to an agent
+whose behavior responds to rules. This is the paper's theoretical claim, and it is
+refutable on two observables --- the sign of the inspection response and whether
+agent output moves.
+
 This gives three separable implications. Under \emph{substitution}, adoption lowers
 review and the agent's output changes. Under \emph{compliance}, adoption lowers
 review \emph{because} output improves. Under \emph{legibility}, adoption raises
@@ -490,22 +519,44 @@ moves the outcome in the opposite direction.}
 \label{fig:placebo}
 \end{figure}
 
-The pooled treatment conceals heterogeneity we can document but not explain.
-Estimated separately, \texttt{copilot-instructions.md} gives $+0.089$ for coverage
-and $+0.107$ for reviewers across 123 adopting repositories, while
-\texttt{AGENTS.md} gives $+0.011$ and $+0.005$ across 287. Three candidate
-explanations fail. It is not truncation, although \texttt{AGENTS.md} is adopted a
-median of four months later: restricting both to the window observable for the
-later adopters (lags zero to three) leaves $+0.070$ and $+0.101$ against $-0.016$
-and $-0.016$. It is not agent composition, although 30.4\% of machine-authored PRs
-in \texttt{AGENTS.md} repositories come from Devin against none in the others:
-restricting the \texttt{AGENTS.md} arm to Copilot-authored PRs gives $+0.011$ and
+The pooled treatment conceals heterogeneity, and tracing it changes what the
+treatment is best understood to be. Estimated separately,
+\texttt{copilot-instructions.md} gives $+0.089$ for coverage and $+0.107$ for
+reviewers across 123 adopting repositories, while \texttt{AGENTS.md} gives
+$+0.011$ and $+0.005$ across 287. Three explanations fail. It is not truncation,
+although \texttt{AGENTS.md} is adopted a median of four months later: restricting
+both to the window observable for the later adopters leaves $+0.070$ and $+0.101$
+against $-0.016$ and $-0.016$. It is not agent composition, although 30.4\% of
+machine-authored PRs in \texttt{AGENTS.md} repositories come from Devin against
+none in the others: restricting that arm to Copilot-authored PRs gives $+0.011$ and
 $+0.002$. And it is not that \texttt{AGENTS.md} is adopted without operational
-need, the ceremonial reading --- 57\% of its adopters have machine-authored work in
-the six months before adoption against 41\% for \texttt{copilot-instructions.md},
-at the same median volume. We report the pooled treatment because it is the
-construct the theory names, and record that the effect is carried by the
-platform-specific file for reasons these data do not identify.
+need --- 57\% of its adopters have machine-authored work in the six months before
+adoption against 41\% for \texttt{copilot-instructions.md}.
+
+What does account for it is whether the file is subsequently maintained, and the
+pattern is common to both paths rather than specific to either. Splitting each at
+its own median revision count, \texttt{AGENTS.md} gives $+0.184$ for reviewers
+where the file is revised more and $-0.053$ where it is not (pre-trends $p=0.913$
+and $p=0.943$, 118 and 119 repositories), and
+\texttt{copilot-instructions.md} gives $+0.103$ against $-0.071$. The apparent
+file effect is a pooling artefact: \texttt{AGENTS.md} mixes two halves of opposite
+sign in almost equal numbers, and it is revised \emph{more} on average than the
+platform-specific file (11.4 commits against 4.7), so a ceremonial reading of it is
+also wrong. Pooling the two paths and splitting on maintenance directly, reviewers
+per agent PR rise $+0.067$ where the file is revised more than the median and fall
+$-0.067$ where it is not; under equal-repository weighting the contrast is $+0.170$
+against $-0.002$, with pre-trends passing in all four.
+
+We report this as descriptive heterogeneity and not as a moderator, for two
+reasons. Revisions necessarily occur after adoption, so the split conditions on a
+post-treatment variable and the two groups may differ in ways the instruction file
+did not cause. And the pattern is clean for reviewers but not for coverage, where
+the maintained arm fails its pre-trend under PR weighting. What it establishes is
+narrower than a dose-response and still useful: the treatment that moves review is
+a maintained convention rather than a committed file, which is consistent with the
+legibility mechanism --- a convention that is kept current is one against which
+deviation remains detectable --- and with the substantive rather than ceremonial
+character of the response documented in Section~\ref{sec:enforcement}.
 
 A sixth check matters because PR-weighted estimates in this
 corpus are routinely dominated by a few high-volume owners: one organization
@@ -841,10 +892,10 @@ separate. The comparative estimates are conditional associations on populations 
 argue are comparable, not causal effects, and conditioning on promotion selects on
 a post-opening decision. The standing measure is behavioral and leaves 22.5\% of
 its outsiders closing their own PRs. The draft stage is a design feature of one
-vendor. The review effect is carried by \texttt{copilot-instructions.md} and is
-absent for \texttt{AGENTS.md}, which we cannot attribute to timing, to which agent
-authored the work, or to operational need, so some property of these files or their
-adopters that we do not observe is doing work in the pooled estimate. Reviewer identities span repositories, so repository clusters are not
+vendor. The review effect appears only where the instruction file is
+subsequently maintained, and that split conditions on a post-treatment variable, so
+we cannot say whether maintenance causes the effect or marks projects that would
+have increased review regardless. Reviewer identities span repositories, so repository clusters are not
 independent and all intervals are too narrow by an unknown amount. The analysis was
 specified after extensive exploratory work on these data and multiplicity is
 controlled within declared families only.

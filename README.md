@@ -87,9 +87,27 @@ it is low — a difference of **+0.293**, pre-trends passing in both strata (p=0
 p=0.991). Splitting at the median of repository *stars* gives the wrong sign for
 signalling, with a failing pre-trend in the low arm.
 
-**Partly supportive:** a dose-response on instruction-file revisions. Reviewers per
-PR scale +0.121 (low revision) → +0.187 (high), both pre-trends passing; coverage
-runs the other way and its high-revision arm fails its pre-trend.
+**What the treatment actually is: a *maintained* convention, not a committed file.**
+Estimated separately, `copilot-instructions.md` gives +0.089/+0.107 and `AGENTS.md`
+gives +0.011/+0.005 — which is not truncation, not agent composition, and not lack
+of operational need. It is a **pooling artefact**. Split each path at its own median
+revision count:
+
+| path | arm | repos | reviewers | pre-trend |
+|---|---|---|---|---|
+| `AGENTS.md` | maintained | 118 | **+0.184** | 0.913 PASS |
+| `AGENTS.md` | one-off | 119 | −0.053 | 0.943 PASS |
+| `copilot-instructions.md` | maintained | 44 | +0.103 | 0.000 FAIL |
+| `copilot-instructions.md` | one-off | 72 | −0.071 | 0.638 PASS |
+
+`AGENTS.md` mixes two halves of opposite sign in near-equal numbers — and it is
+revised *more* on average (11.4 commits vs 4.7), so the ceremonial reading is wrong
+too. Pooling both paths and splitting on maintenance: **+0.067 vs −0.067** reviewers,
+and **+0.170 vs −0.002** under equal-repository weighting, all four pre-trends passing.
+
+**Reported as descriptive, not as a moderator.** Revisions happen after adoption, so
+this conditions on a post-treatment variable; and it is clean for reviewers but not
+for coverage.
 
 **Substitution is rejected.** Reproduce: `venv/bin/python analysis/instruction_adoption.py`
 
