@@ -1979,3 +1979,19 @@ enforces more than the one-in-four we observe. Rewrote the contributions paragra
 to lead with the theoretical claim rather than the measurement result.
 
 Paper now 24 pages including the EC, zero undefined citations or references.
+
+**Correction: the gate-quality null was overclaimed.** The paper said governance
+"does not reduce" the lapse rate on the strength of -0.014 with joint p=0.199. A
+power calculation shows that claim exceeds what the design supports. Adoption and
+machine-authored activity are nearly coincident in this corpus: the six months
+before adoption hold 1,033 merged agent PRs across 152 repositories against 2,848
+across 222 after. At the observed 0.223 lapse base rate the minimum detectable
+effect is ~4.2 points (19% of base); at the 4.5% corrective-work rate it is ~2.1
+points (47% of base). The per-period intervals confirm it -- roughly +/-0.07 to
++/-0.13. So the null rules out a large improvement, not a modest one.
+
+Abstract, introduction and the Quality section now say "does not detectably
+reduce" and state the bound. This also explains why no consequence measure in this
+project has worked and why trying more would not help: the constraint is the thin
+pre-adoption window, not the choice of outcome. It is the reason the cross-sectional
+bound across 386 repositories is the stronger form of the enforcement claim.

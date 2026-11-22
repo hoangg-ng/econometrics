@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and public git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend test passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are used as the treatment. The agent's own output is unchanged, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. Ex ante rules and ex post inspection are therefore complements here, not the substitutes agency theory assumes. The response is substantive, scaling with machine-authored volume rather than with visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not reduce that rate. Nor is the pattern specific to this instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, with any protective association bounded at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
+Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and public git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend test passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are used as the treatment. The agent's own output is unchanged, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. Ex ante rules and ex post inspection are therefore complements here, not the substitutes agency theory assumes. The response is substantive, scaling with machine-authored volume rather than with visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate, ruling out improvements of a fifth or more. Nor is the pattern specific to this instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, with any protective association bounded at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
 }
 
 
@@ -119,8 +119,10 @@ splitting at the median of repository stars gives the wrong sign on review
 coverage and fails its pre-trend in the low-star stratum.
 The response is substantive and correctly targeted. Yet 74.8\% of agent PRs whose
 continuous-integration checks are failing are merged anyway. A control system that
-withholds the sanction three times in four does not improve when monitoring rises
-by a tenth, because monitoring was not the binding margin.
+withholds the sanction three times in four does not measurably improve when
+monitoring rises by a tenth. Our power to detect such an improvement extends to
+about a fifth of the lapse rate, so what we rule out is a large gain rather than
+any gain; the cross-sectional bound below is the stronger version of the claim.
 
 Three further results frame this. First, delegated production passes through two
 organizational stages that public records collapse into one, and separating them
@@ -713,10 +715,26 @@ failure. Among the 5,121 agent PRs with a failing gate, \textbf{74.8\% merge
 anyway}. Failing checks are not, in this population, a binding constraint on
 machine-authored work.
 
-Governance adoption does not change that. The rate of merging with a failing gate
-moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$ under
-equal-repository weighting, and $-0.013$ when the largest owners are dropped: a
-directionally favourable null at every specification. The share of agent PRs whose
+Governance adoption does not visibly change that. The rate of merging with a
+failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$
+under equal-repository weighting, and $-0.013$ when the largest owners are dropped:
+directionally favourable and indistinguishable from zero at every specification.
+
+How much that null establishes is a question of power, and we state it rather than
+leave it to the reader. Instruction-file adoption and machine-authored activity are
+nearly coincident in time in this corpus: the six months before adoption contain
+1,033 merged agent PRs across 152 repositories, against 2,848 across 222
+repositories in the six months after. At the observed lapse base rate of $0.223$
+that supports a minimum detectable effect of roughly 4.2 percentage points, or 19\%
+of the base rate; at the 4.5\% corrective-work base rate the minimum detectable
+effect is 2.1 points, or 47\% of it. So the honest reading of these nulls is that
+governance adoption does not produce a \emph{large} improvement in gate outcomes
+--- a fifth of the lapse rate or more --- and that a modest improvement would be
+invisible to us. This is a limit of the setting and not of the measure. Every
+consequence outcome we construct is bounded by the same thin pre-adoption window,
+which is why we treat the enforcement evidence in Section~\ref{sec:enforcement},
+where the cross-section supplies 386 repositories rather than 152, as the stronger
+statement of the same claim. The share of agent PRs whose
 gate reports failure does not move either ($-0.061$, joint $p=0.872$). And
 conditional on the gate failing, merging anyway becomes \emph{more} common after
 adoption, by $+0.110$ (pre-trend $p=0.696$, joint $p=0.0005$) and $+0.141$ under

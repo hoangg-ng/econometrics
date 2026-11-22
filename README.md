@@ -187,8 +187,18 @@ closure (−1.2pp, CI [−9.1, +6.7]) are bounded nulls.
 
 A measure independent of referencing: merging a change whose CI checks report
 failure is a directly observable lapse of the gate. Across **17,151 agent PRs with
-an observed check rollup**, governance adoption does not reduce it — **−0.014,
-joint p=0.199**, stable under equal-repository weighting and owner exclusion.
+an observed check rollup**, governance adoption does not detectably reduce it —
+**−0.014, joint p=0.199**, stable under equal-repository weighting and owner
+exclusion.
+
+**How much that null establishes — stated, not left to the reader.** Adoption and
+agent activity are nearly coincident: the 6 months before adoption hold 1,033
+merged agent PRs (152 repos) against 2,848 (222 repos) after. MDE is ~4.2pp on the
+22.3% lapse base rate (19% of it) and ~2.1pp on the 4.5% corrective-work rate (47%
+of it). So we rule out a *large* improvement, not any improvement. This is a limit
+of the setting, not the measure — every consequence outcome hits the same thin
+pre-window, which is why the 386-repository cross-sectional bound below is the
+stronger statement.
 
 The reason is visible in the level, not the change: **74.8% of agent PRs with a
 failing gate are merged anyway.** The signal was already there and already ignored.
