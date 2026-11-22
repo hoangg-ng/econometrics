@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. It survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's delivered output is unchanged in size and breadth, so the channel is inspection, not production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. The additional inspection is consequential rather than ceremonial --- holding patch size fixed, machine-authored pull requests accumulate more commits before disposition --- but what reviewers obtain is revision, not refusal. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes, and the response is substantive, scaling with machine-authored volume rather than visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate --- on the better-powered human-authored stream the estimate is $+0.001$ with an interval ruling out reductions beyond a quarter of the base rate. Nor is this specific to one instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, bounding any protective association at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
+Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises, by 4.5 percentage points in coverage and 0.090 distinct reviewers, with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. The estimate survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's delivered output is unchanged in size and breadth, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes. The inspection is consequential --- holding patch size fixed, machine-authored pull requests accumulate more commits before disposition --- but what reviewers obtain is revision, not refusal. Accordingly 74.8\% of agent PRs with failing checks are merged anyway, governance does not detectably reduce that rate, and across 386 repositories the amount of monitoring machinery a project maintains does not predict whether a failing check blocks a merge. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
 }
 
 
@@ -474,168 +474,81 @@ $p \geq 0.20$ for all three placebo outcomes.
 
 \subsection{Robustness}
 
-Nine checks, and the first two qualify the headline.
+Table~\ref{tab:robust} reports ten checks. Two need explanation because they
+qualify the headline rather than support it.
+
+\begin{table}[t]
+\caption{Robustness of the governance effect on human review of agent PRs}
+\label{tab:robust}
+\centering\small
+\begin{tabular}{llcc}
+\toprule
+Check & What it addresses & Coverage & Reviewers \\
+\midrule
+Fixed-effects event study & the reported estimate & $+0.057$ & $+0.120$ \\
+Pooled two-way fixed effects & negative weighting & $-0.010$ & $-0.015$ \\
+Group-time, monthly cohorts & staggered adoption & $+0.144$ & $+0.244$ \\
+Group-time, quarterly cohorts & staggered adoption & $+0.059$ & $+0.081$ \\[3pt]
+Non-AI configuration files & treatment specificity & $-0.117$ & $-0.272$ \\
+Human-authored PRs & a repository-wide shock & $-0.004$ & $+0.012$ \\
+Agent PR arrivals (logs) & project dormancy & \multicolumn{2}{c}{pre $-0.159$, post $+0.012$} \\[3pt]
+Not-yet-treated controls only & selection into adopting & $+0.160$ & $+0.389$ \\
+Repository linear trends & a rising trajectory & $+0.015$ & $+0.059$ \\
+Organization-owned only & the open-source setting & $+0.044$ & $+0.095$ \\
+Equal-repository weighting & owner concentration & $+0.074$ & $+0.118$ \\
+Excluding the largest owner & owner concentration & $+0.054$ & $+0.107$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}
+\footnotesize Post-minus-pre contrasts. All pre-trend tests pass except where
+noted in the text. The non-AI row averages \texttt{CONTRIBUTING.md}, a pull-request
+template and \texttt{dependabot.yml}, estimated separately.
+\end{table}
 
 The first is the estimator. A pooled two-way fixed effects regression --- a single
-post indicator with repository and month fixed effects, which is what a reader
-checks first --- returns $-0.010$ for coverage and $-0.015$ for reviewers, both
-indistinguishable from zero. We report this because it is easy to compute and
-because the resolution is informative rather than defensive. Under staggered
-adoption with effects that grow over event time, the pooled estimator uses
-already-treated repositories as controls for later-treated ones; by then those
-units have high outcomes, so they are poor controls and the negative weights
+post indicator, which is what a reader checks first --- returns $-0.010$ and
+$-0.015$, indistinguishable from zero. The resolution is informative rather than
+defensive: under staggered adoption with effects that grow over event time, the
+pooled estimator uses already-treated repositories as controls for later-treated
+ones, and because those units have high outcomes by then the negative weights
 attenuate the estimate toward zero and past it
 \citep{goodman2021difference, dechaisemartin2020two}. The two estimators that
-handle staggered timing disagree with it and agree with each other. The
-fixed-effects event study gives $+0.057$ and $+0.120$ with joint post-period tests
-of $1.7\times10^{-7}$ and $0.0004$. A group-time estimator comparing each cohort
-only with never-treated and not-yet-treated units
-\citep{callaway2021difference} gives post-period means of $+0.144$ and $+0.244$
-with monthly cohorts, and $+0.059$ and $+0.081$ when adoption is pooled to
-quarterly cohorts. The direction is common to both; the magnitude is not, and we
-do not claim one.
+handle staggered timing disagree with it and agree with each other on direction,
+though not on magnitude, and we claim neither as a point estimate.
 
 The second is dynamics. Too few repositories adopt in any single month for the
-group-time estimator to reach event times beyond $+3$, so its monthly figure
-covers $e=0$ to $e=3$. Quarterly pooling enlarges cohorts enough to estimate
-$e=4$, at the cost of up to two months of error in the treatment date, and it
-shrinks the post-period means substantially. We therefore report the positive
-post-period direction as robust across the staggered-robust specifications, and
-the late-emerging pattern visible in the fixed-effects event study as \emph{not}
-robust. Adoption does
-not coincide with a sustained change in agent PR arrivals (pre mean $-0.159$, post
-mean $+0.012$ in logs), so this is not the project-dormancy confound that
-invalidated several designs in Section~\ref{sec:audit}. A second governance act
-points the same way: adoption of a \texttt{CODEOWNERS} file raises review coverage
-by 33.4 points and reviewers by 0.842, through an identifiable platform mechanism
---- \texttt{CODEOWNERS} causes automatic reviewer requests, and requested-review
-incidence rises by 10.1 points --- though it rests on 40 repositories with marginal
-pre-trends and we treat it as corroboration. A dose-response on the number of
-commits to the instruction file is only partly supportive: reviewers per PR scale
-from $+0.121$ in low-revision repositories to $+0.187$ in high-revision ones with
-both pre-trends passing, while coverage runs the other way and its high-revision
-arm fails its pre-trend.
+group-time estimator to reach event times beyond $+3$; quarterly pooling reaches
+$e=4$ at the cost of up to two months of error in the treatment date, and shrinks
+the post-period means substantially. We therefore report the positive post-period
+direction as robust and the late-emerging pattern in the fixed-effects event study
+as \emph{not} robust.
 
-A fifth check discriminates the treatment from the act of committing a
-configuration file. Projects commit such files during periods of accelerating
-activity: adoption of \texttt{CONTRIBUTING.md}, a pull-request template,
-\texttt{dependabot.yml} or \texttt{CODEOWNERS} each predicts a rise in
-human-authored PR volume of $+0.20$ to $+0.43$ log points, which is as large as or
-larger than the rise that follows adoption of an AI-instruction file ($+0.18$ to
-$+0.23$). Any design that reads a contribution increase off config-file adoption is
-therefore reading a growth phase.
+Three further results in the table carry the weight a referee will want. Adoption
+of \emph{non}-AI configuration files moves the same outcome in the opposite
+direction, so the effect is specific to agent governance rather than to committing
+configuration during a growth phase --- which matters because every such file
+predicts a contribution increase of $+0.20$ to $+0.43$ log points, as large as the
+rise following an AI-instruction file. Restricting controls to not-yet-adopting
+repositories removes selection into ever-adopting and the estimate grows; removing
+repository-specific linear trends absorbs the rising-trajectory alternative and
+leaves coverage jointly significant at $p=0.0004$ with reviewers at $p=0.082$, so
+the direction survives and the magnitude does not. And the effect is if anything
+cleaner in the 204 organization-owned adopting repositories, the firm-like arm
+available in public data, so it is not a property of volunteer communities.
 
-That makes a treatment-side placebo essential, and it is informative. Re-estimating
-our specification with non-AI configuration files as the treatment and the same
-outcome --- human review of agent PRs --- the sign reverses. Adoption of
-\texttt{CONTRIBUTING.md} gives $-0.172$ for review coverage and $-0.271$ for
-reviewers per agent PR with pre-trends passing ($p=0.239$); a pull-request template
-gives $-0.098$ and $-0.233$ and \texttt{dependabot.yml} $-0.081$ and $-0.312$,
-though those two fail their pre-trend tests. The AI-instruction treatment gives
-$+0.057$ and $+0.120$ with both pre-trends passing. Growth phases, in other words,
-\emph{reduce} the human review that machine-authored work receives --- plausibly
-because reviewers are stretched across more arrivals --- and adopting an
-agent-instruction file reverses that. The effect is specific to AI governance
-rather than to configuration activity, and netting out the growth channel widens
-rather than narrows it. Figure~\ref{fig:placebo} shows the contrast.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\textwidth]{treatment_placebo.pdf}
-\caption{Treatment-side placebo. The same specification and the same outcome ---
-human review of machine-authored pull requests --- with non-AI configuration files
-substituted for the agent-instruction file as the treatment. Every non-AI path
-moves the outcome in the opposite direction.}
-\label{fig:placebo}
-\end{figure}
-
-The pooled treatment conceals heterogeneity, and tracing it changes what the
-treatment is best understood to be. Estimated separately,
-\texttt{copilot-instructions.md} gives $+0.089$ for coverage and $+0.107$ for
-reviewers across 123 adopting repositories, while \texttt{AGENTS.md} gives
-$+0.011$ and $+0.005$ across 287. Three explanations fail. It is not truncation,
-although \texttt{AGENTS.md} is adopted a median of four months later: restricting
-both to the window observable for the later adopters leaves $+0.070$ and $+0.101$
-against $-0.016$ and $-0.016$. It is not agent composition, although 30.4\% of
-machine-authored PRs in \texttt{AGENTS.md} repositories come from Devin against
-none in the others: restricting that arm to Copilot-authored PRs gives $+0.011$ and
-$+0.002$. And it is not that \texttt{AGENTS.md} is adopted without operational
-need --- 57\% of its adopters have machine-authored work in the six months before
-adoption against 41\% for \texttt{copilot-instructions.md}.
-
-What does account for it is whether the file is subsequently maintained, and the
-pattern is common to both paths rather than specific to either. Splitting each at
-its own median revision count, \texttt{AGENTS.md} gives $+0.184$ for reviewers
-where the file is revised more and $-0.053$ where it is not (pre-trends $p=0.913$
-and $p=0.943$, 118 and 119 repositories), and
-\texttt{copilot-instructions.md} gives $+0.103$ against $-0.071$. The apparent
-file effect is a pooling artefact: \texttt{AGENTS.md} mixes two halves of opposite
-sign in almost equal numbers, and it is revised \emph{more} on average than the
-platform-specific file (11.4 commits against 4.7), so a ceremonial reading of it is
-also wrong. Pooling the two paths and splitting on maintenance directly, reviewers
-per agent PR rise $+0.067$ where the file is revised more than the median and fall
-$-0.067$ where it is not; under equal-repository weighting the contrast is $+0.170$
-against $-0.002$, with pre-trends passing in all four.
-
-We report this as descriptive heterogeneity and not as a moderator, for two
-reasons. Revisions necessarily occur after adoption, so the split conditions on a
-post-treatment variable and the two groups may differ in ways the instruction file
-did not cause. And the pattern is clean for reviewers but not for coverage, where
-the maintained arm fails its pre-trend under PR weighting. What it establishes is
-narrower than a dose-response and still useful: the treatment that moves review is
-a maintained convention rather than a committed file, which is consistent with the
-legibility mechanism --- a convention that is kept current is one against which
-deviation remains detectable --- and with the substantive rather than ceremonial
-character of the response documented in Section~\ref{sec:enforcement}.
-
-Three further checks answer objections the main design cannot address by
-construction, and we group them because each targets a different one.
-
-The treatment is chosen, so the first asks whether selection into adopting at all
-drives the estimate. Dropping never-adopting repositories entirely leaves a sample
-in which every unit adopts eventually and only the timing differs, so whatever
-makes a project the kind that writes agent instructions is common to treated and
-control units. The estimates rise rather than fall: $+0.160$ for coverage and
-$+0.389$ for reviewers across the same 281 adopting repositories, with pre-trends
-at $p=0.411$ and $p=0.456$ and joint post-period tests of $1.6\times10^{-6}$ and
-$8.3\times10^{-5}$. What this cannot remove is selection into adopting
-\emph{early}, which no design on observational adoption can.
-
-The effect emerges from month four, which is as consistent with a rising
-trajectory as with rules taking time to bind, so the second removes a
-repository-specific linear trend from the outcome before estimation. This is
-demanding on a seven-month post window and it attenuates, as expected: coverage
-falls to $+0.015$ but remains jointly significant ($p=0.0004$), and reviewers to
-$+0.059$ at $p=0.082$. The direction survives a test designed to absorb precisely
-the alternative explanation we cannot otherwise rule out; the magnitude does not.
-
-The setting is not a firm, so the third splits on whether GitHub records the owner
-account as an Organization rather than a User. Organization-owned projects have
-institutional owners and formal membership, and are the firm-like arm available in
-public data. The effect is if anything cleaner there: $+0.044$ coverage
-($p=0.003$) and $+0.095$ reviewers ($p=0.024$) across 204 adopting organizations,
-pre-trends passing, and $+0.097$ and $+0.175$ under equal-repository weighting.
-The user-owned arm runs the same direction on 71 repositories with weaker
-precision ($+0.053$ and $+0.035$). The result is therefore not a property of
-volunteer communities. Organization ownership is a proxy for an institutional
-owner rather than for a firm --- many organizations here are foundations --- so
-this is a lower bound on how firm-like the setting can be made with public traces.
-
-A ninth check matters because PR-weighted estimates in this
-corpus are routinely dominated by a few high-volume owners: one organization
-supplies 44.4\% of the treated agent PRs and the top three supply 65.6\%. The
-estimate is nonetheless stable. Dropping the largest owner moves the post-period
-effect from $+0.057$ to $+0.054$ for review coverage and from $+0.120$ to
-$+0.107$ for reviewers per PR; dropping the top five leaves $+0.036$ and $+0.096$;
-and weighting every repository-month equally rather than by PR volume gives
-$+0.074$ and $+0.118$, slightly \emph{larger} than the headline. All pre-trend
-tests pass in every variant. We report this check prominently because it is the
-one that distinguishes this result from others we examined: a candidate second
-treatment --- adoption of an independent AI code reviewer, which appeared to
-shorten agent PR disposition by 0.368 log hours with an excellent pre-trend
-($p=0.988$), a near-zero placebo on human PRs ($-0.010$), and passing volume
-validity --- reverses sign when the single largest owner is excluded ($+0.050$)
-and under equal-repository weighting ($+0.463$). We do not report it as a finding.
+The pooled treatment conceals heterogeneity that identifies what the treatment
+is. Estimated separately, \texttt{copilot-instructions.md} gives $+0.089$ and
+$+0.107$ while \texttt{AGENTS.md} gives $+0.011$ and $+0.005$ --- which is not
+truncation, not agent composition, and not operational need, but a pooling
+artefact. Splitting each path at its own median revision count,
+\texttt{AGENTS.md} gives $+0.184$ for reviewers where the file is maintained and
+$-0.053$ where it is not, and \texttt{copilot-instructions.md} shows the same
+pattern. Pooling both paths and splitting on maintenance gives $+0.067$ against
+$-0.067$, and $+0.170$ against $-0.002$ under equal-repository weighting, with
+pre-trends passing in all four. Revisions necessarily follow adoption, so this
+conditions on a post-treatment variable and we report it as descriptive: the
+treatment that moves review is a maintained convention rather than a committed
+file, which is what the legibility mechanism predicts.
 
 \subsection{Magnitude}
 
@@ -782,66 +695,20 @@ under equal-repository weighting, and $-0.013$ when the largest owners are dropp
 directionally favourable and indistinguishable from zero at every specification.
 
 How much that null establishes is a question of power, and we report the interval
-rather than leave it to the reader. Estimating the post-minus-pre contrast directly,
-with its standard error clustered by repository, gives $-0.014$ with an interval of
-$[-0.119, +0.091]$ on 2,722 treated agent PRs across 212 adopting repositories.
-Against a base lapse rate of $0.223$ that rules out reductions larger than 53\% of
-the base rate and nothing smaller --- a weak statement, and we do not dress it up.
-
-The same claim has a better-powered test, because enforcement is not a property of
-the machine-authored stream. Whether a failing check blocks a merge is a
-repository-wide policy, so if adopting monitoring machinery changed enforcement it
-would change it for human-authored work too. Human-authored PRs are a placebo for
-the \emph{review} outcome, since an instruction file addresses the agent; for the
-\emph{enforcement} outcome they are a substantive test, and they are far more
-numerous. On 9,817 treated human PRs across 280 adopting repositories the contrast
-is $+0.0011$ with an interval of $[-0.042, +0.045]$ against a base rate of $0.154$,
-ruling out reductions larger than 27\% of the base rate. The estimate is almost
-exactly zero and the bound is half as wide.
-
-Both margins bind the precision. The human stream carries 3.6 times the pull
-requests and 280 rather than 212 adopting repositories, and its standard error is
-0.41 times the agent stream's --- better than the 0.53 that independent sampling
-alone would give, because it gains on repositories and pull requests at once.
-
-We pursued the implication. Our cohort is 848 of 8,976 repositories that passed
-the original screen for coding-agent use, and dating the agent-instruction file in
-the remainder identifies 1,512 further adopting repositories. Collecting, for each,
-only the pull requests inside its own adoption window widens the estimate to 471
-adopting repositories, and it moves very little: the contrast becomes $+0.004$ with
-an interval of $[-0.038, +0.045]$, ruling out reductions larger than 25\% of the
-base rate against 27\% on the cohort alone. The standard error falls from $0.0221$
-to $0.0211$ where independent sampling would predict $0.0181$, and it stops falling
-well before the repositories run out.
-
-The reason is visible in the distribution, and it changes how the null should be
-read. Taking each repository's own pre-to-post difference in the lapse rate, the
-median is exactly zero and the mean is $-0.005$, but the standard deviation across
-repositories is $0.190$: most projects show no change at all and a minority swing
-widely, almost all of them projects with few pull requests on one side of adoption.
-Removing the most extreme ten percent leaves $-0.002$ with an interval of
-$[-0.023, +0.019]$ across 104 repositories, a bound of 15\% of the base rate. We
-report the untrimmed figure as the estimate, because trimming on the outcome is
-choosing the bound; the trimmed figure is evidence about where the width comes
-from. Restricting on precision instead --- requiring more pull requests each side
---- \emph{widens} the interval, to 47\% at fifteen per side, because it discards
-repositories faster than it gains precision within them.
-
-So the null is not an average over heterogeneous responses that happens to cancel.
-The typical adopting repository changes its enforcement behaviour by nothing
-measurable, and the width of the pooled interval is contributed by a small number
-of small projects. Four attempts to sharpen this estimate --- lengthening the
-pre-adoption window, instrumenting review with adoption, moving to the larger
-human-authored stream, and widening the repository count --- each bought less than
-the last, and we state that as the design's limit rather than as an open question.
-What the evidence supports is that governance adoption does not produce a large
-improvement in gate outcomes, with the cross-sectional bound in
-Section~\ref{sec:enforcement} the stronger form of the claim. The share of agent PRs whose
-gate reports failure does not move either ($-0.061$, joint $p=0.872$). And
-conditional on the gate failing, merging anyway becomes \emph{more} common after
-adoption, by $+0.110$ (pre-trend $p=0.696$, joint $p=0.0005$) and $+0.141$ under
-equal-repository weighting. That estimate conditions on a post-treatment variable
-and we do not lean on it, but it certainly does not indicate a stricter gate.
+rather than leave it to the reader. The post-minus-pre contrast, clustered by
+repository, is $-0.014$ with an interval of $[-0.119, +0.091]$ on the agent stream.
+Enforcement is a repository-wide policy rather than a property of the
+machine-authored stream, so human-authored pull requests give a better-powered test
+of the same claim: there the contrast is $+0.001$ with an interval of
+$[-0.042, +0.045]$ across 280 adopting repositories, ruling out reductions larger
+than a quarter of the base rate. Section~\ref{ec:power} reports what we did to
+tighten that bound --- widening the repository sample from 848 of 8,976 screened
+projects to 471 adopting repositories, instrumenting review with adoption, and
+lengthening the pre-adoption window --- and why each bought less than the last. The
+decomposition there matters for how the null reads: the median adopting repository
+changes its lapse rate by exactly zero, and the width of the pooled interval is
+contributed by a small number of small projects rather than by genuine
+heterogeneity that cancels.
 
 \subsection{Monitoring rose; enforcement did not}
 \label{sec:enforcement}
@@ -1074,6 +941,71 @@ Match on covariates, not the baseline outcome, in a bounded reverting outcome & 
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{What Bounds the Consequence Estimates}
+\label{ec:power}
+
+How much that null establishes is a question of power, and we report the interval
+rather than leave it to the reader. Estimating the post-minus-pre contrast directly,
+with its standard error clustered by repository, gives $-0.014$ with an interval of
+$[-0.119, +0.091]$ on 2,722 treated agent PRs across 212 adopting repositories.
+Against a base lapse rate of $0.223$ that rules out reductions larger than 53\% of
+the base rate and nothing smaller --- a weak statement, and we do not dress it up.
+
+The same claim has a better-powered test, because enforcement is not a property of
+the machine-authored stream. Whether a failing check blocks a merge is a
+repository-wide policy, so if adopting monitoring machinery changed enforcement it
+would change it for human-authored work too. Human-authored PRs are a placebo for
+the \emph{review} outcome, since an instruction file addresses the agent; for the
+\emph{enforcement} outcome they are a substantive test, and they are far more
+numerous. On 9,817 treated human PRs across 280 adopting repositories the contrast
+is $+0.0011$ with an interval of $[-0.042, +0.045]$ against a base rate of $0.154$,
+ruling out reductions larger than 27\% of the base rate. The estimate is almost
+exactly zero and the bound is half as wide.
+
+Both margins bind the precision. The human stream carries 3.6 times the pull
+requests and 280 rather than 212 adopting repositories, and its standard error is
+0.41 times the agent stream's --- better than the 0.53 that independent sampling
+alone would give, because it gains on repositories and pull requests at once.
+
+We pursued the implication. Our cohort is 848 of 8,976 repositories that passed
+the original screen for coding-agent use, and dating the agent-instruction file in
+the remainder identifies 1,512 further adopting repositories. Collecting, for each,
+only the pull requests inside its own adoption window widens the estimate to 471
+adopting repositories, and it moves very little: the contrast becomes $+0.004$ with
+an interval of $[-0.038, +0.045]$, ruling out reductions larger than 25\% of the
+base rate against 27\% on the cohort alone. The standard error falls from $0.0221$
+to $0.0211$ where independent sampling would predict $0.0181$, and it stops falling
+well before the repositories run out.
+
+The reason is visible in the distribution, and it changes how the null should be
+read. Taking each repository's own pre-to-post difference in the lapse rate, the
+median is exactly zero and the mean is $-0.005$, but the standard deviation across
+repositories is $0.190$: most projects show no change at all and a minority swing
+widely, almost all of them projects with few pull requests on one side of adoption.
+Removing the most extreme ten percent leaves $-0.002$ with an interval of
+$[-0.023, +0.019]$ across 104 repositories, a bound of 15\% of the base rate. We
+report the untrimmed figure as the estimate, because trimming on the outcome is
+choosing the bound; the trimmed figure is evidence about where the width comes
+from. Restricting on precision instead --- requiring more pull requests each side
+--- \emph{widens} the interval, to 47\% at fifteen per side, because it discards
+repositories faster than it gains precision within them.
+
+So the null is not an average over heterogeneous responses that happens to cancel.
+The typical adopting repository changes its enforcement behaviour by nothing
+measurable, and the width of the pooled interval is contributed by a small number
+of small projects. Four attempts to sharpen this estimate --- lengthening the
+pre-adoption window, instrumenting review with adoption, moving to the larger
+human-authored stream, and widening the repository count --- each bought less than
+the last, and we state that as the design's limit rather than as an open question.
+What the evidence supports is that governance adoption does not produce a large
+improvement in gate outcomes, with the cross-sectional bound in
+Section~\ref{sec:enforcement} the stronger form of the claim. The share of agent PRs whose
+gate reports failure does not move either ($-0.061$, joint $p=0.872$). And
+conditional on the gate failing, merging anyway becomes \emph{more} common after
+adoption, by $+0.110$ (pre-trend $p=0.696$, joint $p=0.0005$) and $+0.141$ under
+equal-repository weighting. That estimate conditions on a post-treatment variable
+and we do not lean on it, but it certainly does not indicate a stricter gate.
 
 \section{Identification Audit}
 \label{ec:audit}
