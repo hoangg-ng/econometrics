@@ -7,3 +7,4 @@ output/
 *.egg-info/
 .ipynb_checkpoints/
 *.log
+tmp/
