@@ -1,5 +1,17 @@
 # What we extend, and what we add
 
+**Superseded, November 11, 2026.** The capability-break argument below is retained
+as research history, not as a current claim. The larger sample and subsequent
+measurement checks do not support it. The active organizational-design framing,
+new experiments, and limitations are in
+[management_science_direction.md](overleaf/paper/management_science_direction.md).
+
+**Do not cite the sections below as current findings.** In addition to the
+withdrawn break argument, the later log withdraws the claim that scrutiny stayed
+flat, updates the standing comparison, and decomposes review events into human,
+automated, and author-self activity. This file is retained as a record of an
+earlier paper position; the README and linked memo are the current summaries.
+
 One sentence: **prior work found that human reviewers approve more and scrutinise
 less of AI-agent code over time, but could not tell whether reviewers were
 habituating or the agent code was genuinely getting better. We supply the

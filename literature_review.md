@@ -1,236 +1,157 @@
-# Literature: agent-authored pull requests and contribution acceptance
+# Literature review: governing a machine contributor
 
-Read rather than summarised from search results where marked **[read]**. The
-purpose is to establish what is already known, so this project's claims can be
-positioned honestly rather than restated.
+Updated November 22, 2026 to the monitoring-versus-enforcement framing in
+`overleaf/paper/paper.tex`, which is the source of truth. This review replaces
+earlier notes advancing a capability-step story, reviewer-concentration
+hypotheses, and an affiliated-review/routing framing — all withdrawn; see the
+withdrawn-claims table in [`README.md`](README.md).
 
----
+Sections 1 and 2 are a census of published work and remain current. Sections 3 and
+4 state where this paper sits against it.
 
-## 1. The foundational result on standing
+## 1. AI-enabled work and coordination
 
-**Tsay, Dabbish & Herbsleb (2014), ICSE** — *Influence of social and technical
-factors for evaluating contribution in GitHub.*
-Social factors, principally the submitter's standing in the project, predict
-pull-request acceptance **more strongly than technical properties** of the
-contribution. This is the origin of the social-versus-technical framing, and it
-is cited throughout the agentic-PR literature.
+Research on generative AI in software development examines productivity,
+collaboration, and review activity. The evidence is heterogeneous across tasks
+and settings, and recent enterprise studies explicitly raise the possibility
+that proposal production can grow faster than evaluation capacity. These works
+make coordination a relevant organizational outcome; they do not establish
+that public repositories experience a common capacity shock or that more review
+is always better. The paper should position itself as studying a concrete
+coordination process, not as showing a general productivity gain or loss.
 
-**The onion model** (core/periphery, legitimate peripheral participation)
-supplies the companion account of how standing is acquired: newcomers enter at
-the periphery and migrate inward by accumulating reputation.
+## 2. Agentic pull requests: outcomes and interaction are already studied
 
-> **Implication for us.** Our insider 87.4% vs outsider 58.2% is a
-> **replication**, twelve years on. It cannot be a contribution.
+Several recent studies sharply limit novelty claims based on merge outcomes or
+review behavior alone:
 
----
+- [Ehsani et al., *Where Do AI Coding Agents Fail?* (arXiv:2601.15195)](https://arxiv.org/abs/2601.15195) analyzes 33,000 agent-authored PRs and manually examines 600 unmerged PRs. Its rejection taxonomy includes coordination and workflow conditions as well as technical problems.
+- [Peralta et al., *Why Are Agentic Pull Requests Merged or Rejected?* (arXiv:2605.22534)](https://arxiv.org/abs/2605.22534) studies 11,048 closed agentic PRs, with manual rationale recovery for a subset. It argues that binary outcomes alone do not identify agent capability because workflow constraints and missing observable rationale account for many rejections.
+- [Nakashima et al., *Why Agentic-PRs Get Rejected: A Comparative Study of Coding Agents* (arXiv:2602.04226)](https://arxiv.org/abs/2602.04226) examines 654 rejected agent PRs, including a human baseline, and finds agent-specific rejection modes; 67.9% of sampled rejections lack explicit reviewer feedback. This overlaps with rejection-pattern comparisons, though it does not center closer identity.
+- [Khelifi, Ouni, and Khemaja, *Behind Agentic Pull Requests* (MSR 2026 Mining Challenge)](https://2026.msrconf.org/details/msr-2026-mining-challenge/26/Behind-Agentic-Pull-Requests-An-Empirical-Study-on-Developer-Interventions-in-Age) compares human interventions in agent and human PRs. It reports lower intervention incidence for agent PRs (52.17% vs. 83.59%), but higher effort proxies when intervention occurs.
+- [Domingues, Castor, and Madeiral, *Bug-Fixing in the Age of AI* (MSR 2026 Mining Challenge)](https://2026.msrconf.org/details/msr-2026-mining-challenge/10/Bug-Fixing-in-the-Age-of-AI-Human-vs-Agentic-Pull-Requests) compares 9,052 agent and human bug-fix PRs and manually classifies rejected agent PRs, further limiting novelty claims about human-versus-agent outcomes and rejection reasons.
+- [Gonzalez and El Mezouar, *When Bots Get the Boot*](https://2026.msrconf.org/track/msr-2026-mining-challenge) and [Strauss and Schulze, *Why and When Agentic Pull Requests are (not) Accepted*](https://2026.msrconf.org/track/msr-2026-mining-challenge) study rejection reasons and acceptance predictors, respectively, reinforcing the crowded outcome-prediction stream.
+- [Haider and Zimmermann, *Understanding Dominant Themes in Reviewing Agentic AI-authored Code* (arXiv:2601.19287; MSR 2026)](https://arxiv.org/abs/2601.19287) classifies review-comment themes in agent-authored PRs. Review content is therefore an active research stream.
+- [Chung and Hassan, *Collaborator or Assistant?* (arXiv:2605.08017; AIware 2026)](https://arxiv.org/abs/2605.08017) analyzes 29,585 PR lifecycles through initiator and approver roles. It directly addresses the separation of agent initiative from human merge governance.
+- [Gao et al., *On Autopilot?* (arXiv:2601.13754; MSR 2026)](https://doi.org/10.1145/3793302.3793573) compares AI-only, human--AI, and human PRs, including review coverage; it reports that many AI-coauthored PRs from nonowners are merged without explicit review.
+- [Hindi et al., *Coding Agents in the Wild* (IEEE Access, 2026)](https://doi.org/10.1109/ACCESS.2026.3696573) reports that 84.2% of unmerged agent PRs in its sample lack inline reviewer feedback, and manually validates a classifier for visible rejection reasons. Thus, “silent rejection” and limited public rationale are already established patterns.
+- [Njoku et al., *When Code Authors Are Agents* (AIware 2026)](https://doi.org/10.1145/3805760.3814909) compares 33,596 agent-authored and 6,618 human-authored PRs across integration outcomes and collaboration signals. This overlaps with broad comparisons of review interaction and acceptance.
+- [Song, Agarwal, and Wen, *The Impact of Generative AI on Collaborative Open-Source Software Development* (Information Systems Research, 2026)](https://doi.org/10.1287/isre.2024.1361) directly studies collaborative and review-related changes around Copilot.
 
-## 2. The acceptance gap is already established
+Organizationally oriented work narrows the room for a contribution based only
+on “governance” language:
 
-**Li, Zhang, Hassan et al. (2025)** — *AI Teammates in Software Engineering
-(SE) 3.0*, the **AIDev** dataset (932,791 agentic PRs by five autonomous
-agents). Reported that the acceptance rate of agentic PRs is **significantly
-lower** than that of humans. AIDev is already cited in our own
-`adoption_signal_validation.md`.
+- [He et al., *AI Writes Faster Than Humans Can Review* (arXiv:2607.01904)](https://arxiv.org/abs/2607.01904) follows 802 developers and 196,212 PRs at one enterprise. It reports increased throughput and roughly doubled per-reviewer load, with automated review overtaking human review. This is more direct organization-level workload evidence than our public OSS traces.
+- [Tang, Karahanna, and Zhao, *Governance in Multi-Agent Open-Source Projects* (ICIS 2026, proceedings page posted; conference scheduled December 2026)](https://aisel.aisnet.org/icis2026/fow/fow/5/) uses fsQCA on 4,121 repositories and links configurations of agents and formal governance with project performance. This is a particularly close management/IS contribution; describe it as forthcoming rather than a completed conference presentation as of November 12, 2026.
+- [Wu et al., *From Delegation to Action Approval* (arXiv:2611.10058)](https://arxiv.org/abs/2611.10058) surveys 203 developers on delegation and approval of agent actions, finding that oversight remains mentally demanding. Its unit is developer-reported action approval, not PR disposition.
 
-**[read] "How Do AI Coding Agents Contribute to Software Development?"**
-(arXiv 2607.21832) — 220,612 closed PRs from 489 Python repositories, 9,428
-agentic PRs from five agents, data through **20 November 2025**.
+Together, these studies establish that agent initiative can coexist with human
+merge authority, many agent PRs receive no explicit review, unmerged outcomes
+have mixed rationales, silent rejection is common, and governance relates to
+project performance in OSS. The broad claim that AI changes governance, review
+coverage, public explanation, intervention incidence, or rejection reasons is
+**not novel**. A potential additional distinction is whether the association
+between a reviewer's repository affiliation and acceptance differs between
+agent- and human-authored PRs. The studies reviewed here compare outcomes,
+review presence, and intervention, but do not appear to focus on that
+interaction. Our estimate is exploratory, based on one selected resolved-PR
+sample, and affiliation is only a proxy for authority; it is not yet a
+consequential management contribution. The closure comparison remains a
+secondary descriptive distinction: a censoring-aware, within-repository and
+opening-period contrast of recorded human-nonauthor closure, considered with
+formal review and public closer text. Its matched-process magnitude is
+sensitive to patch and timing controls. The phrase screen is not manual content
+coding, and a human closure is not a validated rejection reason.
 
-| agent | merge rate (EMM) |
-|---|---|
-| Claude | 84.3% |
-| Codex | 73.5% |
-| Cursor | 63.9% |
-| Copilot | 59.6% |
-| Devin | 43.0% |
-| *human baseline* | *~85%* |
+## 3. Management theory: attention, authority, and expertise
 
-Comparison group: balanced samples of 2,275 merged agentic and 2,275 merged
-human PRs. **No matching or control on contributor standing, author
-association, maintainer status, or write access.**
+The association between contributor standing and acceptance is not new. Tsay,
+Dabbish, and Herbsleb's GitHub study links both technical signals and the
+submitter's social connection to project managers with contribution acceptance
+([ICSE 2014](https://doi.org/10.1145/2568225.2568315)). The current analysis
+asks a different, narrower question about the recorded evaluator's affiliation
+and whether its association with merging differs for agent-authored proposals.
+This distinction should be presented as an extension of established social
+evaluation research, not as discovery that standing matters.
 
-Longitudinal: quarterly merge rates **65.4%, 63.7%, 68.2%, 67.7%**, and *"none
-of the pairwise comparisons is statistically significant"*.
+Three organizational lenses fit the question without overstating what GitHub
+data measure:
 
-> **Implication for us.** The acceptance *level* and the agent-type ranking are
-> published. We cannot claim either. Note their human baseline (~85%) is close
-> to **our insider rate (87.4%)**, not our outsider rate (58.2%) — consistent
-> with their human sample being dominated by contributors who hold write access.
+- **Attention allocation.** Ocasio's attention-based view connects firm
+  behavior to how rules, resources, and relationships channel decision-makers'
+  attention into issues and procedures ([Ocasio 1997](https://doi.org/10.1002/(SICI)1097-0266(199707)18:1+<187::AID-SMJ936>3.0.CO;2-K)). Review is one visible procedure for allocating attention to a proposal.
+- **Decision rights.** Aghion and Tirole distinguish formal authority from real
+  authority and discuss how information and overload affect their relationship
+  ([Aghion and Tirole 1997](https://doi.org/10.1086/262063)). GitHub review records
+  reveal some formalized process events, but not who held internal authority or
+  whether private deliberation preceded a direct closure.
+- **Expertise coordination.** Work on software teams shows that effective
+  coordination entails mobilizing expertise, not merely counting activity
+  ([Faraj and Sproull 2000](https://doi.org/10.1287/mnsc.46.12.1554.12072)).
+  Accordingly, review-event counts are not reviewer effort, expertise, or
+  project quality.
 
----
+Agency theory supplies the frame the paper actually uses. Eisenhardt's treatment
+of control modes contains both a monitoring technology and a sanction
+([Eisenhardt 1985](https://doi.org/10.1287/mnsc.31.2.134)), but empirical work on
+control overwhelmingly varies monitoring and takes enforcement as given. That is
+defensible when the sanction is automatic. It is not when accepting flawed output
+carries little private cost to the accepting party, which is the case here: the
+merge is performed by a project member whose position is unaffected by a later
+defect, and who is often the same person who dispatched the agent.
 
-## 3. The standing confound is known — and quantified
+## 4. Where this paper sits
 
-**[read] Yoshioka, Monno, Tokumasu, Wakamatsu, Ota, Weeraddana & Matsumoto
-(2026), MSR '26** — *Let's Make Every Pull Request Meaningful: An Empirical
-Analysis of Developer and Agentic Pull Requests.*
+The crowded streams above establish that agent initiative coexists with human
+merge authority, that many agent PRs receive no explicit review, that silent
+rejection is common, and that governance configurations correlate with project
+performance. None of that is novel territory, and this paper does not claim it.
 
-40,214 PRs from AIDev: 6,618 human PRs (2,515 developers, 818 repositories) and
-33,596 agentic PRs — Codex 21,799, Copilot 4,970, Devin 4,827, Cursor 1,541,
-Claude Code 459. 64 features in 6 families, logistic regression, 96 model terms.
+Four things in the current manuscript are not in the literature reviewed above.
 
-Central finding: **submitter attributes dominate merge outcomes for both
-groups** — relative importance **69.00%** for human PRs and **76.15%** for
-agentic PRs, far ahead of reviews/discussion (7.08% and 4.68%).
+1. **An identified effect of a governance choice on human oversight of machine
+   work, with its channel isolated.** Committing an agent-instruction file raises
+   human review of agent PRs (+0.045 coverage, +0.090 reviewers, all pre-trends
+   passing) while leaving the agent's own output, patch size, time to readiness and
+   private draft abandonment unchanged. The prior work compares agent and human
+   outcomes; it does not exploit a dated organizational act.
 
-On the same-person submitter/integrator feature (`same_user`):
+2. **A treatment-side placebo that reverses sign.** Non-AI configuration files
+   (`CONTRIBUTING.md`, PR templates, `dependabot.yml`) move the same outcome the
+   other way. Config-file adoption marks a growth phase, so any design reading a
+   contribution increase off it is reading the growth phase. Outcome-side placebos
+   alone do not catch this.
 
-- odds of merging rise **~219×** for human PRs and **~5,419×** for agentic PRs
-  when contributor and integrator are the same person
-- **57.63%** of merged human PRs have `same_user = 1`, against **77.51%** of
-  merged agentic PRs (two-proportion *z* = −29.38, *p* < 0.001)
+3. **The monitoring/enforcement distinction, with the enforcement margin located
+   rather than assumed.** 74.8% of agent PRs with failing CI checks merge anyway,
+   before and after governance adoption. The oversight increase is substantive —
+   it scales with machine-authored volume (+0.293) and not with visibility — and
+   still inert, because every available instrument acts on monitoring and none on
+   enforcement. That asymmetry is also an asymmetry in public traces: GitHub
+   exposes branch protection only as current state, so enforcement cannot be dated.
 
-Their *Implication 1* reads it as an oversight risk: allowing the same entity to
-both author and merge "may limit independent oversight."
+4. **What measurement choices are worth.** Five construction choices, each current
+   practice in at least one study cited above, each individually capable of
+   producing a publishable-looking effect that does not survive. The withdrawn-claims
+   table in `README.md` is the evidence.
 
-> **Implication for us, and it is the important one.** This is very close to our
-> standing argument, published first, and quantified. `same_user` is included as
-> a *feature* in a predictive model, but they do **not** estimate an
-> agent-versus-human acceptance gap *net of* standing — their research questions
-> are about which feature families predict merging, not about correcting the
-> agent effect. So the correction remains unexecuted, but it is now clearly
-> **incremental** rather than novel.
->
-> Note also that their 77.51% agentic `same_user` is irreconcilable with our
-> measured **0%** agent self-merge. Theirs must attribute agentic PRs to the
-> dispatching human; ours are authored by the bot account itself
-> (`copilot-swe-agent`). These are different populations and the numbers should
-> never be compared directly.
+The two-stage decomposition is a secondary contribution: a coding agent's draft is
+screened privately before it becomes a formal proposal, public records label both
+stage endings identically, and separating them reverses the pooled pattern that
+`Chung and Hassan` and the rejection-taxonomy papers describe.
 
----
+**Claim boundary.** Instruction-file adoption is self-selected; pre-trends and the
+two placebos are the only evidence for parallel trends. The comparative estimates
+are conditional associations on populations argued to be comparable, not causal
+effects. The enforcement margin is descriptive — two attempts to identify it
+causally are reported in the paper and both fail, one on composition and one on its
+own shuffle placebo. Avoid claims of causal capacity rationing, productivity
+effects, or validated quality.
 
-## 4. Adjacent work, not read in full
+## References to verify before submission
 
-- *Where Do AI Coding Agents Fail?* (arXiv 2601.15195) — failed agentic PRs
-- *Why Are AI Agent–Involved Pull Requests (Fix-Related) Remain Unmerged?*
-  (arXiv 2602.00164)
-- *Bug-Fixing in the Age of AI: Human vs. Agentic Pull Requests*
-  (10.1145/3793302.3793570)
-- *Security in the Age of AI Teammates* (arXiv 2601.00477)
-- *Code Change Characteristics and Description Alignment* (arXiv 2601.17627)
-- *How AI Coding Agents Modify Code* (arXiv 2601.17581)
-- *On the Use of Agentic Coding* (10.1145/3798166)
-
----
-
-## 5. Where this leaves our claims
-
-| our claim | verdict |
-|---|---|
-| Agents accepted less than humans | **Published** (Li et al.; arXiv 2607.21832) |
-| Agent-type ranking | **Published**, and our sample cannot support it |
-| Standing dominates acceptance | **Published** (Tsay 2014; Yoshioka et al. 2026) |
-| Agent gap net of merge authority (−25.7pp → −4.4pp) | **Incremental** — executes a correction Yoshioka et al. quantify but do not apply |
-| **Discrete capability step, ~Nov 2025** | **Novel** — see below |
-| **Agent PRs do not displace human contribution** | **Novel** — not addressed in any surveyed work |
-| Post-merge quality | infeasible here; others have attempted it |
-
-### Why the capability step survives
-
-arXiv 2607.21832 looked for a time trend and found none: quarterly rates 65.4%,
-63.7%, 68.2%, 67.7%, no significant pairwise difference. **But their data ends
-20 November 2025 — within days of our detected break at 2025-11.** They could
-not have observed it. Our window runs to 2026-08 (extending to 2026-10), giving
-roughly nine further months on the far side of the break.
-
-That is a defensible novelty claim with a concrete explanation for why earlier
-work missed it, which is the strongest form such a claim can take.
-
-
----
-
-## 6. Temporal work — and the paper this project should extend
-
-### 6a. A trend already exists, for a different agent
-
-**[read, summary] "Comparing AI Coding Agents: A Task-Stratified Analysis of Pull
-Request Acceptance"** (arXiv 2602.08915, MSR 2026). 7,156 AIDev PRs, five agents.
-
-- **Devin rises +0.77% per week (R² = 0.34), roughly 60% → 80%**
-- **all other agents hold stable acceptance rates**
-- task specialisation: Claude Code leads docs (92.3%) and features (72.6%);
-  Cursor leads fixes (80.4%)
-
-> **Implication.** Temporal analysis of agent acceptance is *not* unexplored, so
-> "we study change over time" is not by itself a contribution. But their pattern
-> is a **linear trend in Devin** with others flat; ours is a **discrete step in
-> Copilot**, in a later period. Different agent, different functional form,
-> different window.
-
-### 6b. The paper we should extend — "Habituation at the Gate"
-
-**[read] "Habituation at the Gate: Rising Approval and Declining Scrutiny in
-Human Review of AI Agent Code"** (arXiv 2606.22721). 11,429 reviews by 400
-repeat reviewers (≥10 agent PR reviews each), repos >100 stars, **January–July
-2025**. Agents: Copilot Autofix, Devin, Codex CLI, Cursor.
-
-Findings:
-
-| measure | change |
-|---|---|
-| approval rate | 30.1% → 36.8% (**+6.7 pp**; +14.5 pp across experience deciles) |
-| inline comments per review | 1.01 → 0.79 (**−22%**) |
-| change-request rate | 11.2% → 5.6% (**−5.6 pp**) |
-| approval rise vs comment decline | ρ = −0.556, p < 10⁻⁴ |
-
-Running variable is **reviewer experience** (cumulative reviews), not calendar
-time: *"experience carries the signal (mean coefficient +0.11…) while calendar
-time contributes little (mean −0.007)."*
-
-**Their stated limitation is precisely our opening:**
-
-> *"we cannot establish causality: agent code may genuinely improve over the
-> observation window (all four agents received updates during 2025), confounding
-> reviewer behavior change with rational re-calibration."*
->
-> *"we lack a direct measure of agent code quality over time; if agents genuinely
-> improved, rising approval would be rational rather than habituative."*
-
-### Why this is the strongest available positioning
-
-They identify rising approval and declining scrutiny, and say outright they
-cannot tell **habituation** from **genuine agent improvement** because they have
-no measure of agent code quality over time.
-
-We have what they lack, for a later period:
-
-| what they need | what we have |
-|---|---|
-| a measure of agent output quality over time | median churn 70 → 50 lines, changed files 3 → 2 at the break |
-| scrutiny measured across a capability change | unreviewed 47.6% → 43.4%, reviewers 0.89 → 0.90, review events 2.06 → 2.16 — **flat** |
-| a period containing a discrete capability shift | the 2025-11 break, four months after their data ends |
-| coverage past July 2025 | our window runs to 2026-08, extending to 2026-10 |
-
-**The resolution.** If habituation drove rising acceptance, scrutiny would fall.
-Across our break it does not, while agent output measurably changes. For this
-episode the rise is **capability, not habituation** — the alternative they could
-not rule out.
-
-Note the measures differ: theirs is *approval* (a review state) on a
-reviewer-experience clock; ours is *merge* on a calendar clock. The two are
-complementary rather than contradictory, and both can hold — individuals may
-habituate with experience while aggregate scrutiny at a calendar break stays
-flat. The paper must say so rather than claiming a refutation.
-
-
----
-
-## 7. Honest summary
-
-Three contributions survive contact with the literature:
-
-1. **The discrete capability step** (2025-11) — prior temporal work finds a
-   linear trend in Devin and flatness elsewhere, and the largest cross-sectional
-   study's data ends 20 November 2025, within days of our break.
-2. **Resolving the habituation-versus-capability ambiguity** that arXiv 2606.22721
-   explicitly leaves open, by supplying the agent-quality measure they lack and
-   showing scrutiny flat across a capability change. **This is the strongest
-   positioning available: extending a named paper's stated limitation.**
-3. **No crowding out** — not addressed anywhere surveyed.
-
-Plus one recovered repository-level result: **review intensity rises ~22% per
-change after adoption** (+0.4335 review events per PR, p = 0.0025) with reviewer
-counts unchanged — intensification per change, not broadening.
-
-Not contributions: the acceptance level, the agent ranking, standing predicting
-acceptance, and the existence of temporal variation.
+The arXiv studies are working papers unless their current version specifies a
+peer-reviewed venue. Confirm version, publication status, author metadata, and
+final bibliographic details at submission. The manuscript's older literature
+notes remain in `experiment_log.md` as project history; they should not be used
+to restore the withdrawn acceptance-step or concentration claims.

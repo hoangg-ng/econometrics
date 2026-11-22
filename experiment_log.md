@@ -4,12 +4,143 @@
 > Terminal extraction failures are kept verbatim because the design rules require
 > distinguishing verified zeros from failed extraction. The unabridged 40,107-line
 > log is in git history at commit 4e96596.
+>
+> **Compressed 2026-11-13.** The closed reviewer-concentration programme held 2,565
+> lines reproducing twenty-one finding files and two raw run logs verbatim. Every
+> verdict is preserved in the table under *Archived records*; the verbatim text is
+> at commit `ecb8810`. No current claim depended on it. 4,035 lines → 1,540.
 
 # Complete Experiment Log — AI Adoption and Code Review
 
-Generated 2026-11-01.
+Updated 2026-11-13.
 
 This file preserves the full experiment record: planned checks, completed analyses, robustness runs, null results, failed or inconclusive specifications, and raw run logs. The paper and presentation use only results that materially inform the research questions or document an important limitation. A result appearing here is not automatically a supported claim.
+
+## Reader's guide and current status — November 13, 2026
+
+This section is the short map for collaborators. The dated entries below retain
+the full history, including results later withdrawn. The current manuscript is
+`overleaf/paper/paper.tex`; the literature review is `literature_review.md`;
+the reproducibility and scope notes are in `README.md` and the analysis memos
+linked below.
+
+### Current research question
+
+How is the relationship between evaluator affiliation and acceptance different
+for agent-authored proposals, and how are those proposals otherwise disposed
+of? The setting is public open-source GitHub repositories. We observe PR
+authors, submitted review events, GitHub's reviewer-association field, merge or
+close events, and some public discussion and CI outcomes. These traces do not
+directly identify managerial assignment, permission, effort, private reasoning,
+proposal quality, or organization performance.
+
+### Current candidate findings
+
+Every contrast below is reported against **D2-outsider human controls** — humans
+who, like an agent account, have not reviewed anyone else's PR in that repository
+and so do not routinely merge their own work. Estimates against pooled human
+controls are retained in the dated entries but are not current claims: 59.3% of
+those controls are insiders and 51.4% of their merges are self-merges. See the
+2026-11-13 audit entry.
+
+1. **Direct disposition.** In 824 matched resolved pairs with an outsider control,
+   a human nonauthor closes the proposal without merging **+21.24 points** more
+   often for agent PRs (95% repository-bootstrap CI [+16.28, +26.29]); merging is
+   **−8.62 points** less likely (CI [−13.69, −3.91]). Against pooled controls the
+   same differences are +32.96 and −22.25 points, so roughly a third of the raw
+   gap was control standing. In the censor-aware 30-day cohort the closure
+   difference is +28.9 points equal-cell and +12.3 points PR-weighted with
+   repository x opening-month fixed effects (CI [+5.4, +19.2]); that cohort has
+   **not** yet been re-estimated against outsider controls.
+2. **Oversight is not detectably different.** Within the same outsider-control
+   pairs, with automated reviewers excluded and reviews restricted to on or
+   before the terminal disposition: eligible human review −1.82 points
+   (CI [−6.54, +2.74]), affiliated human review +1.09 (CI [−3.52, +5.54]), human
+   approval −0.97 (CI [−5.41, +3.41]), human CHANGES_REQUESTED +0.00
+   (CI [−1.48, +1.55]). These are bounded nulls at roughly +/-5 points, not
+   evidence of equivalence.
+3. **Affiliated review and acceptance — demoted.** The agent-by-affiliated-review
+   interaction is +16.64 points against pooled controls but **+4.90 points
+   (CI [−5.74, +15.53], p=0.367)** against outsider controls, and the triple
+   interaction with control standing is +23.08 points (p=0.00091). The published
+   estimate is driven by the control group's merge authority. Reported as a
+   sensitivity, not as a mechanism.
+4. **Visibility and performance limits.** Among human-nonauthor closures, formal
+   human review preceded closure in 14.7% of agent cases versus 29.7% of pooled
+   controls, and closer-authored public text was present in 30.3% versus 70.3%.
+   These are public traces, not evidence of absent private review, and neither
+   figure has been recomputed against outsider controls. CI-failure (−0.7 points,
+   CI [−4.3, +2.9]) and linked-issue (−1.2 points, CI [−9.1, +6.7]) proxies are
+   bounded nulls. Higher agent share is associated with fewer human merges at
+   fixed arrivals but no detectable total-merge increase. No quality,
+   productivity, or welfare effect is established.
+
+**Interpretation boundary:** the defensible contribution is that machine-authored
+proposals are screened by direct human disposition rather than by reduced
+oversight, in a comparison held to equal merge authority with automated reviewers
+separated. Several published studies read the same traces as evidence of absent
+oversight; on this comparison that reading does not hold. But the standing measure
+is a full-window proxy whose outsider arm still self-closes 22.5% of the time,
+review assignment is unobserved, the process sample selects resolved PRs, and no
+mechanism, capacity, or quality claim is identified.
+
+### How the project evolved
+
+1. The original program studied reviewer concentration, workload, and crowding
+   around AI adoption using repository-month panels and matched projects. The
+   log retains extensive matching, pretrend, contamination, roster, and
+   concentration checks. Key concentration estimates changed under balanced
+   designs, several outcomes were mechanically bounded, and the current
+   common-window analysis does not establish increasing concentration.
+2. A later paper story proposed a discrete November 2025 capability shift and
+   argued that acceptance rose without declining scrutiny. Larger samples
+   removed the step and showed mixed-to-declining scrutiny measures; the
+   capability-not-habituation conclusion was withdrawn.
+3. Reviewer-standing analyses found a large insider--outsider acceptance gap.
+   The apparent +12.4-point agent premium over outsiders depends on defining
+   insiders from activity over the full observation window, which uses future
+   behavior. With historical pre-period participation, the agent--outsider
+   contrast is negative and statistically inconclusive; it does not establish
+   an agent premium or equality with outsiders.
+4. The study then shifted toward how proposals are evaluated, accepted, and
+   directly closed. New collections added currently open PRs, dated reviews,
+   reviewer affiliation, closer text, CI checks, and linked issues. The review
+   established substantial overlap with prior software-engineering studies,
+   so the paper narrows its claim and makes limitations explicit.
+5. An exploratory result on reviewer affiliation in the matched process sample
+   was briefly the paper's lead finding. The 2026-11-13 audit showed it is
+   produced by the control group's merge authority, and that the companion
+   review-coverage gap is produced by counting automated reviewers. Both were
+   demoted. What survives, held to equal merge authority, is direct human
+   disposition: agent proposals are closed by a human nonauthor far more often
+   while oversight is not detectably different.
+
+### Reproduction map
+
+From the repository root, run the current analyses individually:
+
+```sh
+venv/bin/python analysis/standing_sensitivity.py
+venv/bin/python analysis/management_science.py
+venv/bin/python analysis/management_science_followup.py
+venv/bin/python analysis/core_routing_acceptance.py
+venv/bin/python analysis/gate_throughput.py
+venv/bin/python analysis/management_science_censored_cohort.py
+venv/bin/python analysis/management_science_closure_robustness.py
+venv/bin/python analysis/management_science_authority_review.py
+venv/bin/python analysis/management_science_unverified.py
+```
+
+`python3 reproduce.py` reproduces the older declared pipeline, not every newer
+management-science analysis. Current result memos are
+`analysis/management_science_plan.md`,
+`analysis/management_science_process.md`,
+`analysis/management_science_closure_discussion.md`,
+`analysis/management_science_unverified.md`, and
+`overleaf/paper/management_science_direction.md`. The corresponding JSON
+outputs are kept under `output/management_science/` and
+`output/process_data/`. Some scripts require pre-collected CSV inputs; collector
+commands and API limitations are described in `README.md`.
 
 The associated analysis scripts are retained in the repository, including
 the candidate-pool, PR-level, repository-month, identity, contamination,
@@ -63,2570 +194,74 @@ identity results, lead-displacement results, and their execution logs.
 | `output/repo_month_panel_run.log` | raw execution log |
 | `output/reviewer_identity_check_run.log` | raw execution log |
 
-## Full records
+## Archived records: the reviewer-concentration programme (March–November 2026)
 
-### `output/lead_displacement_results.md`
+**Status: closed 2026-11-04, superseded by the identified null below.** This
+section previously held 2,565 lines reproducing twenty-one finding files and two
+raw run logs verbatim. Every verdict they recorded is preserved in the table
+below; the verbatim text is in git history (the full working-file text at commit
+`ecb8810`, and the unabridged 40,107-line original at `4e96596`). Nothing here
+supports a current claim. Its value is the record of which specifications failed
+and why.
 
-# Lead displacement analysis (overleaf/implementation_plan.md)
+The programme asked whether a repository's own adoption of an AI coding tool
+changes how review work is distributed. Design: staggered-adoption event study on
+a matched treated/control repository-month panel, 1,771 complete pairs, Borusyak
+et al. imputation estimator, joint pre-trend Wald tests, caliper sensitivity at
+0.10–0.50, matched-pair bootstrap at 300–1,000 draws. The adoption signal combined
+commit co-authorship trailers, agent-authored branch and author patterns, and
+config-file presence, validated against three published datasets; its
+implementation was never committed and is lost.
 
-Pairs usable (both treated+control have an identifiable pre-period L_i): 309 / 1771 complete pairs.
+### Verdicts, by source file
 
-## A. Where does the old lead (L_i) go?
-
-### A1. Share of repo-months at each rank, pre vs. post (descriptive)
-
-| Role | Period | rank 1 | rank 2 | rank 3+ | absent | n |
-|---|---|---|---|---|---|---|
-| treated | pre | 75.7% | 14.0% | 5.8% | 4.5% | 1109 |
-| treated | post | 54.7% | 16.1% | 9.3% | 19.8% | 1594 |
-| control | pre | 77.2% | 13.0% | 3.5% | 6.2% | 993 |
-| control | post | 60.1% | 15.1% | 6.2% | 18.6% | 1331 |
-
-### A2. Rank distribution by event time (descriptive)
-
-| Role | h | rank 1 | rank 2 | rank 3+ | absent | n |
-|---|---|---|---|---|---|---|
-| treated | -6 | 69.6% | 15.2% | 12.3% | 2.9% | 171 |
-| treated | -5 | 76.2% | 16.9% | 4.3% | 2.6% | 231 |
-| treated | -4 | 76.8% | 11.4% | 7.0% | 4.8% | 228 |
-| treated | -3 | 78.3% | 12.8% | 3.0% | 6.0% | 235 |
-| treated | -2 | 76.2% | 13.9% | 4.1% | 5.7% | 244 |
-| treated | +0 | 61.2% | 17.1% | 11.8% | 9.9% | 263 |
-| treated | +1 | 57.5% | 17.4% | 11.6% | 13.5% | 207 |
-| treated | +2 | 55.9% | 18.6% | 8.5% | 17.0% | 188 |
-| treated | +3 | 50.3% | 18.3% | 11.2% | 20.1% | 169 |
-| treated | +4 | 53.8% | 19.4% | 7.5% | 19.4% | 160 |
-| treated | +5 | 51.1% | 12.8% | 10.6% | 25.5% | 141 |
-| treated | +6 | 58.2% | 10.7% | 6.6% | 24.6% | 122 |
-| treated | +7 | 52.7% | 9.9% | 8.8% | 28.6% | 91 |
-| treated | +8 | 48.8% | 15.9% | 7.3% | 28.0% | 82 |
-| treated | +9 | 55.4% | 9.5% | 6.8% | 28.4% | 74 |
-| treated | +10 | 44.2% | 15.4% | 5.8% | 34.6% | 52 |
-| treated | +11 | 46.7% | 24.4% | 4.4% | 24.4% | 45 |
-| control | -6 | 73.9% | 16.2% | 4.9% | 4.9% | 142 |
-| control | -5 | 77.6% | 11.7% | 3.6% | 7.2% | 223 |
-| control | -4 | 75.5% | 12.3% | 4.9% | 7.4% | 204 |
-| control | -3 | 78.8% | 13.0% | 2.9% | 5.3% | 208 |
-| control | -2 | 79.2% | 13.0% | 1.9% | 6.0% | 216 |
-| control | +0 | 66.2% | 13.8% | 4.8% | 15.2% | 210 |
-| control | +1 | 61.2% | 18.2% | 6.1% | 14.5% | 165 |
-| control | +2 | 58.1% | 17.4% | 6.5% | 18.1% | 155 |
-| control | +3 | 62.3% | 17.4% | 8.0% | 12.3% | 138 |
-| control | +4 | 60.4% | 14.4% | 2.9% | 22.3% | 139 |
-| control | +5 | 55.3% | 13.2% | 6.1% | 25.4% | 114 |
-| control | +6 | 55.1% | 11.2% | 9.3% | 24.3% | 107 |
-| control | +7 | 58.5% | 13.4% | 11.0% | 17.1% | 82 |
-| control | +8 | 61.2% | 13.4% | 6.0% | 19.4% | 67 |
-| control | +9 | 54.7% | 21.9% | 4.7% | 18.8% | 64 |
-| control | +10 | 70.2% | 8.5% | 4.3% | 17.0% | 47 |
-| control | +11 | 48.8% | 14.0% | 7.0% | 30.2% | 43 |
-
-### A3 / D2. Causal ATT: L_i's absolute count and L_i's share of total (full rigor)
-
-**A: L_i's absolute review count** (`li_count`)
-- ATT = -0.2648, analytic SE = 0.5628 (t=-0.47)
-- Bootstrap SE (300/300 valid reps) = 0.6935 (t=-0.38, p=0.7026)
-- Pre-trend joint Wald: stat=4.68, df=5, p=0.4557 -- **PASS**
-- n_omega0=3433, n_omega1=1594, treated repos=304
-- Caliper stability:
-  - caliper=0.10: n_pairs=70, ATT=+2.7817, pretrend p=0.8003
-  - caliper=0.15: n_pairs=116, ATT=+1.2931, pretrend p=0.3941
-  - caliper=0.25: n_pairs=309, ATT=-0.2648, pretrend p=0.4557
-  - caliper=0.35: n_pairs=110, ATT=-0.1131, pretrend p=0.0832
-  - caliper=0.50: n_pairs=49, ATT=-1.6309, pretrend p=0.3729
-- Balanced h=0..5 (85 repos): ATT=-0.1224 (SE 1.0623)
-
-**A/D: L_i's share of month's total reviews** (`li_share`)
-- ATT = -0.0251, analytic SE = 0.0161 (t=-1.56)
-- Bootstrap SE (300/300 valid reps) = 0.0211 (t=-1.19, p=0.2341)
-- Pre-trend joint Wald: stat=12.06, df=5, p=0.0340 -- **FAIL**
-- n_omega0=3431, n_omega1=1594, treated repos=304
-- Caliper stability:
-  - caliper=0.10: n_pairs=70, ATT=+0.0086, pretrend p=0.2679
-  - caliper=0.15: n_pairs=116, ATT=+0.0080, pretrend p=0.0535
-  - caliper=0.25: n_pairs=309, ATT=-0.0251, pretrend p=0.0340
-  - caliper=0.35: n_pairs=110, ATT=+0.0187, pretrend p=0.0036
-  - caliper=0.50: n_pairs=49, ATT=+0.0270, pretrend p=0.2655
-- Balanced h=0..5 (85 repos): ATT=+0.0015 (SE 0.0209)
-
-## B. Who is the new top-1? (descriptive, no causal claim)
-
-### B1. Pre-period rank of N_it, when N_it != L_i (post-t0 months only)
-
-| Role | rank 2 | rank 3-5 | rank 6+ | absent pre-period | n |
-|---|---|---|---|---|---|
-| treated | 43.6% | 24.8% | 4.6% | 27.0% | 722 |
-| control | 31.5% | 23.2% | 6.2% | 39.2% | 531 |
-
-### B2. Distinct people ever occupying the new-top-1 slot, per repo
-
-| Role | # distinct new leaders | share of repos |
+| source | what it tested | verdict |
 |---|---|---|
-| treated | 1 | 54.0% (n=109) |
-| treated | 2 | 27.7% (n=56) |
-| treated | 3 | 11.4% (n=23) |
-| treated | 4 | 4.5% (n=9) |
-| treated | 5 | 1.5% (n=3) |
-| treated | 7 | 0.5% (n=1) |
-| treated | 12 | 0.5% (n=1) |
-| control | 1 | 57.4% (n=109) |
-| control | 2 | 26.8% (n=51) |
-| control | 3 | 13.7% (n=26) |
-| control | 4 | 1.6% (n=3) |
-| control | 5 | 0.5% (n=1) |
-
-## C. Is it a handover or a rotation? (descriptive, no causal claim)
-
-Among repos where the monthly top-1 changes at least once post-t0:
-
-| Role | n repos w/ >=1 change | mean months to first change | mean successor persistence (share of remaining months) | mean L_i-at-rank-2 share |
-|---|---|---|---|---|
-| treated | 202 | 1.47 | 0.339 (n=159) | 0.210 (n=159) |
-| control | 190 | 1.99 | 0.249 (n=152) | 0.158 (n=152) |
-
-## D. Total volume control (full rigor)
-
-**D: Total reviews per repo-month** (`total_reviews_month`)
-- ATT = +0.7296, analytic SE = 1.4866 (t=0.49)
-- Bootstrap SE (300/300 valid reps) = 1.3686 (t=0.53, p=0.5940)
-- Pre-trend joint Wald: stat=4.09, df=5, p=0.5363 -- **PASS**
-- Caliper stability:
-  - caliper=0.10: n_pairs=70, ATT=+4.6573, pretrend p=0.8504
-  - caliper=0.15: n_pairs=116, ATT=+1.7905, pretrend p=0.8619
-  - caliper=0.25: n_pairs=309, ATT=+0.7296, pretrend p=0.5363
-  - caliper=0.35: n_pairs=110, ATT=-0.0006, pretrend p=0.6793
-  - caliper=0.50: n_pairs=49, ATT=-0.7781, pretrend p=0.8195
-- Balanced h=0..5 (85 repos): ATT=+1.2104 (SE 2.1548)
-
-**Cross-reference (A3):** L_i's share of total reviews (`li_share`) ATT = -0.0251 (bootstrap p=0.2341, pretrend FAIL). Reading D alongside A3: if total_reviews rises while li_share falls, that's dilution-by-growth; if li_share falls with total_reviews flat/falling, L_i is doing less in absolute terms too.
-
-## E. Rank-2 slot decomposition, post-t0 (descriptive, no causal claim)
-
-| Role | L_i + someone new | two new people | L_i alone / only one reviewer | n | (months with 0 reviewers, excluded) |
-|---|---|---|---|---|---|
-| treated | 52.7% | 21.3% | 26.0% | 1594 | 0 |
-| control | 52.4% | 15.4% | 32.2% | 1331 | 0 |
-
-### `session_summary.md`
-
-# Session Summary — AI Adoption and Code Review Structure
-
-Status snapshot of everything analyzed, confirmed, tested-and-rejected, or
-still pending across this session. Written for a human read-through, not
-as a paper section.
-
----
-
-## 1. Data pipeline status
-
-| Dataset | Coverage | Notes |
-|---|---|---|
-| `matched_pairs.csv` | 2,320 caliper-0.25 matched pairs | Full candidate pool: 8,972 repos |
-| `validated_complete_pairs()` | **1,771 pairs** | The paper's actual full sample (any cache data for both repos) |
-| `repo_month_cache.csv` | ~1,771 pairs, but only some have full pre+post coverage | First-stage repo-month extraction, capped at 40 PRs/month |
-| `pr_level_data.csv` (uncapped) | **1,406 of 1,771 pairs** (293k PR rows) | Grew from an initial 802 after fixing a target-list bug in `build_pr_level_data.py` |
-| `reviewer_identity_check.csv` | **~972 of 1,771 pairs** | Narrower scope — `build_reviewer_identity_check.py` has an unfixed role-level bug (drops a role independently, not atomically per pair). Never patched. |
-
-**Remaining 365 pairs without PR-level data:** 362 have *neither* repo with valid pre+post coverage in `repo_month_cache.csv` at all (a genuine upstream gap, not a bug); 3 are a negligible one-sided edge case.
-
----
-
-## 2. Confirmed findings (in the deck, full/near-full sample)
-
-### H1 — Specialization (concentration), full 1,771-pair sample
-| Outcome | ATT | p |
-|---|---|---|
-| Top-1 review share | +0.017 | 0.052 |
-| Top-2 review share | +0.015 | 0.003 |
-| Tail share (outside top 2) | −0.015 | <0.001 |
-| Reviewer Gini | +0.030 | <0.001 |
-| Team size (distinct reviewers) | −0.041 | n.s. |
-
-Restricted to repos with 3+ reviewers/month: top-1 share +0.041, top-2 share +0.036 (both <0.001) — the pooled estimate is diluted by repo-months pinned near 100% with only 1–2 reviewers.
-
-**Gini re-run on the expanded 1,406-pair sample:** ATT=+0.0303, **t=5.01** (up from 4.89 on the earlier 802-pair subsample), stable across all 3 testable calipers (t=3.72/3.95/5.01 at 0.10/0.15/0.25).
-
-### H2 — Reassignment, not destabilized
-| Outcome | ATT | p |
-|---|---|---|
-| Monthly leader = pre-adoption top-1 | −0.077 | <0.001 |
-| Monthly top-2 overlaps pre-adoption top-2 | −0.045 | <0.001 |
-| **Month-to-month leader change** (new, this session) | **−0.058** | **0.004** |
-
-The new `leader_changed` result **replaces an old informal pooled comparison** (55.9% vs 57.7%, p=0.54, not a real estimate) with a proper BJS estimate — and it's a *stronger* finding: turnover doesn't just fail to rise, it **significantly falls**. Clean pre-trend (joint Wald p=0.84).
-
-`distinct_leaders_6m` (the other half of the old informal comparison) **cannot be estimated under this design at all** — the pre-period window is only 5 months, so no treated repo can ever supply a full 6-month lookback for the pre-period model fit. Structural ceiling, not a bug.
-
-### H3 — Process signature
-| Outcome | ATT | p |
-|---|---|---|
-| Time to first review (h) | −65.0 | 0.025 |
-| Time to merge (h) | −62.8 | 0.021 |
-| Review rounds/PR | +0.180 | 0.027 |
-
-**PR-size robustness check** (rules out "PRs just got smaller" as the explanation for latency dropping): unrestricted ATT=−34.2 (t=−1.74) → residualized on size ATT=−35.8 (t=−1.82) → restricted to similarly-sized PRs ATT=−61.8 (t=−2.62, cleanest pre-trend of the three). Size explains ~0% of variance in latency (R²=0.0025). **Latency drop survives — genuinely faster, not just smaller.**
-
----
-
-## 3. Tested this session, came back inconclusive/null — removed from deck, logged in `implementation_plan.md`
-
-- **Does `review_rounds` rise most where reassignment is largest?** Median-split test: diff=+0.244, p=0.122 (not significant, though directionally right — high-reassignment stratum t=1.70 vs low-reassignment t=−0.09). Continuous-regression follow-up: r=−0.057, p=0.144 (weaker, not stronger). Verdict: directionally consistent, not statistically confirmed, likely underpowered at n=668/1,771.
-- **Alternative explanations for H2** ("upstream reallocation," "capacity ceiling," "mechanism not measured"): 2 of 3 aren't testable with any data we have (capacity/saturation needs workload data we don't collect; "mechanism not measured" is a theory-vs-observation limitation by definition). The one testable angle (does the old lead's *own* PR-authoring activity rise, via `author_login` in `pr_level_data.csv`) was never run — logged as a real next step, not attempted.
-- **Lead displacement analysis (A–E)**, on the 309-pair subsample where both treated+control have identifiable pre-period identities:
-  - Causal parts (A: where does the old lead's rank/count/share go; D: total volume control) — **null, caliper-unstable, or pre-trend-failing**. Not usable.
-  - Descriptive parts (not causal claims): new leaders were the previous #2 43.6% of the time in treated repos vs 31.5% control (more "internal promotion"-looking); treated repos change leaders faster (1.47 vs 1.99 months) but the successor then holds the role longer (34% vs 25% of remaining months). Suggestive of a faster-but-stickier internal handover pattern — not statistically established, flagged as such.
-
----
-
-## 4. Removed from the deck for other reasons
-
-- **ANZ Bank citation** (`chatterjee2024anz`, "42.4% faster") — has documented published scrutiny (re-analyses reporting calculation/selection errors, non-replication in comparable settings). Cut entirely.
-- **"Who reaches the core in 3 years" future-work item** — genuinely impossible right now, not just undone: latest adoption `t0` in the sample is 2026-09-11, today is 2026-09-30. That data won't exist until 2029.
-- **Review-intensity claims** ("fewer hands," "single point of failure") — `n_reviewers` is null; these were unsupported and dropped per this project's own stated standard of not overclaiming nulls.
-
----
-
-## 5. Sampling-cap caveat (still on the smaller 802-pair subsample — not yet re-verified on 1,406)
-
-The original repo-month pipeline capped each repo-month at 40 sampled PRs (binds ~11% of repo-months). Re-estimating on the 802-pair subsample, capped vs. uncapped:
-
-| Outcome | Capped ATT (t) | Uncapped ATT (t) |
-|---|---|---|
-| Top-1 share | +0.0141 (2.07) | +0.0070 (1.12) — loses significance |
-| Top-2 share | +0.0153 (4.08) | +0.0082 (2.47) — survives |
-
-Direction not overturned; magnitude of the original capped-pipeline numbers is probably somewhat inflated. **Not yet re-run on the full 1,406-pair sample** — a real next step if this matters.
-
----
-
-## 6. Bootstrap SE validation — 1,000-replicate re-run **in progress**
-
-Original validation (300–500 reps): analytic SE understates true uncertainty by 12–83%; top-1 share drops to borderline (p=0.052) after correction, everything else survives.
-
-Re-run at 1,000 replicates (this project's own plan calls for ≥1,000) — **complete**:
-
-| Outcome | Analytic ATT (SE) | Bootstrap mean (SE) | Ratio | Corrected $t$ | Corrected $p$ |
-|---|---|---|---|---|---|
-| Top-1 share | +0.0173 (0.0064) | +0.0167 (0.0087) | 1.36× | 1.99 | 0.047 |
-| Top-2 share | +0.0151 (0.0034) | +0.0153 (0.0055) | 1.59× | 2.75 | 0.006 |
-| Time to first review | −65.01 (21.40) | −65.36 (31.14) | 1.46× | −2.09 | 0.037 |
-| Time to merge | −62.81 (24.18) | −61.88 (27.58) | 1.14× | −2.28 | 0.023 |
-| Review rounds | +0.1804 (0.0447) | +0.1766 (0.0821) | 1.84× | 2.20 | 0.028 |
-
-**Verdict: essentially confirms the deck's existing corrected p-values** (0.052/0.003/0.025/0.021/0.027 at 300–500 reps vs. 0.047/0.006/0.037/0.023/0.028 at 1,000 reps) — no outcome changes significance status, no sign flips. Doubling the replicate count mainly tightened top-1 share slightly (0.052→0.047, crossing the conventional 0.05 line) and nudged time-to-first-review down a touch (0.025→0.037, still significant). The deck's numbers were already stable; this just satisfies the plan's own ≥1,000-rep requirement with a cleaner record. **No deck update needed** — differences are noise-level, not a substantive change.
-
----
-
-## 7. Implementation-plan triage (current 9-section formal checklist)
-
-**Already satisfied**, no action needed: uncapped extraction, one-count-per-reviewer-per-PR, bot filtering, matching/balance reporting, H1 estimates + cap sensitivity, H2 pseudo-adoption dates + top-2 overlap definition, BJS/pre-trend/balanced-panel/mean-reversion checks, H3 baseline + PR-size adjustment.
-
-**Genuinely blocked — needs new data extraction, not more analysis:**
-- Independent incumbent-selection window (h=−12..−7) — we only have data from h=−6 onward.
-- Full reviewer-level leader-prediction model (file familiarity, maintainer/CODEOWNERS role) — not in our schema.
-- Downstream outcomes (reverts, post-merge defects, contributor retention) — not collected.
-
-**Not done, feasible now with existing data (not yet started):**
-1. Bootstrap ≥1,000 reps — **running now** (§6 above).
-2. Shared-reviewer/shared-organization dependence across repos (an untested SUTVA-adjacent assumption).
-3. Tie-handling sensitivity for monthly/pre-adoption leader identification.
-4. Partial reviewer-level leader-prediction model using only the features we do have (prior workload, prior reviewing experience) — a scaled-down version of the full §7 extension.
-
----
-
-## 8. Citations added/verified this session
-
-All verified via web search/fetch before adding (not taken on faith from the project's own `.bib`, which has a documented history of placeholder/unverified entries):
-`perry2023users`, `pearce2022asleep`, `paradis2025speed`, `hoffmann2025generative`, `adams2026radar`, `gao2026autopilot`, `zhong2026generations`, `wegner1987transactive`, `lewis2003measuring`, `ren2011transactive`.
-
-Two flagged with caveats worth remembering:
-- **Paradis (Google RCT, 21% speedup)** — not statistically significant after covariate adjustment, per the paper itself.
-- **Chatterjee (ANZ Bank, 42.4%)** — documented scrutiny; **removed from the deck entirely** (see §4).
-
----
-
-## 9. Current hypothesis structure (deck)
-
-Started at 5 hypotheses, consolidated to 3:
-- **H1** — Specialization: concentrates on fewer specialists, headcount unchanged (was H1+H2 merged).
-- **H2** — Reassigned, not destabilized: displaced from pre-adoption top position, but the new arrangement is stable (was H3+H4 merged).
-- **H3** — Process signature: faster but more iterative (was H5).
-
-### `research_design.md`
-
-# Research design: what still needs new data
-
-Items pulled off the slide deck (`overleaf/part1.tex`) — reported honestly
-as gaps rather than attempted with a weaker proxy. This is a planning
-document, not part of the paper or the deck.
-
-## 1. Reviewer identity tracking
-
-**Status: extraction complete** (10,075/10,078 targets,
-`output/reviewer_identity_check.csv`). Confirmed, clean findings on the
-full sample:
-- `top1_persists` (does the monthly re-crowned leader match the
-  pre-adoption identity): ATT = −0.077, p<0.0001, clean pre-trend.
-- `top2_overlap` (does the monthly top-2 overlap the pre-adoption
-  top-2): ATT = −0.045, p<0.0001, clean pre-trend.
-- Whole-period leadership (same person the single biggest contributor
-  across the full pre- vs. post-window): **no adoption effect**,
-  67.0% treated vs. 66.9% control, p=0.96.
-- Month-to-month switching rate: **no adoption effect**, properly
-  tested pre-vs-post, p=0.335.
-- Segment/streak-length analysis: leadership does **not** transfer
-  once and hold — treated repos average 3.25 distinct leadership
-  segments post-adoption, control 3.32; statistically indistinguishable.
-- All absolute-count measures (fixed leader, fixed #2, fixed top-2
-  combined, distinct reviewers) are null.
-
-Net read: the specific person leading review each month churns
-significantly faster than the pre-adoption baseline predicts, but this
-is diffuse ongoing rotation, not a clean handover to a stable new
-leader, and it doesn't touch anyone's actual workload or the project's
-long-run leadership. The *mechanism* behind the faster churn remains
-unresolved — every specific explanation tested (more reviewers, the
-runner-up absorbing work, faster switching, stable succession) failed
-to hold up. See `diagnose_fixed_top2_and_persistence.py`,
-`diagnose_participation_decomposition.py`,
-`diagnose_concentration_index_and_rank2.py`,
-`diagnose_fixed_identity_heterogeneity.py`.
-
-Still genuinely open:
-- **Periphery withdraws** vs. **entry stops** as competing accounts for
-  the churn: `periphery_retention` and `entrant_share` were both tested
-  and both **fail their pre-trend test** (mechanical reversion artifact,
-  since both are defined relative to a fixed 5-month pre-period roster) —
-  neither is usable as stated. A cleaner construction (not anchored to a
-  single fixed window) would be needed to test this properly.
-- Total review volume: tested (`total_reviews = mean_reviewers ×
-  n_merged_prs`) and **fails pre-trend even restricted to a balanced
-  panel** — this isn't a fixable data-quality issue, it reflects that
-  repos are genuinely on an organic growth trajectory before they adopt,
-  confounding any raw-volume measure with pre-existing momentum. Would
-  need a different identification strategy (e.g. an instrument for
-  adoption timing) to ever resolve.
-
-## 2. Unreviewed/open PR censoring
-
-The entire pipeline queries `is:merged` PRs only. Assessing censoring
-(does AI adoption change the rate at which PRs go unreviewed or never
-merge at all?) needs fetching all PRs opened in each window and their
-eventual fate (merged / closed unmerged / still open), not just the
-merged subset.
-
-## 3. Exact per-signal-type DiD
-
-The signal-composition split (agent-authored vs. human-assisted) reuses
-the combined adoption date $t_0$ from the OR-combined signal. A fully
-separate treatment definition per signal type needs its own $t_0$ per
-signal and likely a new extraction pass, since a repo could show an
-"assisted" signal well before an "agent" signal or vice versa.
-
-## 4. Qualitative review-round coding
-
-Distinguishing substantive vs. clarification vs. automation-driven
-review rounds needs the actual review-comment text, which was never
-fetched (only counts/timestamps), plus human coders for blind
-double-coding to classify round types.
-
-## 5. Does the gap between core and peripheral reviewers widen?
-
-We have `top2_share` (share held by the busiest two) and a borderline
-HHI result (+0.0126, p=0.095, clean pre-trend) on the full distribution,
-but nothing that directly measures whether the *gap* between core and
-everyone else grows — e.g. the ratio or difference between the core's
-per-person average activity and the periphery's, tracked as its own
-outcome. HHI is the closest thing we have and it's suggestive, not
-confirmed; a purpose-built inequality measure (e.g. a Gini coefficient
-over each month's full reviewer distribution, or core-vs-periphery
-average-activity ratio) would test this more directly and might have
-more power than HHI alone.
-
-## 6. Does AI make reviewing itself easier, not just faster?
-
-Everything tested so far is about *who* reviews and *how concentrated*
-that activity is. We have not tested whether AI-assisted review tooling
-(auto-summaries, suggested changes, automated static analysis feeding
-into the review) reduces the *effort* a reviewer expends per review,
-independent of who's doing it or how fast the process moves end-to-end.
-Latency (H2) shows the *process* is faster, but that's a repo-level
-clock-time measure, not a reviewer-effort measure. Testing this would
-need something we don't have: review-tool usage data at the individual
-review level (e.g. whether an AI review-assist bot commented on the PR
-before the human review), or a direct effort proxy (time spent per
-review, review comment length/depth as a crude proxy for depth of
-engagement). Worth scoping as a distinct extraction, not an add-on to
-the current reviewer-identity data.
-
-### `new_design.md`
-
-# Research Design — Does AI Adoption Change Code Review Behavior?
-
-**Status:** Draft v0.2 — narrowed to a single causal question, per project
-decision (the broader trend/ecosystem-diffusion angle explored earlier this
-session is dropped, not archived elsewhere — cut for focus, not because it
-was wrong).
-**Prior project:** AI coding agents and code review (matched treated/control
-DiD) — archived at `archive/prior_project_ai_code_review/`. This design is a
-direct re-test of that project's question, not a new one. That project's
-extracted data is gone (accidentally deleted, unrecoverable — see project
-history); its code, methodology, and hard-won lessons are not, and this
-design carries the relevant ones forward explicitly (§9).
-**Also abandoned this session:** a crypto-market event-study direction
-(`archive/explored_crypto_event_study/`) — dropped because the DefiLlama/
-CoinGecko universe is too noisy (scams, dead forks, wrong repo mappings) to
-trust without a much larger legitimacy-filtering effort than the question
-warranted.
-
----
-
-## 1. Question
-
-Does an individual repo's own AI-tool adoption trigger a change in its code
-review behavior? A direct re-test of the archived project's question, on
-fresh data, with a materially better-validated adoption signal (§2) than
-that project had (trailer-only, with contamination the archived README
-documents finding only after the fact).
-
-> **H1 (review rate drop).** Does AI adoption trigger a drop in how much
-> review a repo's PRs get?
->
-> **H2 (burden concentration).** Does AI adoption trigger review work
-> concentrating more heavily on one member of the team?
-
-This has a clean single `t0` per repo (its own first-adoption date), which
-is exactly what makes a causal event-study design appropriate here — per
-§9's carried-forward lesson, a causal estimator (matching, DiD) should only
-be built when the question has one. It does; that's why this design is
-causal, unlike the broader ecosystem-diffusion framing explored earlier
-this session (no single date to build a `t0` around there, which is a
-different problem this design doesn't need to solve).
-
----
-
-## 2. Adoption signal
-
-**Decision: combine commit co-authorship trailer OR config-file presence —
-either one is sufficient to count a repo as adopted.** Implemented in
-`src/adoption_signal.py::is_ai_adopted()`, live-tested against real repos
-and validated this session against three independent published datasets
-(He & Miller, Robbes et al., Li et al./AIDev — see each paper's replication
-package for the exact numbers). This is a deliberate recall-over-precision
-choice, made explicitly aware of the trade-off below — not a reversal of
-the prior project's finding that trailer beats config-file *alone* (see
-archive README's 43%-mislabeling result). OR-combining the two is a
-different claim: config-file presence is kept as a *supplementary* net
-precisely because trailer-alone has a recall ceiling, and every signal is
-always reported separately (`layer_a_signal_types`, `layer_b_signal_types`,
-`config_files_present`, `config_gitignored`) so a precision-only read stays
-possible later without re-extracting anything.
-
-**Two layers, because they measure genuinely different populations** —
-confirmed empirically, not assumed: testing the trailer-only signal against
-Li et al.'s PR-level ground truth found it catches 75% of Claude Code PRs
-(same signal class) but 0% of Devin, 2.5% of Cursor, 5.1% of Copilot —
-because those three are typically used in an autonomous, agent-authors-the-
-PR mode, and a co-authorship trailer structurally cannot exist when the
-agent is the primary author, not a co-author.
-
-- **Layer A, autonomous** (`detect_agent_authored_prs`): the agent *is* the
-  PR's author — branch-name prefix (`codex/`, `copilot/`, `cursor/`,
-  `devin/`) or PR-author bot login/identity (`devin-ai-integration[bot]`,
-  `google-labs-jules[bot]`, `copilot` — confirmed live that Copilot's
-  coding-agent PR-author login is literally `"Copilot"`, no app name in it
-  at all; `author:app/copilot-swe-agent` is the only reliable way to
-  identify it otherwise).
-- **Layer B, assisted** (`detect_trailer_commits`): co-authorship trailers
-  and `"Generated with ..."` lines inside commits a human still authored.
-  Carried forward as-is from the prior project (`AGENT_TRAILER_PATTERNS`,
-  `AUTOFIX_IDENTITY_MARKERS`) — `copilot_trailer` excludes the `Copilot
-  Autofix` variant (an automated CodeQL bot, not a developer choosing AI
-  assistance; contamination confirmed twice at ~1/3 magnitude). `devin`/
-  `jules` patterns are plausible human first names, spot-checked at ~0-3%
-  false-positive rate — real but not dominant.
-
-**Config-file signals** (`detect_config_files`, `detect_gitignored_config`),
-carried forward from the prior project (`discover_treated.py::CONFIG_
-SIGNALS`) and extended with patterns found missing against Robbes et al.'s
-ground truth this session: `.cursorrules`, `.cursor` (dir), `.claude` (dir),
-`.continue` (dir), `.cline` (dir), `.clinerules`, `.windsurfrules`,
-`cursor.json`, `.claude.json`, `.cline.json`, `.continue.json`, `CLAUDE.md`,
-`.github/copilot-instructions.md`, `AGENTS.md`, `.agents` (dir), `.roo`
-(dir), `GEMINI.md`, `.geminiignore`. Matched case-insensitively via one
-root-directory listing (not a case-sensitive GET per path — real repos vary
-case). `.gitignore` is scanned separately for the same keywords, catching
-adopters who deliberately exclude their config file from version control
-(weaker evidence than the file existing, reported separately).
-
-Checked via the Contents API against the current default-branch HEAD only
-— a file added and later removed won't be seen.
-
-**Known, accepted trade-off of the OR combination:** the prior project
-found 34/332 repos had a config file present with *zero* trailer evidence,
-and never verified whether that reflects real usage through a tool that
-doesn't leave a trailer, or a config file nobody actually used. Those
-repos will now be labeled "adopted" without that distinction resolved —
-accepted as a project decision, not an oversight.
-
-**Known ceiling, state explicitly regardless of which signals are in use:**
-all of the above only capture *attributed* AI usage. A developer using an
-assistant without a trailer/config/bot in the loop is invisible to this
-design. Report adoption as a lower bound, not a population estimate — no
-amount of combining public signals closes this; only GitHub-internal
-telemetry or a validated code classifier could.
-
----
-
-## 3. Review-process outcomes
-
-Reused from the prior project's outcome families — these definitions were
-never the problem (the treatment/sampling side was); no reason to redesign
-them. Also the direct reason **network density and Freeman degree
-centralization were dropped and are not used here**: both have team size
-in the denominator (density: `N(N-1)/2`; centralization: normalized by
-`N`), so they move mechanically with team-size changes regardless of
-whether review behavior itself changed. Song et al. found AI adoption
-raises contributing-developer count ~5.4%; that alone predicts ~4%
-mechanical density decline with zero real effect. `top1_reviews` (a raw
-count) and `top1_share` (normalized by review volume, not team size) don't
-have this problem, matched on team size instead (§4) so it's controlled as
-a confounder rather than baked into the outcome's denominator.
-
-| Outcome | Definition | Family |
-|---|---|---|
-| `mean_reviewers` | mean distinct human reviewers per merged PR, per repo-month | H1, review contraction |
-| `zero_human_rate` | share of merged PRs with 0 human reviewers | H1, review contraction |
-| `single_reviewer_rate` | share with exactly 1 human reviewer | H1, review contraction |
-| `top1_reviews` | review count of the busiest reviewer that month | H2, burden concentration |
-| `top1_share`, `top2_share` | share of total reviews done by the busiest 1/2 reviewers | H2, burden concentration |
-| `zero_any_review_rate` | share with neither human nor agent review | required alongside every H1 outcome above — without it, a repo that adds an AI *reviewer* alongside an AI *coder* looks identical to one where review quietly stopped |
-| `agent_only_rate` | share reviewed only by an agent, no human | same reason |
-| `time_to_first_review`, `time_to_merge`, `review_rounds` | latency/iteration measures | supporting, never finished under the corrected trailer definition last time |
-
-**`top1_reviews` and `top1_share` must always be reported together — this
-is the analytical centerpiece, not a footnote.** Worked example from the
-archived project: a 10-person team where everyone reviews 5 PRs before
-adoption; after, the busiest handles 4 and the other nine handle 1 each.
-`top1_share` rises sharply — but `top1_reviews` shows the busiest reviewer
-doing *less* absolute work. Reporting either alone reproduces the exact
-ambiguity that made centralization measures useless here.
-
----
-
-## 4. Sample
-
-Matched treated/control, same shape as the prior project's 332-repo pool —
-that part of the design was right; the treatment definition was the weak
-point, not the matching.
-
-- **Treatment:** `is_ai_adopted()` fires (§2 — Layer A, Layer B, config
-  file, or `.gitignore`), `t0` = earliest date any signal is observed.
-- **Control:** repos with zero signal across their entire observed history.
-- **Matching:** CEM + propensity-score matching on pre-adoption covariates
-  — team size / active-developer count, stars, language, creation year,
-  and pre-period trend *slopes*, not just levels (archived
-  `research_design.md` §4.3's two-stage approach: level-covariate CEM+PSM
-  first, then a second stage matching on pre-period slopes once a panel
-  exists). Team size is matched on explicitly *because* §3's outcomes were
-  chosen to not need a team-size-normalized measure — matching controls
-  that confounder without baking it into the outcome's denominator.
-- **Availability gate:** ≥6 months pre-period, ≥3 months post-period
-  around `t0`, computed from actually-extracted data (§9 — this bit the
-  archived project's coverage numbers when assumed instead of measured).
-- **Quality bar:** ≥10 stars (same threshold He & Miller and Robbes et al.
-  both use for the same reason — Munaiah et al. found it achieves ~97%
-  precision for excluding toy/tutorial/homework repos), exclude forks,
-  require a minimum contributor count and recent push activity (reuse
-  `src/legitimacy.py`'s `is_fork`/`n_contributors`/`days_since_last_push`
-  logic directly).
-
----
-
-## 5. Analysis approach
-
-Event-study DiD, staggered adoption. Same estimator family the archived
-project settled on and He & Miller independently also used for the same
-class of problem: the **Borusyak et al. imputation estimator** (fits the
-counterfactual on untreated observations only, avoids the "forbidden
-comparisons" bias of naive two-way fixed effects under staggered adoption
-— see He & Miller's own appendix for a worked comparison against TWFE and
-Callaway–Sant'Anna).
-
-- **H1:** `ATT` and horizon-average `ATT_h` on `mean_reviewers`,
-  `zero_human_rate`, `single_reviewer_rate` (§3).
-- **H2:** same estimator on `top1_reviews` and `top1_share`, **reported
-  together** (§3).
-- **Primary outcome, declared before estimating, per §9:** `mean_reviewers`
-  for H1, `top1_reviews` for H2. Everything else in the family is secondary
-  with Benjamini–Hochberg correction — direction matters, verify the
-  step-up runs largest-p-first (archived project flagged this as an easy
-  mistake and never actually wired the correction in; do it this time).
-
----
-
-## 6. Checks — the archived project's core identifying assumptions
-
-Re-verified as real assumption tests, not the informal stacked-diagnostics
-approach the archived project's early iterations used (see archive
-README's "Core identifying assumptions" correction):
-
-1. **Parallel trends** — the central one. A *joint* (omnibus) Wald test
-   that all pre-period event-time lead coefficients are zero, on the plain
-   untrended spec. Not eyeballing an event-study plot; not via any
-   detrending (§9 — detrending is what broke the archived project).
-2. **No anticipation** — exclude the immediate pre-`t0` lead from the
-   pre-trend test (developers may start using a tool before their first
-   commit trailer/config file appears).
-3. **SUTVA** — no interference across repos, treatment consistently
-   defined via §2's signal.
-4. **Exogenous treatment timing** — adoption isn't itself caused by the
-   outcome. Mean-reversion diagnostic: regress the change in each outcome
-   on its own pre-period baseline level, by treatment arm — a real,
-   structural check, not optional (§7's selection risk is exactly what
-   this tests for).
-5. **Time FE absorb common shocks** (GitHub UI/workflow changes, Actions-
-   driven auto-merge, Dependabot volume growth affecting all repos in a
-   given month).
-6. **Signal precision, before trusting any count at scale.** Re-run the
-   Autofix-contamination and name-collision spot checks (§2) on the fresh
-   sample — do not assume last session's fix still holds; CI bot naming
-   conventions change.
-7. **Multiple testing.** One primary outcome per family, declared before
-   looking at results (§5); everything else secondary with
-   Benjamini–Hochberg correction, step-up run largest-p-first.
-
----
-
-## 7. Known risks
-
-- **Attribution ceiling (§2)** — this measures *visible* AI usage, not true
-  usage. A "control" repo may have real invisible usage, biasing the ATT
-  toward zero. State as a lower bound throughout.
-- **Selection into treatment.** Repos may adopt AI tools *because* they're
-  already struggling to keep up with review load, not the other way
-  around — making adoption a symptom of prior review strain rather than
-  its cause. The mean-reversion diagnostic (§6.4) is the direct test; if
-  it fires, report the result as association, not causation, exactly as
-  the archived project's own framework requires.
-- **This may simply replicate the prior null.** A real possible outcome,
-  not a failure — the archived project's null on these exact hypotheses,
-  with a weaker treatment signal, is itself evidence worth strengthening
-  with a better-measured repeat, not a reason to expect a different answer.
-- **Ecosystem/language skew** — GitHub's population skews toward certain
-  languages/company sizes; matching helps but doesn't eliminate this.
-
----
-
-## 8. Data
-
-| Source | Use |
-|---|---|
-| GitHub REST/GraphQL (`src/github_client.py`) | Repo discovery, commits (Layer B), PRs (Layer A + outcomes), config files/`.gitignore` (config signal) |
-| No external market data | Not needed for this question |
-
----
-
-## 9. Sequencing
-
-**Phase 0 — signal re-verification.** Confirm the adoption signal's known
-contamination fixes still hold on a small fresh pull (§6.6). Estimate API
-cost of the full matched-sample extraction.
-
-**Phase 1 — build the matched pool.** Extract candidate treated/control
-repos, run CEM+PSM matching (§4), confirm the availability gate.
-
-**Phase 2 — extract outcomes, run the event-study.** Repo-month panel of
-§3's outcomes, Borusyak et al. estimator, checks (§6) *before* reading the
-ATT — go/no-go gate: if the joint pre-trend test fails, stop and report
-why rather than estimating anyway.
-
-**Phase 3 — writing.**
-
----
-
-## 10. Carried forward from the prior project
-
-- Commit-trailer beats config-file presence as an adoption signal alone —
-  measured, not assumed (43% mislabeling under the old definition) — which
-  is exactly why §2 combines both rather than picking one.
-- Watch for bot-contamination inside a trailer pattern that looks clean
-  (Copilot Autofix hiding inside `copilot_trailer`) — verify commit-by-
-  commit on a sample before trusting a pattern at scale.
-- An availability/coverage gate (enough observed history around `t0`) has
-  to be computed from *actually extracted* data, not assumed from the
-  nominal extraction window.
-- Do not build a causal estimator (matching, detrending, DiD) unless the
-  question actually has a clean single treatment date. This design does
-  (§1); a diffusion-style question wouldn't, and retrofitting one onto
-  such a question is what produced the prior project's one outright-wrong
-  result (the detrending extrapolation artifact) — don't repeat that if
-  this design is ever extended toward an ecosystem-level question later.
-- Persist raw extracted data immediately and durably (this session's data
-  loss was exactly the failure mode "write the hypothesis/spec before
-  estimating" was supposed to prevent, just one step earlier in the
-  pipeline — land it somewhere durable the moment it's pulled).
-
----
-
-## Next step
-
-Phase 0: pull a small fresh sample, re-verify the adoption signal's known
-contamination fixes still hold, and get a real API-cost estimate for the
-full matched-sample extraction before committing to it.
-
-### `new_findings.md`
-
-# Exploratory follow-ups: reviewer burnout and team-size heterogeneity
-
-Two new angles, not robustness checks on existing claims. Both use only
-already-extracted data. Scripts: `diagnose_reviewer_burnout.py`,
-`diagnose_size_heterogeneity.py`.
-
-## Thread A — Does the displaced pre-adoption lead show exit risk?
-
-Scope: `output/reviewer_identity_check.csv`'s known ~972/1,771-pair subset;
-1,281 (repo,t0) units all have an identifiable fixed pre-period top-1 (L_i).
-
-**Pooled "permanent exit" read** (zero activity in a repo's last 2 observed
-post-period months): treated 116/705 (16.5%) vs. control 64/344 (18.6%).
-**Not significant** (z=−0.87, p=0.386), and if anything runs the *opposite*
-direction from a burnout story — consistent with H2's already-confirmed
-finding that leadership turnover falls, not rises, after reassignment.
-
-**BJS binary outcome** (`l_i_inactive`: did the fixed pre-adoption lead do
-zero reviews *that specific month*, across all available pre+post months,
-309 pairs where both treated+control have an identifiable L_i, 5,027
-repo-month observations): **ATT=+0.0418, SE=0.0185, t=2.26, p=0.024**,
-clean pre-trend (joint Wald p=0.257, no flagged lead).
-
-**Read: these two results are not contradictory, they measure different
-things.** The pre-adoption lead doesn't become more likely to leave for
-good — but does become significantly more likely to go quiet in any given
-month (episodic disengagement, not departure). This is a genuinely new,
-statistically supported finding, consistent with and sharpening the
-existing "reassigned, not destabilized" story: the old lead doesn't
-vanish, but does step back intermittently as the role concentrates
-elsewhere. **Caveat:** 309-pair subsample (known narrower scope), single
-specification — no caliper-stability or bootstrap-SE check run here.
-Worth a caliper check before treating as paper-ready.
-
-## Thread B — Does concentration hit small teams harder?
-
-Median split on the treated repo's own pre-period (h=-6..-2) mean
-reviewers: 651 small-pool pairs, 650 large-pool, median=0.306.
-
-| Outcome | Small ATT (t, pretrend) | Large ATT (t, pretrend) | Diff (p) |
-|---|---|---|---|
-| top1_share | +0.0252 (1.76, PASS) | +0.0160 (2.30, PASS) | p=0.563 |
-| top2_share | +0.0225 (3.61, PASS) | +0.0146 (3.46, PASS) | p=0.292 |
-| reviewer_gini (uncapped, smaller n) | +0.0172 (1.03, PASS) | +0.0382 (5.98, PASS) | p=0.241 |
-
-**Clean null on heterogeneity.** No diff-in-ATT test clears significance.
-Point estimates for top1/top2_share lean slightly larger in small pools
-(suggestive of "small teams hit harder," not confirmed), but Gini points
-the *other way* (larger effect in large pools) — the two outcomes
-disagree on direction, which argues against a clean "vulnerable small
-projects" story rather than for one. Concentration looks like a broadly
-uniform effect across team size, not something that concentrates
-(ironically) in small projects specifically.
-
-## Verdict
-
-**Thread A is the one worth taking further** — a real, pre-trend-clean,
-p=0.024 result on a question not previously tested, that adds nuance to
-an existing finding rather than just confirming it. Not yet at the rigor
-bar this project holds its headline numbers to (no caliper check, no
-bootstrap SE, smaller subsample) — flag as suggestive-but-promising, not
-paper-ready without that follow-up.
-
-**Thread B is a well-powered, clean null** — legitimate to report as
-ruling out a specific concern (small projects aren't disproportionately
-hit), not a "shocking" finding, but not nothing either: it's informative
-that the effect is structural/general rather than concentrated in the
-most vulnerable-looking projects.
-
-### `null_results.md`
-
-# Supplementary null result: AI adoption and review intensity
-
-**Status:** Tested as part of the main study, excluded from `paper.tex`
-because it does not survive the robustness battery. Kept here for
-transparency (avoid appearing as an untested/hidden hypothesis) and in
-case a future draft wants to report it as a disclosed null in an
-appendix.
-
-## Hypothesis (as originally specified)
-
-> A repository's adoption of an AI coding tool reduces the average number
-> of distinct human reviewers per merged pull request, and increases the
-> share of pull requests merged with zero or exactly one human reviewer.
-
-**Rationale tested:** AI-generated code is perceived as already vetted,
-or reviewers apply lighter scrutiny per unit as volume rises
-(automation-complacency mechanism).
-
-## Variables
-
-- `mean_reviewers` — mean distinct human reviewers per merged PR, per
-  repository-month (declared primary outcome for this hypothesis)
-- `zero_human_rate` — share of merged PRs with 0 human reviewers (secondary)
-- `single_reviewer_rate` — share of merged PRs with exactly 1 human
-  reviewer (secondary)
-
-Same treatment definition, matching, sample (1,771 pairs / 20,188
-repo-months), and BJS imputation estimator as the main paper.
-
-## Results (main specification, caliper = 0.25 SD)
-
-| Outcome | ATT | SE | t | Pre-trend Wald p |
-|---|---|---|---|---|
-| `mean_reviewers` (primary) | −0.019 | 0.010 | −1.95 | 0.042 (**fails**) |
-| `zero_human_rate` | +0.007 | 0.007 | 1.02 | 0.432 (passes, null) |
-| `single_reviewer_rate` | −0.003 | 0.007 | −0.40 | 0.770 (passes, null) |
-
-## Why it's excluded from the main paper
-
-**Caliper sensitivity is the decisive check.** Re-estimating
-`mean_reviewers` at five matching calipers:
-
-| Caliper | 0.10 | 0.15 | 0.25 (main) | 0.35 | 0.50 |
-|---|---|---|---|---|---|
-| ATT sign | − | − | − (p=0.052) | **+** | − |
-| Pre-trend Wald | pass | pass | **fail** (p=0.042) | pass | pass |
-
-The sign flips at caliper 0.35, and the *only* specification where the
-effect looks significant is also the *only* specification where the
-identifying pre-trend assumption fails. That is the signature of a
-matching-artifact, not a real treatment effect — the main-caliper result
-is not a smaller/noisier version of a true effect, it is an outlier
-across the caliper range.
-
-**Balanced-panel restriction** (repos observed at every horizon h=0..11,
-n=59): ATT = −0.039, not significant (SE 0.041), pre-trend clean
-(p=0.354) — consistent with no real effect, just underpowered.
-
-**Mean-reversion diagnostic:** treated repos revert *less* sharply than
-matched controls (slope −0.22 vs. −0.28), the opposite of what a
-selection-into-treatment story would predict — rules out reverse
-causality as an alternative explanation, but doesn't rescue the null.
-
-**Secondary outcomes** (`zero_human_rate`, `single_reviewer_rate`): null
-on every check, no caliper ever produces significance.
-
-## Verdict
-
-**Not supported.** Review intensity (how many people review a PR) does
-not detectably change with AI-tool adoption in this sample. This is a
-substantively informative null — it rules out the simplest "AI reduces
-oversight" story — but it is not robust enough to report as a positive
-finding, and including it in the main paper as a confirmed hypothesis
-would overstate the evidence.
-
-### `exploratory_findings_summary.md`
-
-# Exploratory findings — debate gaps and new tests
-
-Four forks run this session hunting for (a) weaknesses in the existing
-design worth defending against, and (b) genuinely new findings. Mixed
-results, reported honestly — two real confirmations, one real caveat,
-two rejected/null threads. Nothing here has been added to the deck or
-paper; this is a working log.
-
----
-
-## Confirmed robust (strengthens existing claims)
-
-**H3 latency drop survives a second independent confound check.**
-Already ruled out "PRs just got smaller" (PR-size residualization).
-Now also ruled out "repos just process more volume, faster" — total
-monthly PR volume explains ~0% of latency variance (R²=0.0014/0.0036),
-residualizing on it moves the ATT by under 2%, pre-trends stay clean.
-Two independent alternative explanations closed off.
-*(`diagnose_volume_confound.py`)*
-
----
-
-## Real, important caveat for the paper (not yet resolved)
-
-**The pooled H1 concentration ATT averages two very different
-sub-populations.** Repos already concentrated pre-adoption show
-concentration *falling* after adoption (ATT=−0.047, t=−5.36); repos
-starting diffuse show it *rising* (ATT=+0.055, t=6.90) — a huge,
-consistent split. Most likely explanation is regression-to-the-mean
-(more room to move in either direction), and the diffuse stratum's
-`top1_share` pre-trend actually fails, excluding it from causal
-interpretation by this project's own standard. The `top2_share` version
-is cleaner (passes pre-trend both strata, same pattern) and is the more
-trustworthy half of this result. Doesn't overturn the headline finding,
-but means "concentration rises on average" is hiding real heterogeneity
-worth a sentence in the paper either way.
-*(`diagnose_preperiod_concentration_heterogeneity.py`)*
-
-**Contamination (reviewers spanning treated + control repos) does not
-confirm its own theoretical direction.** 43% of identity-covered pairs
-are contaminated; over half the contaminating reviewers are leads, not
-peripheral. Excluding contaminated pairs should, in theory, *increase*
-the measured effect (removing dilution) — instead every clean-sample ATT
-came back roughly **half** the full-sample size, and two of three
-outcomes lost significance. Can't yet distinguish "true effect is
-smaller," "underpowered at n=176," or "contamination itself inflates
-the estimate." Checked separately whether more data would resolve this
-— it wouldn't: every "missing" repo-side already has cache data, just
-genuinely zero merged-PR activity in the required windows, not an
-unfetched gap. This stays an open, unresolved limitation.
-*(`diagnose_contamination_severity.py`, `contamination_findings.md`)*
-
----
-
-## Tested and rejected — do not use
-
-**"Displaced lead goes quiet more often" (burnout signal) — does not
-survive robustness, reverse of initial read.** Looked real at the main
-caliper (t=2.26, p=0.024). Sign flips negative and vanishes at calipers
-0.10/0.15; bootstrap-corrected p at the main caliper rises to 0.073.
-Textbook matching-artifact signature already used elsewhere in this
-project to exclude findings. Not real.
-*(`diagnose_burnout_robustness_and_reallocation.py`)*
-
----
-
-## Tested and closed (clean nulls — rule something out, prove nothing)
-
-- **Upstream reallocation** (did the displaced lead move to AI-assisted
-  authoring instead of reviewing?) — clean null, ATT=+0.42, t=0.67,
-  p=0.505, clean pre-trend, n=309 pairs. Rules this out as the
-  explanation for H2 displacement.
-- **Team-size heterogeneity** (does AI adoption hit small/single-
-  maintainer projects harder?) — clean, well-powered null across
-  top1_share/top2_share/Gini (p=0.563/0.292/0.241), point estimates
-  don't even agree on direction. No vulnerability-by-size effect.
-- **Permanent reviewer exit** (does the displaced lead leave for good,
-  not just go quiet temporarily?) — clean null, 16.5% vs 18.6%, p=0.386.
-
----
-
-## Bottom line
-
-One real strengthening (H3 latency, now survives two confound checks),
-one real unresolved caveat worth a paper sentence (pre-period-
-concentration heterogeneity — likely mean reversion, not fully ruled
-out), one important open limitation (contamination doesn't behave as
-theory predicts, and more data won't fix it), and three cleanly closed
-nulls/rejections. No overclaiming — this is the honest state of things.
-
----
-
-## Round 2 — reviewer-overlap deep dive, size heterogeneity, robustness consolidation
-
-### Confirmed robust / added to deck
-
-- **Leader-tenure heterogeneity (new H1 slide).** Splitting treated repos
-  by whether the pre-adoption leader had already held the top spot for
-  the entire 5-month pre-period ("settled") or not ("unsettled"):
-  unsettled repos show top1_share ATT=+0.047 (t=4.62), settled repos
-  show ATT=−0.022 (t=−1.84), diff p<0.0001. Confirmed as an independent
-  dimension (not a pool-size proxy, r=−0.257, survives within pool-size
-  strata). Reads as acceleration of an already-in-motion transition, not
-  disruption of a settled one. Added to the deck with a scope caveat
-  (subsample skews ~2x busier than average).
-
-- **H3 reverses in busy repos (new slide).** On the same busier
-  subsample (n=296): time_to_merge ATT=+40.7 (t=2.83, slower) vs. the
-  full sample's −62.8 (faster); review_rounds ATT=−0.146 (t=−2.04,
-  fewer) vs. the full sample's +0.180 (more). Both directions pass
-  pre-trend in both samples. Investigated and ruled out as an artifact
-  (not a t0-timing bias, not horizon-weighting — the full sample's own
-  ATT_h never flips sign at any single horizon). Genuine repo-level
-  heterogeneity: busy/high-volume repos respond qualitatively
-  differently to AI adoption on process speed specifically.
-
-- **Consolidated 10-outcome robustness table (new backup slide).**
-  Re-ran every headline outcome on the 176 non-contaminated ("clean")
-  pairs. All 10 pass pre-trend on the clean sample (no construction
-  artifact). Top-2 share, tail share, and top1_persists SURVIVE and
-  STRENGTHEN — these are the paper's most load-bearing, most robust
-  results. Top-1 share, Gini, time-to-merge, review-rounds WEAKEN
-  (keep sign, lose significance at n=176 — plausibly just power loss).
-  **Month-to-month leader_changed COLLAPSES to t=−0.02** — this
-  specific result (added to the deck two rounds ago as a strengthening
-  of H2) does not survive and should not be presented as robust.
-  top2_overlap goes to a non-significant near-zero (not a confident
-  reversal, but not supportive either).
-
-### Tested and rejected — do not use
-
-- **Reviewer reciprocity / network hierarchy.** Does AI adoption push
-  review toward a more one-directional structure? Both a cumulative and
-  a same-month-only reciprocity measure point the same direction
-  (t=−2.33, −2.04) but both fail pre-trend (p<0.0001, p=0.036). Tested,
-  rejected, not reportable.
-
-### Real, unresolved caveat (sharpened, not solved)
-
-- **Contamination-vs-size confound, partially disentangled.** Within
-  the small-repo stratum, contamination still predicts a significantly
-  stronger top2_share effect (contaminated t=4.26 vs. clean t=2.17,
-  diff p=0.031) — real evidence of independent SUTVA inflation, not
-  purely a size artifact. Within the large stratum the gap shrinks and
-  loses significance. Cells are small (54–106 pairs); suggestive, not
-  conclusive. Size explains *some* but not all of the original gap.
-
-### Bottom line after round 2
-
-The paper's core claims are more precisely characterized now, not
-uniformly weaker or stronger: top2_share/tail_share (H1) and
-top1_persists (H2) are the genuinely robust backbone: they survive
-every check thrown at them this session, including the harshest one
-(control-independence restriction). top1_share and Gini are real but
-less robust secondary evidence. leader_changed and top2_overlap should
-be downgraded from "confirmed" to "not established." Two new pieces of
-real heterogeneity (leader tenure, busy-repo H3 reversal) add precision
-about *when* and *where* the effects hold, at the cost of narrowing the
-population some specific numbers apply to.
-
----
-
-## Correction — leader-tenure finding is confounded with the already-known mean-reversion issue
-
-The leader-tenure heterogeneity finding (settled vs. unsettled leadership
-predicting concentration strength) was initially verified as independent
-of reviewer-pool size (r=-0.257) and used to support an "entry threshold
-is lower" claim in the deck's Discussion section. A follow-up check
-(not run by the original fork) found it correlates moderately with
-pre-adoption concentration LEVEL instead (r=0.38; settled repos averaged
-0.673 pre-period top1_share vs. 0.522 for unsettled) -- the same
-confound already flagged for the separate pre-period-concentration
-heterogeneity finding (likely mean reversion). Settled repos aren't just
-"tenured," they're also already more concentrated to begin with, so the
-tenure split and the concentration-level split are likely two measures
-of a related underlying pattern, not independent evidence.
-
-**Corrected status:** the tenure finding is real (both strata pass
-pre-trend, the difference is still statistically strong) but should be
-read as suggestive, not as establishing a genuine "lower entry
-threshold" mechanism. The deck's Discussion section and the H1 tenure
-results slide were both corrected to state this caveat explicitly
-rather than presenting the finding as a clean, independent result.
-
----
-
-## Round 3 — full rank-by-rank distribution (resolves "where does the share go")
-
-**Built the missing middle of the distribution.** Previously only had
-top1_share, top2_share, tail_share (everyone outside top 2) -- nothing
-for ranks 3-5. Full rank-by-rank BJS estimate (uncapped, full sample,
-`output/pr_level_data.csv`):
-
-| Rank | ATT | t | Pre-trend | n (repo-months) |
-|---|---|---|---|---|
-| 1 | +0.0066 | 1.06 | PASS | 3,628 |
-| 2 | -0.0078 | -1.73 | PASS | 2,354 |
-| 3 | -0.0127 | -4.19 | PASS | 1,567 |
-| 4 | -0.0083 | -3.68 | PASS | 1,151 |
-| 5 | -0.0041 | -2.24 | PASS | 859 |
-
-**Not the expected shape.** Neither "sharp top-heavy gain" nor "broad
-gradient" -- the single busiest reviewer (rank 1) barely moves and
-isn't significant. The clear, significant losses sit at ranks 3-4, the
-moderately-active middle, not the top and not just the deep periphery.
-Rank 1+2 combined is roughly flat on this uncapped cut (~-0.001),
-which sits in tension with the capped-pipeline top2_share headline
-(+0.015) -- a third, independent data point confirming the
-already-documented sampling-cap caveat, not a new separate problem.
-
-**Best current read: the moderately-active middle hollows out, while
-the very top holds roughly steady.** This is a more precise, and in
-some ways different, story than "work piles onto the top two" --
-added to the deck as a new backup slide alongside the existing
-sampling-cap caveat. Sample size shrinks fast with rank (only 23.4%
-of repo-months have 5+ distinct reviewers), so rank 4-5 numbers rest
-on a smaller, more-active-repo subsample -- stated plainly.
-
-*(`diagnose_rank_by_rank_concentration.py`, `rank_by_rank_findings.md`)*
-
----
-
-## Round 4 — adoption-era (calendar-time) cohort heterogeneity
-
-**New test, directly motivated by the user asking whether successive
-generations of AI tools (loosely, "GPT-3/4/5/6" eras) show different
-effects.** Caveat stated up front: the adoption signal detects AI
-coding tool usage in general (Copilot, Claude Code, Cursor, agent PRs),
-not a specific model version -- so this is calendar-time adoption-era
-cohort heterogeneity, a proxy, not literal GPT-version heterogeneity.
-
-**Initial pre-trend-only pass** (`diagnose_adoption_era_heterogeneity.py`):
-4 calendar eras by `treated_t0` (Era1 <2025-05 n=46, Era2 2025-05 to
-2025-11 n=413, Era3 2025-11 to 2026-05 n=666, Era4 >=2026-05 n=646).
-Era2 vs Era3 (the two well-powered cohorts): top1_share +0.028 vs
-+0.020 (diff p=0.60), top2_share +0.021 vs +0.014 (diff p=0.42) -- not
-significantly different. Era4 looked null/reversed but averages only
-~1.5 observed post-period months (truncation, not a real reversal,
-consistent with the already-known "effect builds gradually" finding).
-mean_reviewers stayed null in every era (reassuring -- "headcount
-unchanged" isn't a pooling artifact).
-
-**Full robustness battery on Era2 vs Era3**
-(`diagnose_adoption_era_robustness.py`): caliper sensitivity, 300-rep
-bootstrap, and clean-sample (non-contaminated) check, applied both to
-the Era2-vs-Era3 DIFFERENCE and to each era's own ATT individually.
-
-- **The difference claim survives everything.** No test in the battery
-  (caliper, bootstrap, clean-sample) ever produces a significant
-  Era2-vs-Era3 difference. "Not detectably different across adoption
-  eras" is now a well-tested result, added to the deck as its own
-  slide.
-- **Each era's OWN estimate is individually fragile, though.** Only 2
-  of 4 era x outcome cells are caliper-sign-stable (and not on the same
-  outcome between eras); bootstrap knocks out 3 of 4 originally-
-  significant cells; clean-sample knocks out all 4 (small cells,
-  n=49/78). This does NOT contradict the no-difference finding --
-  both eras lose significance under the same pressures roughly
-  equally, consistent with "no era-specific effect" rather than
-  against it -- but era-split estimates should not be cited as two
-  independently robust confirmations. Added to the deck as an explicit
-  caveat slide alongside the main result.
-
-*(`diagnose_adoption_era_heterogeneity.py`, `adoption_era_findings.md`,
-`diagnose_adoption_era_robustness.py`, `adoption_era_robustness_findings.md`)*
-
-### `adoption_era_findings.md`
-
-# Adoption-era cohort heterogeneity
-
-**Question:** does the measured AI-adoption effect on review concentration
-and latency differ depending on WHEN a repo adopted (proxy for "which
-generation of AI coding tools was available")?
-
-**Framing caveat (read before anything else):** this project's adoption
-signal detects AI coding tool usage in general (Copilot, Claude Code,
-Cursor, agent-authored PRs, co-authorship trailers, config files) — not
-a specific model version. We cannot identify "this repo adopted GPT-4."
-This analysis splits repos by their `treated_t0` CALENDAR DATE into eras
-using real-world tool/model milestones as an imperfect proxy. Report as
-**adoption-era cohort heterogeneity**, not "GPT-version" heterogeneity.
-
-**Confidence note on era boundaries:** dates through ~early 2025 (GPT-4,
-GPT-4o, Claude 3.5 Sonnet, o1) are well-established public record. Dates
-from mid/late-2025 onward (exact Claude 4 / Claude Code GA timing, and
-anything in the Era 3/4 window) are reconstructed from training
-knowledge **without web verification** (no search tool available in
-this run) and are lower-confidence. Boundaries were chosen to balance
-real milestones where reliably known against producing non-degenerate
-cohort sizes given this project's actual `treated_t0` distribution
-(heavily concentrated 2025-03 onward).
-
-## Eras
-
-| Era | Window | Anchor (confidence) | n pairs | avg post-months observed |
-|---|---|---|---|---|
-| 1 — Pre/early-agentic | t0 < 2025-05 | GPT-4 (Mar 2023) → Claude 3.7/Claude Code preview/GPT-4.5/o3-mini (~Feb 2025) — high confidence | 46 | 8.46 |
-| 2 — Early agentic maturation | 2025-05 ≤ t0 < 2025-11 | Claude 4 + Claude Code GA, ~May 2025 — medium confidence (training recall, not verified) | 413 | 6.58 |
-| 3 — Mature agentic tooling | 2025-11 ≤ t0 < 2026-05 | Further agent-tooling maturation — **low confidence** on exact milestones in this window | 666 | 4.67 |
-| 4 — Most recent | t0 ≥ 2026-05 | **Low confidence** on which models dominate here — beyond reliable training recall | 646 | **1.47** |
-
-Era 4's average of 1.47 observed post-period months (vs. 8.46 for Era 1)
-is the single most important number in this analysis — see Verdict.
-
-## Results (BJS ATT per era, full-sample `repo_month_cache.csv`)
-
-| Outcome | Era 1 (n=46) | Era 2 (n=413) | Era 3 (n=666) | Era 4 (n=646) |
-|---|---|---|---|---|
-| top1_share | −0.0065 (t=−0.24) | **+0.0284 (t=2.17)** | **+0.0198 (t=2.01)** | −0.0106 (t=−0.92) |
-| top2_share | +0.0186 (t=1.23) | **+0.0211 (t=3.18)** | **+0.0143 (t=2.66)** | −0.0065 (t=−1.01) |
-| mean_reviewers | −0.0147 (t=−0.25) | −0.0250 (t=−1.30) | −0.0178 (t=−1.13) | +0.0069 (t=0.43) |
-| time_to_merge_hours | −66.9 (t=−0.29) | −102.7 (t=−1.40) | **−45.1 (t=−2.21)** | −36.8 (t=−1.00) |
-
-All 16 era×outcome pre-trend Wald tests **pass** (no construction
-artifact in any cell).
-
-## Diff-in-ATT tests
-
-- **Era 1 vs Era 4 (earliest vs latest):** no outcome significant
-  (top2_share closest, p=0.127). Era 1's huge SEs (n=46) make this
-  comparison underpowered regardless of true effect.
-- **Era 2 vs Era 3 (the two best-powered, middle eras):** no outcome
-  significant (top1_share p=0.60, top2_share p=0.42, time_to_merge
-  p=0.45) — concentration effect is statistically indistinguishable
-  between these two cohorts.
-- **Era 3 vs Era 4:** top1_share (p=0.046) and top2_share (p=0.013) are
-  significant — Era 4 looks weaker. **This is very likely a mechanical
-  truncation artifact, not genuine heterogeneity** (see Verdict).
-
-## Verdict
-
-**Concentration (top1_share/top2_share) is stable, not growing or
-shrinking, across the two best-powered adoption cohorts (Era 2, Era 3)
-spanning mid-2025 through early 2026** — both significant, similar
-magnitude, statistically indistinguishable from each other.
-
-**Era 4 (most recent adopters, t0 ≥ 2026-05) looks null/reversed, but
-should NOT be read as "newest tools show no concentration effect."**
-Era 4 repos have only 1.47 average observed post-period months vs.
-4.67–8.46 for the other eras — far too little elapsed time. This
-project's own existing finding (H2 results slide, "the shift builds
-gradually, not at once"; cohort-artifact backup slide, full-window ATT
-roughly double the common-horizon estimate) is that these effects grow
-over the post-adoption window. Era 4 is not a different model
-generation behaving differently — it is the same effect not yet having
-had time to appear.
-
-**Era 1 (pre-2025-05, n=46) is a genuine null but underpowered, not a
-confirmed absence of effect** — wide SEs throughout, cannot distinguish
-"no effect in earliest adopters" from "not enough pairs to detect one."
-
-**`mean_reviewers` stays null in every single era** — a reassuring
-robustness check: the paper's "headcount is unchanged" finding isn't an
-artifact of pooling across calendar time, it holds separately in every
-adoption cohort.
-
-**`time_to_merge_hours` is directionally negative (faster) in all four
-eras without exception**, though only crosses significance in Era 3;
-no era-pair difference is significant for this outcome — consistent
-direction, not conclusively time-varying magnitude.
-
-**Bottom line: no evidence the adoption effect is growing, shrinking, or
-reversing as AI coding tools matured, once the Era 4 panel-truncation
-issue is accounted for.** The two well-powered, fully-elapsed cohorts
-(Era 2 and Era 3) tell the same story. This is a reassuring robustness
-result for the paper's headline claims, not a new heterogeneity finding
-to report as a positive result on its own.
-
-Script: `diagnose_adoption_era_heterogeneity.py`.
-
-### `adoption_era_robustness_findings.md`
-
-# Adoption-era stability: full robustness battery (Era 2 vs Era 3)
-
-Follow-up on `diagnose_adoption_era_heterogeneity.py` /
-`adoption_era_findings.md`, which found Era2 ("early agentic
-maturation", 2025-05..2025-11, n=413) and Era3 ("mature agentic
-tooling", 2025-11..2026-05, n=666) show similar top1_share/top2_share
-concentration ATTs, not significantly different from each other --
-checked only with analytic SE + pre-trend. This runs the same three
-robustness checks applied elsewhere in this project to headline
-results: caliper sensitivity, bootstrap SE, and the clean-sample
-(non-contaminated) restriction. Script: `diagnose_adoption_era_robustness.py`.
-Full run log: `adoption_era_robustness_run.log`.
-
-Era1 (n=46) and Era4 (n=646, ~1.5 avg post-period months -- truncated)
-are out of scope here per the original framing; this is about Era2/Era3
-specifically.
-
-## Check 1 -- caliper sensitivity (0.10/0.15/0.25/0.35/0.50)
-
-Re-matched at each caliper, restricted to pairs already in the cached
-repo-month data (no new extraction).
-
-| Era | Outcome | Values across 5 calipers | Verdict |
-|---|---|---|---|
-| Era2 | top1_share | -0.019, -0.000, +0.028, +0.057, +0.108 | **SIGN FLIPS** |
-| Era2 | top2_share | +0.013, +0.027, +0.021, +0.019, +0.057 | Stable |
-| Era3 | top1_share | +0.017, +0.022, +0.020, +0.022, +0.018 | Stable |
-| Era3 | top2_share | -0.008, +0.012, +0.014, +0.011, -0.005 | **SIGN FLIPS** |
-
-Only 2 of 4 era x outcome cells are caliper-stable, and critically,
-**Era2's stable outcome (top2_share) is not the same as Era3's stable
-outcome (top1_share)** -- the two eras aren't even robust on the same
-measure. At caliper=0.50, Era3's top2_share also fails pre-trend
-(p=0.026), the only pre-trend failure anywhere in this battery.
-
-## Check 2 -- repo-pair cluster bootstrap (300 reps, within-era resampling)
-
-| Era | Outcome | Analytic ATT (SE) | Bootstrap SE | Boot $t$ | Boot $p$ |
-|---|---|---|---|---|---|
-| Era2 | top1_share | +0.0284 (0.0131) | 0.0171 | 1.66 | 0.096 |
-| Era2 | top2_share | +0.0211 (0.0067) | 0.0100 | 2.12 | 0.034 |
-| Era3 | top1_share | +0.0198 (0.0099) | 0.0153 | 1.29 | 0.197 |
-| Era3 | top2_share | +0.0143 (0.0054) | 0.0093 | 1.53 | 0.125 |
-
-Bootstrap SEs run 1.3-1.7x the analytic SEs (consistent with this
-project's documented understatement elsewhere). **Only one of the four
-cells (Era2 top2_share) remains significant** once bootstrap-corrected;
-the other three, including both of Era3's outcomes, no longer clear
-conventional significance on their own.
-
-Era2-vs-Era3 diff, using bootstrap SEs: top1_share diff=+0.009, t=0.38,
-p=0.706; top2_share diff=+0.007, t=0.50, p=0.615 -- still not
-significantly different.
-
-## Check 3 -- clean-sample (non-contaminated), per era
-
-Identity-covered subsample only (Era2 n=79, Era3 n=134); contaminated
-pairs excluded per `diagnose_contamination_severity.py`'s definition.
-
-| Era | Outcome | Clean $n$ | ATT | $t$ | Pre-trend |
-|---|---|---|---|---|---|
-| Era2 | top1_share | 49 | +0.0057 | 0.27 | Pass |
-| Era2 | top2_share | 49 | +0.0208 | 1.49 | Pass |
-| Era3 | top1_share | 78 | -0.0052 | -0.23 | Pass |
-| Era3 | top2_share | 78 | +0.0093 | 0.91 | Pass |
-
-**None of the four clean-sample cells are individually significant** --
-small n (49/78), consistent with this project's broader finding that
-restricting to non-contaminated pairs roughly halves effect sizes and
-often loses significance. Era2-vs-Era3 diff: top1_share p=0.721,
-top2_share p=0.503 -- again no detectable difference.
-
-## Verdict
-
-**The narrow claim -- "Era2 and Era3 are not detectably different from
-each other" -- survives all three checks.** No caliper, no bootstrap
-specification, and no clean-sample restriction ever produces a
-significant Era2-vs-Era3 difference. In that specific sense, "the
-effect is stable across adoption eras" holds up.
-
-**But the broader, implicit claim -- "the concentration effect is
-robustly established within each era" -- weakens considerably under
-this battery.** Caliper sensitivity shows sign flips in 2 of 4 cells
-(and the two eras' *stable* outcomes don't even match). Bootstrap
-correction leaves only 1 of 4 cells significant. Clean-sample
-restriction leaves 0 of 4 significant (on admittedly small n). The
-honest reading: nothing here contradicts era-stability, but the
-within-era evidence supporting it is thinner than the original
-pre-trend-only check suggested -- the same caveat (control
-non-independence, caliper instability, small-sample fragility) that
-already applies to the paper's other secondary outcomes also applies
-here, and applies to BOTH eras roughly equally, which is itself
-consistent with -- not contradicting -- the "no era-specific effect"
-reading.
-
-### `burnout_and_reallocation_findings.md`
-
-# Burnout-finding robustness, and upstream-reallocation test
-
-Follow-up on `diagnose_reviewer_burnout.py`'s `l_i_inactive` finding
-(ATT=+0.0418, t=2.26, p=0.024, clean pre-trend, 309 pairs).
-
-## Thread A -- does l_i_inactive survive caliper + bootstrap?
-
-- Base sample (caliper 0.25): 309 pairs (both treated+control have identifiable L_i).
-- Analytic: ATT=+0.0418, SE=0.0185, t=2.26, p=0.0238, pre-trend p=0.2565 (passes).
-- Bootstrap (300 reps, at caliper 0.25): SE=0.0233 (ratio 1.26x analytic), corrected p=0.0727 -- **no longer significant at conventional 0.05**.
-
-**Caliper sensitivity fails outright -- this is the decisive result:**
-
-| Caliper | n pairs | ATT | t | pre-trend p |
-|---|---|---|---|---|
-| 0.10 | 70 | -0.0094 | -0.25 | 0.9583 |
-| 0.15 | 116 | -0.0078 | -0.24 | 0.7930 |
-| 0.25 (main) | 309 | +0.0418 | 2.26 | 0.2565 |
-
-The sign flips to negative and the effect vanishes (t~-0.25) at both tighter calipers; it is positive and nominally significant *only* at the one caliper originally used. Combined with the bootstrap-corrected p rising to 0.073, this is the same matching-artifact signature this project has already used to exclude other candidate findings (e.g. `null_results.md`'s `mean_reviewers`, where "the only specification where the effect looks significant" was flagged as diagnostic of an artifact, not a real effect).
-
-**Verdict: does NOT survive robustness. Downgrade from "suggestive, promising" to "does not replicate across calipers -- most likely a caliper-0.25-specific artifact, not a real effect." Should not be added to the deck or paper as a finding.**
-
-## Thread B -- does L_i's own authoring activity rise post-adoption?
-
-- Usable sample: 309 pairs, 5,000 repo-month observations (intersection of reviewer-identity coverage and pr_level_data.csv coverage).
-- ATT=+0.4200, SE=0.6293, t=0.67, p=0.5046, pre-trend p=0.4053 (passes).
-
-**Verdict: clean null.** No evidence the displaced lead's own PR-authoring volume rises after adoption. This argues against "upstream reallocation" (moved to AI-assisted authoring, delegated review downward) as the explanation for H2's displacement finding -- though it doesn't confirm any specific alternative either, just rules this one out. Pre-trend is clean and the sample is reasonably sized (309 pairs), so this null is itself informative, not just underpowered noise -- worth logging in `overleaf/implementation_plan.md`'s existing note on this topic as resolved (tested, null), consistent with this project's standard of reporting a well-powered null as a real result.
-
-### `clean_sample_robustness_table.md`
-
-# Full clean-sample (n=176) robustness check, all headline outcomes
-
-Identity-covered pairs: 309 (contaminated: 133, clean: 176)
-
-| Outcome | Full-sample ATT (t, n) | Clean-176 ATT (t, n) | Pre-trend p | Verdict |
-|---|---|---|---|---|
-| top1_share | +0.0170 (+1.91, n=1771) | +0.0118 (+0.86, n=176) | 0.964 | **WEAKENS** |
-| top2_share | +0.0150 (+3.00, n=1771) | +0.0208 (+2.79, n=176) | 0.862 | **SURVIVES** |
-| tail_share | -0.0150 (-3.00, n=1771) | -0.0208 (-2.79, n=176) | 0.862 | **SURVIVES** |
-| reviewer_gini | +0.0300 (+nan, n=1406) | +0.0194 (+1.49, n=176) | 0.506 | **WEAKENS** |
-| top1_persists | -0.0770 (-5.10, n=None) | -0.1106 (-3.70, n=176) | 0.694 | **SURVIVES** |
-| top2_overlap | -0.0450 (-4.46, n=None) | +0.0095 (+0.45, n=176) | 0.126 | **REVERSES** |
-| leader_changed | -0.0580 (-2.95, n=None) | -0.0006 (-0.02, n=176) | 0.488 | **WEAKENS** |
-| time_to_first_review_hours | -65.0000 (-2.25, n=1771) | -89.7650 (-2.92, n=176) | 0.269 | **SURVIVES** |
-| time_to_merge_hours | -62.8000 (-2.32, n=1771) | -56.1510 (-1.88, n=176) | 0.318 | **WEAKENS** |
-| review_rounds | +0.1800 (+2.20, n=1771) | +0.1756 (+1.82, n=176) | 0.671 | **WEAKENS** |
-
-## Reading the verdicts
-
-All 10 clean-176 estimates pass pre-trend (p>0.05 in every row) -- the
-contamination split itself does not introduce a construction artifact
-into any of these outcomes; whatever each verdict shows is a genuine
-precision/magnitude effect of restricting to non-independent-free
-controls, not a broken counterfactual fit.
-
-**SURVIVES (4/10):** top2_share, tail_share (its exact mirror by
-construction), top1_persists, time_to_first_review_hours. These hold up
-cleanly on n=176 -- in three of the four cases the clean-sample point
-estimate is actually *larger* than the full-sample one (top2_share
-+0.021 vs +0.015; top1_persists -0.111 vs -0.077; first-review latency
--90h vs -65h), which is the direction the theoretical "contamination
-dilutes the gap" story predicts.
-
-**WEAKENS (5/10):** top1_share, reviewer_gini, leader_changed,
-time_to_merge_hours, review_rounds. Same sign throughout, but each loses
-significance at conventional levels on n=176. For top1_share, Gini and
-time_to_merge this likely reflects a genuine n=176-vs-1406/1771 power
-loss rather than a reversal -- the point estimates stay broadly
-consistent in direction and (for Gini, review_rounds) similar magnitude.
-leader_changed is the sharpest casualty: ATT collapses from -0.058 to
-essentially zero (-0.0006, t=-0.02) -- this specific result does not
-survive restriction to the clean sample and should not be presented as
-robust to this check.
-
-**REVERSES (1/10):** top2_overlap flips from -0.045 (t=-4.46) to +0.009
-(t=+0.45). Read this cautiously, not dramatically -- the clean-sample
-estimate is a small, non-significant swing around zero (t=0.45 is not a
-confidently-signed effect in either direction), not a confident opposite
-finding. The honest statement is "null on the clean sample", which
-happens to sit on the positive side of zero, not "the effect reverses".
-
-## Bottom line for the paper
-
-This is a mixed, not uniformly reassuring, picture -- an improvement
-over reporting only the top1_share/top2_share spot-check, because it
-shows the contamination sensitivity is NOT a top1/top2-share-specific
-quirk. Of the three outcome families:
-- **H1 (concentration):** top2-based measures (top2_share, tail_share)
-  hold up robustly; top1_share and Gini weaken to non-significance.
-  Consistent with this session's earlier finding that top2_share is the
-  more robust half of H1 generally.
-- **H2 (reassignment):** top1_persists is the strongest surviving result
-  in the whole table. top2_overlap and leader_changed -- both newer,
-  less load-bearing results -- do not survive and should be flagged or
-  pulled pending further investigation, not presented as confirmed.
-- **H3 (process):** time_to_first_review survives; time_to_merge and
-  review_rounds weaken but keep their sign and roughly their magnitude,
-  consistent with an n=176 power story rather than an artifact.
-
-Recommended framing for the paper: report this full table as the formal
-"robustness to control independence" check, state plainly which specific
-results it does and does not support (do not fold a single pass/fail
-verdict over the whole paper), and flag `top2_overlap` and
-`leader_changed` as not yet robust to this specific sensitivity check.
-
-### `contamination_findings.md`
-
-# Reviewer cross-contamination: severity and effect on the ATT
-
-Adversarial check on the matched-DiD design's "no interference across
-repos" (SUTVA) assumption. Script: `diagnose_contamination_severity.py`.
-Data: `output/reviewer_identity_check.csv` (identity data covers 309 of
-the 1,771 complete pairs on the control side -- the known narrower
-extraction scope), `output/matched_pairs.csv`, `output/repo_month_cache.csv`.
-
-## Part 1 -- pair-level contamination rate
-
-Of 309 complete pairs with identity data on the control side:
-**133 (43.0%) are contaminated** -- the control repo has at least one
-reviewer who also reviews in some treated repo anywhere in the sample
-(not just its own matched partner). 176 (57.0%) are clean.
-
-(This is pair-level, among pairs where contamination is even checkable;
-the earlier inline repo-level figure was 39% of all 450 control repos
-with identity data -- consistent, slightly different denominator.)
-
-## Part 2 -- severity: are contaminating reviewers leads or peripheral?
-
-326 distinct reviewers are cross-arm (appear in >=1 treated AND >=1
-control repo anywhere). Of those:
-- **54.6% (178) are EVER a top1_login (lead) in some repo** -- not a
-  minor-reviewer phenomenon.
-- Sharper cut: of the 133 contaminated control repos, **52.6% (70) are
-  contaminated via that control repo's OWN lead reviewer** -- the person
-  whose activity directly drives `top1_share`/`mean_reviewers` for that
-  repo. The other 47.4% are contaminated only through a peripheral
-  reviewer there.
-
-**Read:** contamination is not a fringe effect touching only occasional
-reviewers. In roughly half of contaminated control repos, the shared
-reviewer is the repo's own primary reviewer -- the person whose
-behavior the headline share-based outcomes most depend on.
-
-## Part 3 -- does excluding contaminated pairs change the ATT?
-
-Re-ran BJS on `top1_share`, `top2_share`, `mean_reviewers` on two
-samples drawn from the same 309-pair identity-covered set: all 309
-("FULL") vs. the 176 non-contaminated pairs only ("CLEAN").
-
-| Outcome | Sample | n pairs | ATT | SE | t | pre-trend p |
-|---|---|---|---|---|---|---|
-| top1_share | FULL | 309 | +0.0225 | 0.0103 | 2.19 | 0.471 |
-| top1_share | CLEAN | 176 | +0.0118 | 0.0137 | 0.86 | 0.964 |
-| top2_share | FULL | 309 | +0.0318 | 0.0060 | 5.33 | 0.951 |
-| top2_share | CLEAN | 176 | +0.0208 | 0.0075 | 2.79 | 0.862 |
-| mean_reviewers | FULL | 309 | −0.0542 | 0.0188 | −2.88 | 0.960 |
-| mean_reviewers | CLEAN | 176 | −0.0277 | 0.0262 | −1.06 | 0.896 |
-
-Pre-trend passes cleanly in every specification, both samples.
-
-**This does NOT confirm the theoretical conservative-bias direction.**
-The naive prediction was: excluding contaminated controls removes
-controls that look artificially "treated-like," so the clean-sample ATT
-should come out *larger* (the full-sample estimate being a
-downward-biased lower bound). Instead, every outcome's clean-sample ATT
-is *smaller* than the full-sample ATT -- roughly half the magnitude for
-top1_share and mean_reviewers, and `top1_share`/`mean_reviewers` both
-lose conventional significance in the clean subsample (t drops from
-~2.2-2.9 to ~0.9-1.1).
-
-**Why this is not a clean bias-correction test, and shouldn't be
-over-read either direction:** contaminated-pair status is not randomly
-assigned -- pairs with cross-project reviewer overlap are very likely
-systematically different (larger, more interconnected open-source
-ecosystems, more prominent shared maintainers) from pairs without any
-overlap. Splitting on contamination status therefore also splits on
-unobserved pair characteristics correlated with the true effect size,
-not on contamination alone. The shrinkage in the clean subsample could
-reflect: (a) the true effect genuinely being smaller in less-connected
-projects, (b) reduced statistical power from nearly halving the sample
-(176 vs. 309 pairs, SE inflating accordingly), or (c) contamination
-itself inflating the full-sample estimate in a way opposite to the
-naive theoretical prediction. The data here cannot distinguish between
-these. What it does rule out: the comfortable assumption that
-contamination is a minor, ignorable nuisance that -- if anything --
-makes the paper's estimates conservative. That assumption does not
-survive contact with the data.
-
-## Bottom line
-
-1. Contamination is real and substantial (43% of checkable pairs), not
-   a theoretical edge case.
-2. It disproportionately runs through control repos' own lead
-   reviewers (~53% of contaminated repos), not just peripheral noise.
-3. Excluding it does not inflate the ATT as the standard SUTVA-violation
-   story predicts -- if anything the opposite, which is itself
-   noteworthy and argues the direction/magnitude of this particular
-   bias is more complicated than "the paper's numbers are a safe lower
-   bound."
-4. Sample caveat: this entire check runs on the 309-pair identity-data
-   subset, not the full 1,771-pair sample -- the clean-pairs result
-   (n=176) is a real but modest sample; take the point estimates as
-   suggestive of a real, non-trivial issue, not as a precise
-   bias-corrected replacement for the headline numbers.
-
-### `contamination_size_tenure_findings.md`
-
-# Contamination-vs-size confound, and leader tenure heterogeneity
-
-Follow-up on `contamination_findings.md`'s open question (contaminated
-repos show a stronger concentration effect, but are also bigger -- can't
-tell if that's a real size effect or SUTVA-violation inflation). Script:
-`diagnose_contamination_size_and_tenure.py`.
-
-## Thread A -- does contamination still predict a stronger effect within a size stratum?
-
-Median-split the 309 identity-covered pairs by treated repo's own
-`treated_contributors` (median=69), crossed with contaminated/clean
-status. Four cells (n=54/106/79/70) -- small sample, suggestive only.
-
-| Stratum | Outcome | Contaminated ATT (t, pretrend) | Clean ATT (t, pretrend) | Diff p |
-|---|---|---|---|---|
-| Small | top1_share | +0.030 (1.20, PASS) | +0.001 (0.06, PASS) | 0.355 (n.s.) |
-| Small | top2_share | **+0.054 (4.26, PASS)** | **+0.020 (2.17, PASS)** | **0.031** |
-| Large | top1_share | +0.042 (2.07, **FAIL**) | +0.033 (1.55, PASS) | 0.760 (n.s.) |
-| Large | top2_share | +0.041 (2.81, PASS) | +0.024 (1.91, PASS) | 0.396 (n.s.) |
-
-**Mixed, partial resolution -- does not cleanly settle the confound.**
-For `top2_share` (the more robust outcome throughout this project),
-contamination still predicts a significantly stronger effect *within
-the small-repo stratum* (p=0.031) -- real evidence the SUTVA violation
-itself adds inflation, not just a size artifact, at least there. But
-within the large stratum the gap shrinks and loses significance
-(p=0.396), consistent with size already explaining most of the
-original gap once repos are already big. `top1_share`'s large+
-contaminated cell fails pre-trend outright and is excluded from causal
-interpretation regardless. **Verdict: contamination appears to add a
-real, independent effect in smaller repos, but can't be distinguished
-from the size confound in larger ones. Not a clean resolution either
-way -- cells are small (54-106), treat as suggestive.**
-
-## Thread B -- does the pre-adoption leader's own tenure predict concentration strength?
-
-For each treated repo with a full 5-month pre-period, tenure = how many
-of those 5 months the eventual "fixed top1" reviewer was already that
-month's re-crowned leader (0-5; restricting to exactly 5 pre-months
-avoids a degenerate measure -- an earlier fraction-based version
-collapsed because short pre-windows trivially score 1.0). n=296,
-median=4. Low tenure (<=4, n=191) vs. high tenure (=5, n=105).
-
-| Outcome | Low tenure ATT (t, pretrend) | High tenure ATT (t, pretrend) | Diff (t, p) |
-|---|---|---|---|
-| top1_share | **+0.047 (4.62, PASS)** | **-0.022 (-1.84, PASS)** | +0.069 (4.40, **p<0.0001**) |
-| top2_share | **+0.036 (4.40, PASS)** | +0.001 (0.14, PASS) | +0.035 (2.95, **p=0.0032**) |
-
-**This is a clean, well-powered, genuinely new finding.** Both strata
-pass pre-trend; the split is highly significant for both outcomes, not
-borderline. Concentration rises sharply where the pre-adoption leader
-was NOT yet fully entrenched (led fewer than all 5 pre-period months --
-i.e., leadership was still somewhat unsettled going into adoption).
-Where one person already held the top spot for the entire observed
-pre-period (fully entrenched, n=105), the effect reverses for
-`top1_share` (significant negative, borderline at t=-1.84) and nulls
-out for `top2_share`. AI adoption appears to accelerate concentration
-specifically in teams whose leadership hadn't yet stabilized, not in
-teams where it already had.
-
-## Bottom line
-
-Thread A: inconclusive / mixed, does not resolve the contamination-vs-
-size confound cleanly -- partial evidence for a real contamination
-effect in small repos only.
-
-Thread B: a real, defensible, well-powered new finding -- leader tenure
-(entrenchment) is a genuine effect modifier for H1 concentration, not
-previously tested in this project. Worth adding to the paper as a
-heterogeneity result, same evidentiary bar as the signal-type and
-team-size heterogeneity checks already in the deck.
-
-### `cumulative_vs_monthly_concentration_findings.md`
-
-# Does concentration mean persistent overload, or monthly rotation?
-
-**Motivation.** `top1_share`/`top2_share`/Gini in the main pipeline are
-recomputed fresh every repo-month (whoever is busiest *this* month). A
-rising monthly share is consistent with two very different stories: (a)
-the same 1-2 people dominate review month after month (persistent
-overload -- real burnout/bus-factor risk), or (b) a different person
-rotates through the "busiest" spot each month, and the apparent
-concentration evens out over a longer window (diffuse -- much lower
-risk). This script (`diagnose_cumulative_concentration.py`) builds the
-comparison that tells them apart, using `output/pr_level_data.csv`
-(uncapped, 1,406/1,771 complete pairs). 300 pairs have usable pre+post
-cumulative reviewer data on both sides.
-
-## 1. Monthly-average vs. cumulative levels (same 300-pair sample)
-
-| | treated pre | treated post | control pre | control post |
-|---|---|---|---|---|
-| monthly-avg top1_share | 0.688 | 0.709 | 0.733 | 0.745 |
-| **cumulative** top1_share | 0.623 | 0.625 | 0.651 | 0.653 |
-| monthly-avg top2_share | 0.868 | 0.878 | 0.916 | 0.921 |
-| **cumulative** top2_share | 0.811 | 0.807 | 0.857 | 0.848 |
-| cumulative Gini | 0.456 | 0.505 | 0.401 | 0.402 |
-
-Cumulative concentration sits well below monthly-average concentration
-in every cell, both arms, both periods -- monthly snapshots do overstate
-concentration relative to the pooled reality. That part is not
-AI-specific: control repos show the exact same gap.
-
-## 2. The direct comparison: does the DiD survive moving to cumulative?
-
-Same 300 pairs, same bootstrap (500 reps):
-
-| Outcome | Monthly-average DiD | Cumulative DiD |
-|---|---|---|
-| top1_share | ATT=+0.027, t=1.67, p=0.095 | ATT=+0.017, t=0.89, **p=0.371** |
-| top2_share | ATT=+0.022, **t=2.88, p=0.004** | ATT=+0.011, t=0.85, **p=0.394** |
-| Gini | (not estimated monthly here) | ATT=+0.066, **t=3.35, p=0.0008** (n=175) |
-
-**top2_share's significant monthly effect is roughly halved and loses
-significance entirely once pooled across the whole post-period.** This
-is the central finding: a real part of the monthly concentration signal
-is coming from month-to-month rotation dynamics, not from the same
-people accumulating a growing share of the *total* pie over the whole
-window.
-
-**Gini is the exception, and it's a real one.** Pooled across the whole
-window, the full reviewer distribution's inequality rises significantly
-for treated repos relative to control (p=0.0008) -- but this isn't
-traceable specifically to the top-1/top-2 people's share (which doesn't
-move). Something about the *shape* of the broader distribution shifts
-even though the top slice's share of the cumulative total does not.
-
-## 3. Does the gap itself widen after adoption? (more rotation = lower risk)
-
-| Outcome | Gap DiD |
-|---|---|
-| top1_share | ATT=+0.010, t=0.80, p=0.422 |
-| top2_share | ATT=+0.012, t=1.33, p=0.183 |
-
-Both point the direction consistent with "rotation increases a little
-after adoption," but neither clears significance. No confident claim
-either way.
-
-## 4. Does the SAME pair of people dominate both halves of the post-period?
-
-Jaccard overlap of the top-2 identity set between h=0-5 and h=6-11:
-
-- Treated: mean 0.522 (n=394)
-- Control: mean 0.539 (n=210)
-- Difference: −0.017, SE=0.029, t=−0.57, **p=0.572**
-
-No detectable difference. Treated repos are not more likely than control
-repos to have the identical pair of people dominating across the whole
-post-adoption window.
-
-## Bottom line, in management terms
-
-**This leans toward the rotation story, not persistent overload --
-with one real exception.** The specific claim "the top-1/top-2 people's
-share of the *whole* post-adoption window grows" does not survive moving
-from a monthly snapshot to a cumulative measure (p=0.37-0.39), and
-identity overlap between the first and second half of the post-period is
-statistically indistinguishable between treated and control (p=0.57).
-That argues against "the same 1-2 people are increasingly, persistently
-overloaded." But the cumulative Gini result (p=0.0008) says something
-real about rising inequality across the *whole* distribution is still
-there -- just not cleanly a top-1/top-2 story. The honest combined read:
-**not strong evidence of specific individuals being persistently
-burdened across the whole post-adoption window**, but **real evidence
-that the broader distribution becomes more unequal in a way that
-survives pooling** -- worth investigating which part of the distribution
-(not the very top) is actually moving.
-
-## What this means for the paper's framing
-
-The existing monthly top2_share/Gini headline claims should not be
-restated as "the same people get overloaded" without this caveat -- the
-data here argues that's the less-supported of the two stories. A more
-defensible framing: review activity concentrates in any given month, but
-*who* is concentrated on shifts enough across months that no strong
-claim about persistent individual burden is supported. The Gini result
-is worth a separate sentence as a distinct, more durable finding.
-
-### `h3_subsample_signflip_investigation.md`
-
-# Investigation: H3 sign flip on the 296-repo leader-tenure subsample
-
-## Confirmed: the sign flip is real, not a coding slip
-
-Standalone BJS estimate, 296-repo subsample vs. full 1,771-pair sample,
-identical `run_outcome` call:
-
-| Outcome | Subsample (n=296) | Full sample (n=1,771) |
-|---|---|---|
-| `time_to_merge_hours` | **+40.7** (SE 14.4, t=+2.83) | **−62.8** (SE 24.2, t=−2.60) |
-| `review_rounds` | **−0.146** (SE 0.072, t=−2.04) | **+0.180** (SE 0.045, t=+4.04) |
-
-Both significant, both opposite sign from the deck's headline numbers.
-Reproduced independently from `diagnose_leader_tenure_followup.py`'s own
-`compute_tenure`/`build_rows_for_pairs` — not a bug in that script.
-
-## What explains it
-
-**Not t0 timing / `EXCLUDE_PERIODS`.** The subsample's `t0` distribution
-is shaped like the full sample's (same median: March 2026), no unusual
-skew toward recent adopters that would interact with the excluded
-2026-09 month.
-
-**Not a horizon-weighting artifact.** The full sample's own `ATT_h`
-breakdown for both outcomes **never flips sign across any horizon
-h=0..11** — `time_to_merge_hours` is negative at every single horizon
-(−64 to −13), `review_rounds` is positive at nearly every horizon (one
-near-zero dip at h=6, h=9). So a subsample that happens to weight later
-horizons more heavily cannot mechanically produce a sign flip — the
-per-horizon effect itself never reverses in the full sample.
-
-**It is real, repo-level selection.** The subsample (treated repos with
-a complete, gap-free 5-month pre-period in `reviewer_identity_check.csv`)
-is systematically different in kind, not just in timing:
-
-| | Subsample | Full sample |
-|---|---|---|
-| Avg. post-period months with latency data | 5.8 | 4.1 |
-| Avg. max post-horizon reached | 5.1 | 4.1 |
-| Avg. pre-period PRs/month | **21.0** | **11.5** |
-
-Nearly 2x the pre-period PR volume, longer-observed. Repos with gaps in
-their pre-period coverage (the ones this subsample excludes) are
-disproportionately quieter, lower-volume projects — exactly the kind
-more likely to have a month with zero merged PRs, breaking the
-"5-of-5 pre-period rows present" requirement. So this subsample isn't a
-random draw from the 1,771 — it's specifically the busier, more
-consistently-active tail. Within that tail, the H3 process effect
-genuinely runs the opposite direction from the rest of the sample:
-busier/fuller-coverage repos see merge time get **slower**, not faster,
-and rounds-per-PR go **down**, not up, after AI adoption.
-
-## Recommendation
-
-**The H1 leader-tenure finding should stay in the deck, but needs an
-explicit scope caveat — not be pulled.** Its own direction (concentration
-rises more where leadership was unsettled) doesn't contradict anything
-found here; H1 wasn't tested for a sign flip, and nothing above touches
-it directly. But the subsample it's built on is NOT representative of
-the general 1,771-pair population — it's specifically large,
-high-pre-period-volume, fully-observed repos, a real selection effect
-confirmed by the volume/coverage numbers above. The tenure slide should
-say so explicitly (e.g. "tested on treated repos with complete 5-month
-pre-period coverage — a busier-than-average subset, see H3 note") rather
-than reading as a population-wide result.
-
-**Separately: the H3 sign flip is itself a genuinely new, interesting
-finding, not just a caveat to bury.** "Busy/high-volume/fully-covered
-repos see review get SLOWER and need FEWER rounds after AI adoption —
-opposite of the general-sample pattern" is worth its own slide or at
-least its own sentence, not just a footnote on the tenure result. It sits
-alongside this session's other big-repo-heterogeneity finding (stronger
-H1 concentration in bigger repos) as a second, independent piece of
-evidence that large/busy projects behave qualitatively differently under
-AI adoption, not just more intensely.
-
-**File:** `h3_subsample_signflip_investigation.md` (this file, repo root).
-No existing files modified.
-
-### `leader_tenure_followup_findings.md`
-
-# Leader-tenure follow-up: does it extend to H2/H3, and is it independent of pool size?
-
-Follow-up on `diagnose_contamination_size_and_tenure.py` Thread B (the
-settled/unsettled leadership split that predicts `top1_share`/`top2_share`
-concentration strength, p<0.0001). Script: `diagnose_leader_tenure_followup.py`.
-n=296 treated repos with a full 5-month pre-window and computable tenure
-(median tenure=4 of 5 months; unsettled n=191, settled n=105).
-
-## Thread A — does the mechanism extend to H2 (displacement) and H3 (process)?
-
-**H2 (`top1_persists`):** both strata show large, significant displacement
-(unsettled ATT=-0.110, t=-3.90, pretrend PASS p=0.126; settled ATT=-0.137,
-t=-4.60, pretrend **FAILS** p=0.000 — not trustworthy on its own).
-Difference between strata is **not significant** (p=0.512). Displacement
-happens regardless of whether the pre-adoption leader was already settled —
-unlike H1 concentration, this is NOT where the settled/unsettled story lives.
-
-**H3 (`time_to_merge_hours`, `review_rounds`):** no significant stratum
-difference for either outcome (p=0.745, p=0.843) — the mechanism doesn't
-extend here either. **More important: both outcomes have the OPPOSITE sign
-from the deck's full-sample headline numbers on this specific 296-repo
-subsample** — `time_to_merge_hours` is +46/+36 here (deck: -62.8, latency
-drops) and `review_rounds` is -0.14/-0.17 here (deck: +0.180, rounds rise).
-Both strata individually pass pre-trend for these two outcomes, so this
-isn't a construction artifact — it's a real indication that the
-tenure-computable/identity-covered 296-repo subsample behaves differently
-from the full 1,771-pair sample for H3 specifically. Flagging this clearly:
-**H3's headline result does not reproduce on this particular slice of the
-data**, which is worth investigating separately from the tenure question
-itself (possible selection effect in which repos have both a full 5-month
-pre-window AND reviewer-identity coverage).
-
-## Thread B — is tenure just a pool-size proxy?
-
-**No — it's a distinct, independent dimension.** Correlation between tenure
-and pre-period `mean_reviewers`: **r=-0.257** (n=296) — weak, not the kind
-of collinearity that would make this a redundant restatement of the known
-pool-size effect.
-
-2x2 split (tenure x pool size, median splits, cells n=35-113):
-
-| Outcome | Within small-pool: unsettled-settled diff | Within large-pool: diff |
-|---|---|---|
-| top1_share | +0.059, t=2.41, **p=0.016** | +0.046, t=1.84, p=0.065 |
-| top2_share | +0.004, t=0.26, p=0.793 | +0.052, t=2.19, **p=0.028** |
-
-The tenure effect survives within at least one pool-size stratum for both
-outcomes (small-pool for top1_share, large-pool for top2_share), confirming
-tenure carries real, independent signal beyond pool size — strengthens
-rather than undermines the original finding.
-
-## Verdict
-
-Thread B: **tenure is a genuinely distinct, robust dimension**, not a
-pool-size proxy — good news for the original finding's standing. Thread A:
-the settled/unsettled mechanism is **specific to H1 concentration**, does
-not extend to H2 displacement (which is strong and universal regardless of
-tenure) or H3 process outcomes — and surfaces a separate, noteworthy
-caveat that H3's headline sign does not reproduce on this particular
-296-repo subsample, worth a follow-up investigation in its own right.
-
-### `pr_level_findings.md`
-
-# PR-level re-examination: what output/pr_level_data.csv adds
-
-**Status:** Exploratory. Not incorporated into `overleaf/paper.tex`,
-`new_design.md`, or `research_design.md` — this file records what was
-tested and the verdict, for someone to decide what (if anything) should be
-promoted into the paper.
-
-**Scope caveat that applies to every result below.** `pr_level_data.csv`
-was extracted only for repo-months inside the declared event-time window
-(pre h=-6..-2, post h=0..11) for pairs that had *both* a pre- and a
-post-window observation in the cache (`build_pr_level_data.py::months_with_data`).
-That is a stricter requirement than "complete pair" as `run_event_study.py`
-defines it (any cache entry for both repos at all). The result: this
-analysis runs on **802 treated repos**, not the paper's full **1,771**.
-Every ATT below is therefore not directly comparable in magnitude to the
-paper's headline numbers — differences could reflect the different sample,
-not just the uncapped data. Where I re-ran the *capped* cache numbers on
-this exact same 802-repo subsample for comparison (Item 1), I did so
-explicitly rather than quoting the paper's full-sample figures.
-
-All estimates use `run_event_study.py`'s exact BJS imputation code
-(`fit_two_way_fe`, `run_outcome`'s logic), imported/reused directly, with
-the plain analytic cluster-SE (not the paper's bootstrap-corrected SE —
-that machinery lives elsewhere and wasn't rerun here). Pre-trend is the
-same joint statistic style used throughout the project: sum of squared
-t-stats across the available pre-leads (h=-6..-2), plus each lead's own
-|t|. Caliper sensitivity could only be checked at 0.10/0.15/0.25 — those
-are true subsets of the current `matched_pairs.csv` (`distance` column);
-0.35/0.50 pairs are not in the current file and re-matching at a wider
-caliper would require re-extracting PR-level data for the newly-included
-repos, which is out of scope here.
-
----
-
-## Item 1 — Does the repo_month_cache 40-PR/month sampling cap bias H1?
-
-**What's being tested:** `src/review_panel.py::repo_window_panel` caps
-each repo-month at 40 sampled merged PRs before computing outcomes.
-`pr_level_data.csv` has no such cap. Recomputed `top1_share`, `top2_share`,
-`mean_reviewers`, and `time_to_merge_hours` from the uncapped PR-level
-data, aggregated to repo-month, and reran BJS on the identical 802-repo /
-9,479-observation sample both ways (capped via `repo_month_cache.csv`,
-uncapped via `pr_level_data.csv`).
-
-| Outcome | Capped ATT (t) | Uncapped ATT (t) | Pre-trend (capped / uncapped) |
-|---|---|---|---|
-| `top1_share` | +0.0141 (2.07) | +0.0070 (1.12) | clean (joint 2.4) / **wobbles** (joint 9.6, h=-6 t=-2.02) |
-| `top2_share` | +0.0153 (4.08) | +0.0082 (2.47) | mostly clean (joint 6.2) / wobbles (joint 13.5, h=-4 t=2.47) |
-| `mean_reviewers` | -0.0471 (-3.45) | -0.0463 (-3.46) | fails both (joint 15.9 / 10.9, h=-4 flagged both ways) |
-| `time_to_merge_hours` | -41.5 (-2.12) | -34.2 (-1.74) | clean both (joint 5.4 / 3.7) |
-
-**Verdict — this matters and should be flagged to whoever finalizes the
-paper's H1 wording.** On this subsample, the sampling cap roughly
-**halves** the top1_share and top2_share point estimates (and pushes
-top1_share's t-stat from significant to not). It doesn't rescue
-`mean_reviewers` (still fails pre-trend either way — consistent with the
-existing null verdict) and doesn't change `time_to_merge_hours` much. The
-direction of the bias makes sense mechanically: capping at the first 40
-PRs returned per repo-month systematically under-samples large/hyperactive
-months, and a smaller effective PR count inflates concentration shares
-(law of small numbers) and shortens observed latency (order-dependent on
-whatever the Search API's default ordering returns, not verified here).
-**This is not simply "the cap is a bug that inflated a false result"** —
-the uncapped top2_share estimate (t=2.47) is still directionally
-consistent and nominally significant, and the *pre-trend gets slightly
-worse*, not better, when uncapping (both top1 and top2 pick up a new
-flagged lead). So uncapping doesn't cleanly vindicate or kill H1; it
-shrinks the effect size and adds some pre-trend noise. Given this is only
-~11% of repo-months (1,525/12,553 restricted-cache rows had
-`n_merged_prs_total>40`), the honest read is: **the paper's top1/top2
-share ATT is probably somewhat inflated by the cap, magnitude uncertain,
-direction of the underlying effect not overturned.** Worth a sentence of
-caveat in the paper (e.g. in the robustness section) rather than a
-retraction.
-
----
-
-## Item 2 — Size-weighted concentration (H1, "PR size is not labor time")
-
-Built `top1_share_sizewt`/`top2_share_sizewt`: each reviewer's share of
-total (additions+deletions) across the PRs they reviewed that month,
-instead of their share of review-event *counts*.
-
-| Outcome | ATT | t | Pre-trend |
-|---|---|---|---|
-| `top1_share_sizewt` | -0.0027 | -0.38 | clean (joint 3.7) |
-| `top2_share_sizewt` | +0.0080 | 2.34 | mostly clean (joint 9.8, one flagged lead h=-4 t=2.24) |
-
-**Verdict:** top1 alone goes to a clean null under size-weighting — the
-busiest reviewer's *share of code volume* reviewed does not rise, only
-their share of review-event count does. top2_share_sizewt survives at a
-magnitude (+0.008) almost identical to the uncapped count-based top2_share
-from Item 1 (+0.0082) — the two-person concentration result is not an
-artifact of counting reviews instead of code volume. This sharpens (not
-contradicts) the paper's own reading that top2_share is "the more secure
-carrier" and top1_share alone is "directionally consistent but not
-independently conclusive" — size-weighting pushes top1 further toward
-null, not less.
-
----
-
-## Item 3 — Does H2 latency survive controlling for PR size?
-
-Residualized per-PR `time_to_merge_hours` on `log1p(additions+deletions)`
-and `changed_files` (pooled OLS, R²=0.0025 — size explains almost none of
-the variance in latency), aggregated the residual to repo-month, ran BJS.
-Also re-ran on the raw outcome restricted to a middle PR-size band
-(25th–75th percentile of additions+deletions, 11–287 lines).
-
-| Spec | ATT (hours) | t | Pre-trend |
-|---|---|---|---|
-| Size-residualized | -35.8 | -1.82 | clean (joint 3.7) |
-| Size-band-restricted (11-287 lines) | -61.8 | -2.62 | clean (joint 2.2) |
-
-**Verdict:** H2 survives, and on the size-band restriction it's actually
-*stronger* and cleaner than the unrestricted uncapped estimate from Item 1
-(-34.2, t=-1.74). Because PR size explains essentially none of the
-variance in time-to-merge here, "PRs just got smaller" is not a viable
-alternative explanation for the latency drop — a real update on this
-specific concern, worth citing as a positive robustness check for H2 in
-the paper text (Section 5.3 already lists other caveats; this one comes
-back clean).
-
----
-
-## Item 4 — Review-effort-per-unit-size proxy (research_design.md item 6)
-
-Built `n_review_events / (additions+deletions+1)` per PR (human review
-submissions per line touched), repo-month mean, BJS.
-
-| Outcome | ATT | t | Pre-trend |
-|---|---|---|---|
-| `effort_per_size` | -0.0058 | -1.95 | clean (joint 4.2, no flagged lead) |
-
-**Verdict:** Borderline (t=-1.95, just short of conventional
-significance) but with a genuinely clean pre-trend. Directionally
-consistent with a "reviewing gets easier per unit of code" story, but not
-strong enough to report as a finding by this project's own bar
-(`null_results.md` treats `mean_reviewers` at p=0.052/t=-1.95 — the exact
-same t as this — as "not conventionally significant," so consistency
-requires the same read here). **Suggestive, not confirmed.** Caliper
-sensitivity not run given it doesn't clear the bar for a headline claim;
-would be worth a caliper check before reporting even as a secondary
-result.
-
----
-
-## Item 5 — A real inequality measure (research_design.md item 5)
-
-Reconstructed the full per-reviewer review-count distribution per
-repo-month from `reviewer_event_counts` and computed a Gini coefficient
-(previously only HHI was available: `+0.0126, p=0.095`, pre-trend clean,
-per `research_design.md`).
-
-| Outcome | ATT | t | Pre-trend | Caliper (0.10 / 0.15 / 0.25) |
-|---|---|---|---|---|
-| `reviewer_gini` | +0.0296 | 4.89 | mostly clean (joint 7.3, one flagged lead h=-4 t=-2.28, **opposite sign** from the ATT) | +0.044 (t=3.64) / +0.036 (t=3.85) / +0.030 (t=4.89) — sign-stable, monotone, all strongly significant |
-
-**Verdict — the strongest new result in this analysis.** Gini is far more
-convincing than the borderline HHI result it supersedes: t=4.89 vs.
-p=0.095, and it's sign-stable and significant at every caliper this
-sample can test. The one flagged pre-trend lead (h=-4) has the *opposite*
-sign from the ATT, which if anything argues against a mechanical
-pre-trend explanation (a real pre-trend confound would push the same
-direction as the effect, not against it). Recommend: report this as a
-secondary/robustness result for H1 in the paper — it directly answers
-`research_design.md` item 5's open question ("does the gap between core
-and peripheral reviewers widen") with a purpose-built inequality measure,
-not an inferred HHI proxy. Caveat: undefined for repo-months with 0-1
-distinct reviewers, so N is smaller (n_omega1=2,353 vs. 3,627 for the
-share measures) — a different, slightly less inclusive sample than the
-other outcomes.
-
----
-
-## Item 6 — Rolling (non-fixed-window) entrant share (research_design.md item 1)
-
-`research_design.md` reports the fixed-pre-period version of
-`entrant_share` fails pre-trend as a mechanical-reversion artifact of
-anchoring "new" to a single fixed 5-month pre-period roster. Built a
-rolling version instead: for each repo-month, the share of that month's
-distinct reviewers who did NOT appear in the union of the reviewer sets
-from the (up to) 3 most recently *available extracted* months. (Caveat:
-"available extracted months" is not a true calendar-month lookback — the
-pre/post windows have a built-in gap at h=-1 (no-anticipation exclusion),
-so for early post-period months the lookback silently spans across that
-gap into late pre-period months. 71.8% of repo-months have a full 3-month
-lookback; the rest use whatever's available, down to 1.)
-
-| Outcome | ATT | t | Pre-trend |
-|---|---|---|---|
-| `entrant_share_rolling` | -0.0003 | -0.03 | **fails** (joint 20.2, dof=4 — h=-5 t=3.66, h=-2 t=-2.53) |
-
-**Verdict:** Does not fix the problem. The rolling construction still
-fails its pre-trend test, arguably worse than what's described for the
-fixed-window version, and the ATT is a clean zero anyway. The "entry
-stops" vs. "periphery withdraws" question remains genuinely open — this
-particular fix (rolling window) isn't the one that resolves it. A
-different construction (e.g., anchored to each repo's *own* full observed
-history rather than a fixed or short rolling lookback) would need to be
-tried next, or this item should stay listed as unresolved in
-`research_design.md`.
-
----
-
-## Summary: what should change in the paper
-
-The single most important thing here is **Item 1**: the paper's
-capped-cache H1 numbers (`top1_share`/`top2_share`) are likely inflated by
-roughly 2x for the ~11% of repo-months where the 40-PR/month cap actually
-bound, though direction and (for top2_share) significance survive
-uncapping. This deserves an explicit caveat sentence, not a retraction —
-and ideally a full re-extraction of PR-level data across all 1,771 pairs
-(not just this 802-repo subsample) before that caveat is finalized, since
-everything here is on a smaller, not-identical sample.
-
-Second most important: **Item 5's Gini result** (t=4.89, sign-stable
-across all testable calipers) is a genuinely new, stronger-than-HHI
-finding that directly answers a stated open question and looks ready to
-report as a secondary H1 outcome, pending the same scrutiny (bootstrap SE,
-balanced-panel check) the paper already applies to its other secondary
-outcomes.
-
-Third: **Item 3** is a clean, positive robustness check for H2 (latency
-survives PR-size control) worth adding as a sentence, not a new claim.
-
-Items 2, 4, 6 are either confirmatory-but-not-new (2), too weak to report
-(4), or a tested-and-failed fix for an already-known open gap (6) — useful
-for ruling things out, not for the paper's results section.
-
-### `rank_by_rank_findings.md`
-
-# Rank-by-rank reviewer workload after AI adoption
-
-Resolves whether concentration is a sharp "only rank 1-2 gain" story or
-a broader gradient across active reviewers. Source: uncapped
-`output/pr_level_data.csv` (full 1,771-pair complete sample, 293,097 PR
-rows, 11,759 aggregated repo-months). Script:
-`diagnose_rank_by_rank_concentration.py`.
-
-## Sample coverage by rank
-
-| Min distinct reviewers | % of repo-months |
-|---|---|
-| >= 1 | 100.0% |
-| >= 2 | 65.6% |
-| >= 3 | 43.8% |
-| >= 4 | 31.8% |
-| >= 5 | 23.4% |
-
-Coverage drops fast past rank 2 -- rank 4/5 results rest on a
-meaningfully smaller, more-active-repo-skewed subsample (~24-32% of
-repo-months even have a 5th/4th reviewer at all).
-
-## Results
-
-| Rank | ATT | SE | t | Pre-trend | n (omega1) | n treated repos |
-|---|---|---|---|---|---|---|
-| 1 | +0.0066 | 0.0063 | 1.06 | PASS (p=0.197) | 3,628 | 1,134 |
-| 2 | -0.0078 | 0.0045 | -1.73 | PASS (p=0.103) | 2,354 | 1,134 |
-| 3 | -0.0127 | 0.0030 | **-4.19** | PASS (p=0.727) | 1,567 | 1,134 |
-| 4 | -0.0083 | 0.0023 | **-3.68** | PASS (p=0.974) | 1,151 | 1,134 |
-| 5 | -0.0041 | 0.0018 | -2.24 | PASS (p=0.089, borderline) | 859 | 1,134 |
-
-All five ranks pass pre-trend cleanly.
-
-## Shape of the pattern
-
-**Not a sharp "only rank 1-2 gain" story, and not quite the broad
-"everyone but the tail loses a little" story either.** The individual
-rank-1 share barely moves and isn't significant (+0.0066, t=1.06) on
-this uncapped full sample. Rank 2 is marginally negative (t=-1.73, not
-quite significant). The clearest, strongest losses sit at **ranks 3-4**
-(t=-4.19 and -3.68), tapering off by rank 5. So the picture is: the
-single busiest reviewer roughly holds steady, and the squeeze falls
-hardest on the reviewers just below the top -- ranks 3 and 4 -- before
-tapering into the long tail.
-
-**This sits in tension with the deck's main-table `top2_share` result**
-(ATT=+0.015, significant, from the capped `repo_month_cache.csv`
-pipeline) -- rank1+rank2 summed here come to roughly flat
-(+0.0066-0.0078 ≈ -0.0012), not a clear rise. This is consistent with,
-and reinforces, the already-documented sampling-cap caveat elsewhere in
-this project (capped vs. uncapped top1/top2_share differ by roughly
-2x and can flip significance) -- this rank-by-rank cut is uncapped and
-full-sample, so some divergence from the capped headline number is
-expected, but the magnitude and pattern here is a further data point
-for that caveat, not a new, separate concern.
-
-## Verdict
-
-A real, pre-trend-clean pattern: losses are concentrated at ranks 3-4,
-not spread evenly across all active reviewers and not concentrated
-narrowly at rank 1. Worth citing as a finer-grained companion to
-`tail_share` (which only distinguishes top-2 vs. everyone else) --
-this shows the squeeze is not uniform across "everyone else," it is
-sharpest for the reviewers just outside the top tier.
-
-### `reciprocity_findings.md`
-
-# Reviewer reciprocity: does review become more one-directional?
-
-New angle: concentration (H1) tells you load piles onto fewer people,
-but says nothing about whether those people are embedded in mutual
-review relationships or sit outside them, only ever reviewing downward.
-Built two reciprocity measures from `output/pr_level_data.csv` (author
--> reviewer directed edges per merged PR), both run through the
-standard BJS pipeline (`run_event_study.py`'s `fit_two_way_fe`/
-`cluster_se`), full complete-pairs sample.
-
-## Measure 1 — cumulative-to-date reciprocity
-
-Fraction of all (author, reviewer) edges observed in a repo's history
-up to and including month *t* that have a reverse edge also present.
-
-**ATT = −0.0103, SE=0.0044, t=−2.33** (n_omega1=3,591, 1,096 treated
-repos). Directionally says reciprocity falls -- review becomes more
-one-directional. **But pre-trend fails badly: joint stat=37.10, dof=5,
-p<0.0001**, driven almost entirely by h=-6 (t=-4.68). This is very
-likely a cold-start artifact of the cumulative construction: h=-6 is
-typically the first observed month per repo, so the "cumulative" edge
-set there is built from almost no history, mechanically depressing
-early-period reciprocity in a way unrelated to treatment. **Excluded
-from causal interpretation by this project's own standard.**
-
-## Measure 2 — same-month-only reciprocity
-
-Same ratio, restricted to edges formed within a single month (no
-history accumulation, avoids the cold-start issue by construction).
-
-**ATT = −0.0112, SE=0.0055, t=−2.04** (n_omega1=3,484, 1,082 treated
-repos). Same direction, similar magnitude. The h=-6 artifact is gone
-(t=+0.59), but **pre-trend still fails: joint stat=11.91, dof=5,
-p=0.036** -- no single lead is extreme, but h=-5 (t=+2.22) and h=-2
-(t=-1.96) combine to a significant joint test. Also **excluded from
-causal interpretation**, though it's a much cleaner fail than Measure 1
-(borderline, not catastrophic).
-
-Secondary consideration: same-month edge counts are sparse (median 3
-distinct author-reviewer pairs per repo-month), so this measure also
-carries real sampling noise independent of the pre-trend issue.
-
-## Verdict
-
-**Not a defensible finding under this project's standards.** Both
-reciprocity measures point the same direction (review becomes less
-mutual/more hierarchical after adoption) with marginally-significant
-ATTs, but neither passes the pre-trend test required before any result
-here is treated as causal. This should be logged as a tested-and-
-rejected direction (same disposition as the burnout-signal finding
-earlier this session), not added to the deck or paper. If revisited, a
-construction that avoids both the cold-start problem (rules out Measure
-1) and the sparsity problem (afflicts Measure 2) would need a different
-window (e.g., a trailing N-month rolling reciprocity rather than either
-full-cumulative or single-month) -- not attempted here.
-
-**Files:** `diagnose_reviewer_reciprocity.py` (repo root).
-
-### `tool_identity_findings.md`
-
-# Tool-identity heterogeneity: does it matter WHICH AI coding tool a repo adopted?
-
-Scripts: `diagnose_tool_identity_heterogeneity.py` (stage 1, quick pass),
-`diagnose_tool_identity_robustness.py` (stage 2, full battery).
-Data: `output/candidate_pool.csv` (`layer_a_signal_types`,
-`layer_b_signal_types`), `output/repo_month_cache.csv`,
-`output/reviewer_identity_check.csv`.
-
-## Framing and bucketing rule
-
-Previously this project only tested the coarse **agent-authored vs.
-human-assisted MODE** split ("Does the Adoption Mode Matter?" in
-`part1.tex`: only top2_share survives correction, p=0.037). This
-analysis goes one level more specific: does it matter which **tool**
-(Codex, Copilot, Claude, Cursor)?
-
-**Buckets are non-exclusive.** A repo is "in" a tool's bucket if it
-shows ANY signal associated with that tool (e.g. Claude =
-`claude_trailer` OR `claude_code_footer`), regardless of what other
-signals it also carries. 761/1,771 (43%) of treated repos in the
-matched sample carry more than one total signal type, and per-signal
-first-fired timestamps were never persisted by the extraction pipeline
-(only the combined earliest `t0` across all signals) -- so an
-exclusive "primary tool" assignment is not reconstructable without new
-extraction. This tests "repos showing ANY signal of tool X" vs. "repos
-attributable ONLY to tool X." Overlap is real: Codex & Copilot overlap
-= 257 of Codex's 961, for example.
-
-**Real per-tool sample sizes** among the 1,771 treated repos in
-`validated_complete_pairs()`: Codex=961, Copilot=800, Claude=478,
-Cursor=151, Devin=45, Jules=32. Devin and Jules are too small to test
-and are skipped (same bar as Era1's n=46 in the adoption-era analysis,
-flagged underpowered rather than over-interpreted).
-
-## Stage 1 — quick pass (analytic SE, caliper=0.25 baseline)
-
-| Tool | top1_share t | top2_share t | mean_reviewers t | time_to_merge_hours t |
-|---|---|---|---|---|
-| Codex (n=961) | +0.19 | +1.57 | -1.08 | **-2.97** |
-| Copilot (n=800) | +1.89 | **+3.18** | +0.48 (pretrend FAILS) | **-2.60** |
-| Claude (n=478) | +1.10 | **+2.55** | -1.14 | -1.26 |
-| Cursor (n=151) | +0.50 | +0.66 | -2.95 (pretrend FAILS) | +1.10 (wrong sign) |
-
-Pairwise diff-in-ATT tests: the only comparisons reaching p<0.05 all
-involve Cursor, and all involve an outcome where Cursor's own estimate
-already fails pre-trend (mean_reviewers) or is itself not individually
-significant. No comparison among Codex/Copilot/Claude (the three
-pre-trend-clean, better-powered buckets) reaches significance on any
-outcome at stage 1 (closest: Codex vs. Claude, time_to_merge_hours,
-p=0.095).
-
-## Stage 2 — full robustness battery (caliper, 300-rep bootstrap, clean-sample)
-
-### top2_share: fragile for ALL FOUR tools -- do not treat any per-tool estimate as established
-
-Caliper sensitivity (5 calipers, 0.10-0.50), sign stability:
-
-| Tool | Values across calipers | Verdict |
-|---|---|---|
-| Codex | -0.0098, +0.0113, +0.0078, +0.0036, -0.0026 | **SIGN FLIPS** |
-| Copilot | -0.0023, +0.0136, +0.0144, +0.0033, +0.0109 | **SIGN FLIPS** |
-| Claude | -0.0078, +0.0290, +0.0173, +0.0130, -0.0003 | **SIGN FLIPS** |
-| Cursor | -0.0473, +0.0165, +0.0073, +0.0009 | **SIGN FLIPS** |
-
-This is the textbook matching-artifact signature this project already
-uses elsewhere to reject a result -- and it hits every single tool
-bucket, not just the smaller ones. Splitting the concentration effect
-by tool reduces each slice's sample enough that CEM matching at
-different calipers pulls in genuinely different sub-populations.
-
-Bootstrap (300 reps, within-tool, caliper=0.25): Codex t=0.97 (n.s.),
-Copilot t=2.20 (p=0.028, survives), Claude t=1.73 (p=0.083, borderline
-n.s.), Cursor t=0.38 (n.s.).
-
-Clean-sample (non-contaminated): Codex t=0.90 n=85 (n.s.), Copilot
-t=2.09 n=106 (p~0.037, marginal survive), Claude t=3.36 n=53 (p<0.001,
-strongly survives), Cursor skipped (clean n=12, too small).
-
-**No tool's top2_share estimate passes all three checks together.**
-Copilot is the closest (survives bootstrap and marginally clean-sample)
-but fails caliper. Claude's clean-sample result is strong but its
-bootstrap is borderline and its caliper sign-flips. Codex never clears
-significance past stage 1. Read: the paper's POOLED top2_share result
-(all tools combined, full n=1,771) is independently well-established
-elsewhere in this project -- but it should not be attributed to any
-one tool, and no tool-specific top2_share claim is defensible from
-this slice.
-
-### time_to_merge_hours: more robust, and Codex stands out
-
-Caliper sensitivity: Codex, Copilot, Claude are all **sign-stable**
-(always negative across all 5 calipers); only Cursor flips sign.
-
-Bootstrap: Codex t=-2.06 (p=0.040, survives), Copilot t=-1.87 (p=0.062,
-borderline), Claude t=-0.88 (n.s.), Cursor t=+1.44 (n.s., wrong-signed
-point estimate but not itself significant).
-
-Clean-sample: **Codex t=-2.65 (p~0.008, n=85, survives strongly)**,
-Copilot t=-0.83 (n.s., n=106), Claude t=-0.82 (n.s., n=53).
-
-**Codex is the one genuinely robust per-tool result in this entire
-analysis**: sign-stable across all 5 calipers, survives the 300-rep
-bootstrap, and survives the clean-sample restriction -- the same bar
-every other headline claim in this project is held to. Codex is almost
-entirely an autonomous-agent signal (`codex_branch`), consistent with
-the existing "Does the Adoption Mode Matter?" framing that
-agent-authored adoption and human-assisted adoption may behave
-differently.
-
-Pairwise diff-in-ATT (bootstrap-corrected): no comparison among
-Codex/Copilot/Claude reaches significance on time_to_merge_hours either
-(Codex vs Copilot p=0.65, Codex vs Claude p=0.25, Copilot vs Claude
-p=0.43) -- so even though Codex's OWN effect is the most robustly
-established, it is **not statistically distinguishable** from
-Copilot's or Claude's effect. The three best-powered tools cannot be
-shown to differ from each other; Codex's result is simply the cleanest
-on its own terms, not provably larger.
-
-The only significant pairwise differences on time_to_merge_hours
-(Codex vs Cursor p=0.014, Copilot vs Cursor p=0.023) both involve
-Cursor, whose own point estimate is wrong-signed, not individually
-significant in bootstrap, and caliper-unstable -- the same "apparent
-difference traces to one noisy, unreliable bucket" pattern already
-documented for the adoption-era analysis (there it was Era4's
-truncated panel; here it's Cursor's small n=151).
-
-## Verdict
-
-1. **No detectable difference among the three well-powered tools**
-   (Codex, Copilot, Claude) on any outcome, in any check. Parallels the
-   adoption-era finding exactly: tool identity does not produce a
-   provable heterogeneous effect among the buckets with enough power
-   to test.
-2. **Cursor's apparent distinctiveness is not trustworthy** -- small
-   sample (n=151), wrong-signed point estimates, caliper-unstable,
-   never individually significant once bootstrap-corrected. Do not
-   cite "Cursor behaves differently" as a finding.
-3. **Per-tool top2_share is fragile for every tool** -- caliper
-   sign-flips across the board. This is itself informative: splitting
-   the paper's most robust headline result (pooled top2_share) by tool
-   erodes its robustness through sample-size loss alone, not through a
-   real tool-specific mechanism.
-4. **One genuine positive result: Codex's latency effect is robust on
-   its own terms** (caliper-stable, bootstrap-significant,
-   clean-sample-significant) -- but not provably different from
-   Copilot's or Claude's weaker-looking estimates, so this should be
-   reported as "Codex's own latency effect is well-established," not
-   "Codex causes faster latency than other tools."
-
-This whole analysis should be read as a stability/robustness result
-for the paper's existing pooled claims (consistent with, and adding to,
-the adoption-era cohort finding), not as a new positive heterogeneity
-finding -- with the single caveat that Codex's latency result is worth
-noting on its own merits.
-
-### `volume_and_concentration_heterogeneity_findings.md`
-
-# Volume confound and pre-period-concentration heterogeneity
-
-Exploratory, additive analysis. Not incorporated into the paper/slides.
-Scripts: `diagnose_volume_confound.py`,
-`diagnose_preperiod_concentration_heterogeneity.py` (repo root).
-
----
-
-## Thread A — Does total PR volume confound the H3 latency drop?
-
-Already tested and ruled out: PR *size* (`pr_level_findings.md` item 3).
-Not yet tested: total monthly PR *volume* (`n_merged_prs_total`) — repos
-processing more PRs might see faster per-PR latency for reasons
-unrelated to AI (queue momentum, parallelization).
-
-Pooled OLS of each latency outcome on `n_merged_prs_total`, residual fed
-through the same BJS estimator as the raw outcome:
-
-| Outcome | Volume R² | Raw ATT (t) | Residualized ATT (t) | Pre-trend (raw / resid) |
-|---|---|---|---|---|
-| Time to first review | 0.0014 | −65.01 (−3.04) | −64.82 (−3.03) | 0.594 / 0.706 (both pass) |
-| Time to merge | 0.0036 | −62.81 (−2.60) | −61.98 (−2.56) | 0.903 / 0.708 (both pass) |
-
-**Verdict: clean confirmation, latency drop is not a volume artifact.**
-Volume explains essentially none of the variance in latency (R² < 0.004
-both outcomes), and residualizing on it barely moves the ATT at all (within
-1-2% of the raw estimate). Combined with the existing PR-size check, two
-independent potential confounds for H3 are now both ruled out.
-
----
-
-## Thread B — Does the concentration effect depend on pre-existing concentration?
-
-For each treated repo, its own pre-period (h=-6..-2) mean `top1_share`.
-Median split (0.729) into "already concentrated" vs. "already diffuse"
-halves, pairs kept together, same convention as the team-size
-heterogeneity check.
-
-| Outcome | Already concentrated (n) | Already diffuse (n) | Difference |
-|---|---|---|---|
-| top1_share | −0.0470 (t=−5.36), pretrend p=0.103, n=1439 | +0.0551 (t=6.90), **pretrend p=0.016 FAILS**, n=2275 | −0.1021, t=−8.61, p≈0 |
-| top2_share | −0.0078 (t=−2.21), pretrend p=0.488 PASS, n=1439 | +0.0303 (t=5.43), pretrend p=0.461 PASS, n=2275 | −0.0380, t=−5.78, p≈0 |
-
-**A real, sharp split — but almost certainly mean reversion, not a clean
-interaction effect, and must be reported that way.** Repos that already
-had high top1_share (near a natural ceiling, since only so much of a
-month's reviews can belong to one person) have more room to fall than
-rise; repos starting low have more room to rise than fall. The direction
-and magnitude of the split (strongly negative in the high stratum,
-strongly positive in the low stratum, for BOTH outcomes) is exactly what
-pure regression-to-the-mean predicts, independent of any real AI effect.
-
-**The `top2_share` result is the one to trust more** — both strata pass
-pre-trend cleanly, unlike `top1_share`'s diffuse stratum which fails
-outright (excluded from causal interpretation by this project's own
-standard). `top2_share`'s split is milder in magnitude than `top1_share`'s
-but shows the identical qualitative pattern, which is itself suggestive
-of the same underlying ceiling effect rather than two independent
-findings.
-
-**What this means for the headline H1 pooled ATT (+0.015 to +0.017):**
-it is very likely an average over two very different sub-populations — a
-strong apparent increase in low-concentration repos and an apparent
-decrease in high-concentration repos — and that average is probably not
-representative of any single repo's actual experience. This is a
-genuinely important caveat for how the paper's main concentration claim
-should be qualified, independent of whether the split itself is "real"
-(treatment effect heterogeneity) or "artifact" (mean reversion/ceiling).
-Distinguishing those two explanations would need a formal mean-reversion
-diagnostic *within* each stratum (regressing each stratum's own post-pre
-change on its own pre-period level, separately by treatment arm) — not
-run here; flagged as the natural next step, not attempted due to scope.
-
-**Sample:** 933 of 1,771 complete pairs have a computable pre-period
-`top1_share` (repos with zero pre-period merged PRs are excluded) —
-smaller than the full sample, state this alongside any reported number.
-
-### `adoption_era_robustness_run.log`
-
-Complete pairs (full sample, caliper=0.25): 1771
-  Era2_early_agentic_maturation: 413 pairs (caliper=0.25 baseline)
-  Era3_mature_agentic_tooling: 666 pairs (caliper=0.25 baseline)
-====================================================================================================
-CHECK 1 -- CALIPER SENSITIVITY, PER ERA
-====================================================================================================
-
-caliper=0.10: 1575 matched, 637 usable (cached) -- Era2_early_agentic_maturation=154, Era3_mature_agentic_tooling=253
-  Era2_early_agentic_maturation top1_share caliper=0.10                  ATT= -0.0186  SE= 0.0324  t= -0.57  n=  154  pretrend_p=0.665 [PASS]
-  Era2_early_agentic_maturation top2_share caliper=0.10                  ATT= +0.0126  SE= 0.0118  t= +1.06  n=  154  pretrend_p=0.907 [PASS]
-  Era3_mature_agentic_tooling top1_share caliper=0.10                    ATT= +0.0166  SE= 0.0183  t= +0.91  n=  253  pretrend_p=0.920 [PASS]
-  Era3_mature_agentic_tooling top2_share caliper=0.10                    ATT= -0.0076  SE= 0.0096  t= -0.79  n=  253  pretrend_p=0.685 [PASS]
-
-caliper=0.15: 1979 matched, 944 usable (cached) -- Era2_early_agentic_maturation=235, Era3_mature_agentic_tooling=371
-  Era2_early_agentic_maturation top1_share caliper=0.15                  ATT= -0.0001  SE= 0.0236  t= -0.00  n=  235  pretrend_p=0.162 [PASS]
-  Era2_early_agentic_maturation top2_share caliper=0.15                  ATT= +0.0274  SE= 0.0111  t= +2.48  n=  235  pretrend_p=0.470 [PASS]
-  Era3_mature_agentic_tooling top1_share caliper=0.15                    ATT= +0.0219  SE= 0.0146  t= +1.50  n=  371  pretrend_p=0.858 [PASS]
-  Era3_mature_agentic_tooling top2_share caliper=0.15                    ATT= +0.0118  SE= 0.0083  t= +1.42  n=  371  pretrend_p=0.531 [PASS]
-
-caliper=0.25: 2320 matched, 1771 usable (cached) -- Era2_early_agentic_maturation=413, Era3_mature_agentic_tooling=666
-  Era2_early_agentic_maturation top1_share caliper=0.25                  ATT= +0.0284  SE= 0.0131  t= +2.17  n=  413  pretrend_p=0.840 [PASS]
-  Era2_early_agentic_maturation top2_share caliper=0.25                  ATT= +0.0211  SE= 0.0067  t= +3.18  n=  413  pretrend_p=0.765 [PASS]
-  Era3_mature_agentic_tooling top1_share caliper=0.25                    ATT= +0.0198  SE= 0.0099  t= +2.01  n=  666  pretrend_p=0.850 [PASS]
-  Era3_mature_agentic_tooling top2_share caliper=0.25                    ATT= +0.0143  SE= 0.0054  t= +2.66  n=  666  pretrend_p=0.162 [PASS]
-
-caliper=0.35: 2462 matched, 1007 usable (cached) -- Era2_early_agentic_maturation=241, Era3_mature_agentic_tooling=355
-  Era2_early_agentic_maturation top1_share caliper=0.35                  ATT= +0.0570  SE= 0.0212  t= +2.68  n=  241  pretrend_p=0.203 [PASS]
-  Era2_early_agentic_maturation top2_share caliper=0.35                  ATT= +0.0191  SE= 0.0084  t= +2.27  n=  241  pretrend_p=0.582 [PASS]
-  Era3_mature_agentic_tooling top1_share caliper=0.35                    ATT= +0.0224  SE= 0.0150  t= +1.49  n=  355  pretrend_p=0.813 [PASS]
-  Era3_mature_agentic_tooling top2_share caliper=0.35                    ATT= +0.0110  SE= 0.0089  t= +1.23  n=  355  pretrend_p=0.188 [PASS]
-
-caliper=0.50: 2574 matched, 673 usable (cached) -- Era2_early_agentic_maturation=167, Era3_mature_agentic_tooling=242
-  Era2_early_agentic_maturation top1_share caliper=0.50                  ATT= +0.1083  SE= 0.0300  t= +3.60  n=  167  pretrend_p=0.098 [PASS]
-  Era2_early_agentic_maturation top2_share caliper=0.50                  ATT= +0.0570  SE= 0.0097  t= +5.88  n=  167  pretrend_p=0.565 [PASS]
-  Era3_mature_agentic_tooling top1_share caliper=0.50                    ATT= +0.0183  SE= 0.0201  t= +0.91  n=  242  pretrend_p=0.508 [PASS]
-  Era3_mature_agentic_tooling top2_share caliper=0.50                    ATT= -0.0049  SE= 0.0103  t= -0.47  n=  242  pretrend_p=0.026 [FAIL]
-
--- Sign stability summary --
-  Era2_early_agentic_maturation    top1_share  : calipers_tested=5  values=['-0.0186', '-0.0001', '+0.0284', '+0.0570', '+0.1083']  [SIGN FLIPS]
-  Era2_early_agentic_maturation    top2_share  : calipers_tested=5  values=['+0.0126', '+0.0274', '+0.0211', '+0.0191', '+0.0570']  [STABLE]
-  Era3_mature_agentic_tooling      top1_share  : calipers_tested=5  values=['+0.0166', '+0.0219', '+0.0198', '+0.0224', '+0.0183']  [STABLE]
-  Era3_mature_agentic_tooling      top2_share  : calipers_tested=5  values=['-0.0076', '+0.0118', '+0.0143', '+0.0110', '-0.0049']  [SIGN FLIPS]
-
-====================================================================================================
-CHECK 2 -- REPO-PAIR CLUSTER BOOTSTRAP (300 reps), PER ERA
-====================================================================================================
-
-Era2_early_agentic_maturation  (n_pairs=413)
-  top1_share   analytic_ATT=+0.0284 (SE 0.0131)   bootstrap (300/300 valid) SE=0.0171  boot_t=+1.66  boot_p=0.0961  boot_SE/analytic_SE=1.31
-  top2_share   analytic_ATT=+0.0211 (SE 0.0067)   bootstrap (300/300 valid) SE=0.0100  boot_t=+2.12  boot_p=0.0340  boot_SE/analytic_SE=1.50
-
-Era3_mature_agentic_tooling  (n_pairs=666)
-  top1_share   analytic_ATT=+0.0198 (SE 0.0099)   bootstrap (300/300 valid) SE=0.0153  boot_t=+1.29  boot_p=0.1968  boot_SE/analytic_SE=1.55
-  top2_share   analytic_ATT=+0.0143 (SE 0.0054)   bootstrap (300/300 valid) SE=0.0093  boot_t=+1.53  boot_p=0.1252  boot_SE/analytic_SE=1.74
-
--- Era2 vs Era3 diff-in-ATT, using BOOTSTRAP-corrected SEs --
-  top1_share   diff(Era2_early_agentic_maturation-Era3_mature_agentic_tooling)=+0.0087  SE=0.0230  t=+0.38  p=0.7056
-  top2_share   diff(Era2_early_agentic_maturation-Era3_mature_agentic_tooling)=+0.0069  SE=0.0136  t=+0.50  p=0.6148
-
-====================================================================================================
-CHECK 3 -- CLEAN-SAMPLE (NON-CONTAMINATED) PER ERA
-====================================================================================================
-
-Era2_early_agentic_maturation: identity-covered=79  clean=49  contaminated=30
-  top1_share CLEAN-ONLY                                                  ATT= +0.0057  SE= 0.0209  t= +0.27  n=   49  pretrend_p=0.896 [PASS]
-  top2_share CLEAN-ONLY                                                  ATT= +0.0208  SE= 0.0139  t= +1.49  n=   49  pretrend_p=0.236 [PASS]
-
-Era3_mature_agentic_tooling: identity-covered=134  clean=78  contaminated=56
-  top1_share CLEAN-ONLY                                                  ATT= -0.0052  SE= 0.0222  t= -0.23  n=   78  pretrend_p=0.622 [PASS]
-  top2_share CLEAN-ONLY                                                  ATT= +0.0093  SE= 0.0101  t= +0.91  n=   78  pretrend_p=0.972 [PASS]
-
--- Era2 vs Era3 diff-in-ATT, clean-sample only --
-  top1_share   diff=+0.0109  SE=0.0304  t=+0.36  p=0.7212
-  top2_share   diff=+0.0115  SE=0.0172  t=+0.67  p=0.5031
-
-### `burnout_robust_run.log`
-
-Complete pairs: 1771   (repo,t0) identity units: 1281
-
-======================================================================
-THREAD A -- l_i_inactive robustness (caliper + bootstrap)
-======================================================================
-Base usable pairs (both units identifiable L_i): 309
-
-Analytic baseline: ATT=+0.0418 SE=0.0185 t=2.26 p=0.0238  pretrend p=0.2565
-
--- Caliper sensitivity (0.10 / 0.15 / 0.25, already-cached data only) --
-  caliper=0.10: n_pairs=70  ATT=-0.0094 (SE 0.0375, t=-0.25)  pretrend p=0.9583
-  caliper=0.15: n_pairs=116  ATT=-0.0078 (SE 0.0323, t=-0.24)  pretrend p=0.7930
-  caliper=0.25: n_pairs=309  ATT=+0.0418 (SE 0.0185, t=2.26)  pretrend p=0.2565
-
--- Repo-pair cluster bootstrap (300 reps) --
-  bootstrap (300/300 valid): mean=+0.0396 SE=0.0233 ratio=1.26  corrected p=0.0727
-
-======================================================================
-THREAD B -- upstream reallocation (L_i's own authoring activity)
-======================================================================
-Usable pairs (identifiable L_i AND present in pr_level_data.csv): 309
-
-Repo-month observations: 5000
-ATT=+0.4200 (SE 0.6293, t=0.67, p=0.5046)
-n_omega0_obs=3421  n_omega1_obs=1577  treated_repos=303
-pre-trend joint Wald: stat=5.087 df=5 p=0.4053 [PASS]
-
+| `null_results.md` | review intensity: `mean_reviewers`, `zero_human_rate`, `single_reviewer_rate` | **not supported.** Primary outcome −0.019 (t=−1.95) fails pre-trend at the only caliper where it looks significant; sign flips at caliper 0.35 |
+| `session_summary.md` | H1 concentration, H2 reassignment, H3 process speed; 1,000-replicate bootstrap | analytic SEs understate true uncertainty by 12–83%; all five headline outcomes survived bootstrap at the time. **All later withdrawn** — see the 2026-11-04 and 2026-11-09 entries |
+| `clean_sample_robustness_table.md` | all 10 headline outcomes on the 176 non-contaminated pairs | 4 survive (`top2_share`, `tail_share`, `top1_persists`, time-to-first-review), 5 weaken, `top2_overlap` reverses to a null. `leader_changed` collapses to t=−0.02 and must not be called robust |
+| `contamination_findings.md` | SUTVA: reviewers spanning treated and control repositories | **real and substantial.** 43% of checkable pairs contaminated; 52.6% via the control's own lead reviewer. Excluding them *halves* the ATT rather than raising it, the opposite of the standard bias story. Unresolved |
+| `contamination_size_tenure_findings.md` | is contamination just a size artefact? | mixed. Contamination predicts a stronger effect within the small-repo stratum (p=0.031) but not the large one. Not resolved |
+| `cumulative_vs_monthly_concentration_findings.md` | monthly snapshot vs cumulative concentration | **the monthly `top2_share` effect does not survive pooling** (p=0.37–0.39); top-2 identity overlap between post-period halves is indistinguishable from control (p=0.57). Cumulative Gini is the exception (+0.066, p=0.0008). No support for persistent individual overload |
+| `rank_by_rank_findings.md` | where in the reviewer distribution the share moves | rank 1 barely moves (t=1.06); significant losses sit at **ranks 3–4** (t=−4.19, −3.68). Rank 1+2 summed is roughly flat on uncapped data, in tension with the capped headline |
+| `pr_level_findings.md` | six checks on the uncapped PR-level panel | the 40-PR/month cap roughly **halves** `top1_share`/`top2_share`; size-weighted top-1 goes to a clean null; latency survives PR-size control and is stronger in a middle-size band; effort-per-size borderline (t=−1.95); purpose-built Gini is the strongest result (t=4.89, sign-stable across calipers); rolling entrant-share still fails pre-trend |
+| `reciprocity_findings.md` | does review become one-directional? | **rejected.** Both measures point the same way (t=−2.33, −2.04) but both fail pre-trend (p<0.0001, p=0.036) |
+| `new_findings.md`, `burnout_and_reallocation_findings.md` | displaced lead goes quiet / exits / moves to authoring | **rejected.** `l_i_inactive` +0.0418 (p=0.024) sign-flips at tighter calipers and bootstraps to p=0.073. Permanent exit null (16.5% vs 18.6%). Upstream reallocation a clean null (+0.42, p=0.505) |
+| `adoption_era_findings.md` + `_robustness_` | does the effect differ by adoption cohort? | **no detectable difference** between the two well-powered eras under any check. But each era's own estimate is fragile: 2 of 4 cells caliper-stable, 1 of 4 survives bootstrap, 0 of 4 survives the clean sample |
+| `tool_identity_findings.md` | does it matter which tool a repository adopted? | **no detectable difference** among Codex, Copilot and Claude on any outcome. Per-tool `top2_share` sign-flips across calipers for all four tools. Cursor's apparent distinctiveness is not trustworthy (n=151, wrong-signed, caliper-unstable). One genuine positive: Codex's own latency effect is caliper-stable, bootstrap- and clean-sample-significant — but not provably different from the others |
+| `volume_and_concentration_heterogeneity_findings.md` | volume confound; pre-period concentration split | volume explains ~0% of latency variance (R²<0.004) — latency drop is not a volume artefact. The pooled concentration ATT averages two opposite sub-populations, almost certainly mean reversion against a ceiling |
+| `leader_tenure_followup_findings.md`, `h3_subsample_signflip_investigation.md` | leader entrenchment as effect modifier; H3 sign flip | tenure split is strong (p<0.0001) but later found confounded with pre-adoption concentration level (r=0.38) — suggestive only. H3 reverses sign on the 296-repo subsample (merge time +40.7h, rounds −0.146): real repo-level selection, that subsample has ~2× the pre-period PR volume |
+| `output/lead_displacement_results.md` | where the displaced lead's work goes (A–E) | causal parts **null, caliper-unstable or pre-trend-failing**; not usable. Descriptive only: the new monthly leader was the previous #2 43.6% of the time in treated repos vs 31.5% in control; treated repos change leader faster (1.47 vs 1.99 months) but the successor then holds longer (34% vs 25%) |
+| `exploratory_findings_summary.md` | four rounds of adversarial follow-ups | two confirmations, one real caveat (pre-period concentration heterogeneity), three closed nulls (upstream reallocation, team size, permanent exit), one rejection (reciprocity) |
+| `research_design.md`, `new_design.md` | the design and what it could not test | genuinely blocked without new collection: independent incumbent-selection window, file familiarity, CODEOWNERS roles, reverts, post-merge defects, contributor retention, open/unmerged PR censoring, review-comment text |
+| `adoption_era_robustness_run.log`, `burnout_robust_run.log` | raw execution output | retained in git only; every number they contain is in the rows above |
+
+### Why the programme closed
+
+1. The headline +2.43pp top-two share effect has a placebo p-value of 0.078 once
+   baseline imbalance and mean reversion are accounted for, against a nominal
+   bootstrap p of 0.0054. Roughly half is mechanical; top-one share is entirely
+   explained (placebo p 0.36).
+2. Matching never balanced the outcome it existed to balance (baseline top-two
+   SMD −0.35), and the caliper was non-binding.
+3. Pre-trend tests cannot detect the operative problem: reversion acts on levels
+   while the joint lead test acts on differences.
+4. The activity decomposition meant to supply the mechanism found nothing
+   surviving Holm across 14 endpoints, and its one nominal result failed its own
+   pre-trend test.
+5. The extensions that would have supplied familiarity, assignment, process and
+   quality outcomes all needed data the exports did not contain.
+
+**Salvaged and still valid:** the measurement work (reviewer-incidence
+reconstruction, bot handling, the frozen-core design) and one negative
+methodological result — an imputation estimator with repository fixed effects is
+**not** robust to baseline imbalance in a bounded, reverting outcome, and passing
+a pre-trend test does not establish that it is. The in-space placebo calibrated
+to the achieved imbalance is the diagnostic.
+
+The identified re-estimation on a shared calendar window with matching on the
+baseline outcome returns **−0.0194 (95% CI [−0.0416, +0.0028], p=0.088)**, an
+interval that excludes the original +0.0243. See the 2026-11-09 entries.
 
 ## E01-E05 on existing data: foundation diagnostics and activity decomposition (2026-11-02)
 Experiment IDs: E01, E02 (descriptive), E03, E04 (partial), E05. Purpose: execute every part of the consolidated plan that existing exports support, and record which parts cannot be executed without new collection. Status: complete for the parts below. No API extraction, no new data.
@@ -3592,3 +1227,693 @@ Monthly slopes over 20 months: acceptance +0.94 pp, unreviewed share **+0.81 pp*
 | Agent PRs displace outsider contribution | specification bug; control contained the outcome |
 
 Eight reversals, each with the corrected version established on better data. That pattern is itself a candidate contribution for a literature publishing monthly on this dataset.
+
+## Organizational-design experiments for a Management Science paper (2026-11-11)
+
+The user requested a Management Science research direction and further empirical
+work. The plan is recorded in `analysis/management_science_plan.md`; it is
+exploratory, not preregistered. New code is `analysis/management_science.py` and
+`analysis/management_science_followup.py`. All estimates, including nulls and
+contradictions, are retained in `output/management_science/`. The interpretation
+and candidate introduction are in `overleaf/paper/management_science_direction.md`.
+
+**New measurement check.** The large sample contains 468,402 resolved PRs from
+848 repositories contributing rows, not 855. No duplicate repository–PR keys.
+CLOSED_EVENT actor matches independently collected mergedBy on all 7,416
+overlapping merged PRs, including 602 exact-account Copilot/Devin PRs. This
+supports using that actor on merged PRs only; self-closing across all states
+cannot validate merge authority. The overlap is selected, not representative.
+
+**The human-intensification claim fails decomposition.** Reconstructing the
+141-pair wide-panel match and grouping merged PRs by merge month yields +0.465
+recorded events per PR: +0.077 human peer, +0.217 automated peer, +0.171 author
+self-review. The human-peer interval is [-0.085, +0.240]; Holm p=1.000. Automated
+and self-events account for 83% of the point-estimated total change. This is an
+arithmetic decomposition, not causal mediation. The total differs from the old
+0.4335 prose figure; that exact implementation was not available. The human
+component agrees with the saved 0.07749 interpretation outcome.
+
+Removing collection-time contributor counts from matching again yields 141
+pairs: human peer events -0.011, automated +0.245, self +0.149. Automated and
+self-events survive Holm correction; human peer events do not. Both matched
+variants use 1,000 pair-bootstrap draws with fixed matching and covariance-aware
+joint pre-period tests. Both condition on merged PRs and inherit review-active
+month selection. This is not an identified effect on human effort or workload.
+
+**Historically observed decision participation changes the standing conclusion.**
+Use pre-September-2025 merges of others' work to define prior participation,
+then analyze September 2025–August 2026. Exact Copilot/Devin accounts have a
+-20.46pp acceptance contrast against humans with such prior participation and
+-6.90pp against humans without it; the latter is statistically inconclusive.
+Thresholds of 1, 3, and 5 prior actions and owner/repository clustering are
+retained. No observed participation is not evidence of no permission. The earlier
+claim of a robust agent premium over outsiders is not supported across definitions.
+
+**Recorded evaluation and acceptance are separable.** Among merged PRs with human
+actors, excluding self-merges, within repository × actor × opening-month cells
+and controlling for churn/files, agent PRs are +8.99pp more likely to have a human
+reviewer other than author or merge actor (95% CI [+3.26, +14.73], Holm p=0.0095;
+354 repositories, 1,040 cells, 23,205 PRs). The actor is 5.54pp less likely to
+appear in the review list. Owner clustering preserves both findings. Including
+human self-merges reverses the independent-review contrast to -11.84pp. Thus a
+rubber-stamping account is not supported by the comparator-robust evidence.
+Review timestamps are missing, so this does not establish pre-acceptance scrutiny.
+
+**Acceptance concentration exceeds review concentration relatively more for agents.**
+The initial finite-sample-corrected concentration comparison is +13.16pp for
+merge actors on 158 cells/58 repositories, excluding self-merges and requiring
+five PRs per author group. After viewing that result, we specified common-cell,
+vendor, equal-repository, and leave-one-out diagnostics. On 117 common cells in
+42 repositories, the agent–human acceptance concentration gap exceeds the
+review-incidence concentration gap by +8.87pp (CI [+4.34, +13.40], Holm p=0.00355
+across 12 follow-up tests). The gap is +11.19pp under equal-repository weighting,
+and +7.44 to +9.64pp under leave-one-repository-out checks. Owner clustering
+also preserves the gap. Copilot is positive; Devin's nine-repository sample is
+inconclusive and its equal-repository point estimate changes sign.
+
+Multiplicity is corrected within declared families, not across all historical
+project analyses. The paired concentration gap was developed after inspecting
+initial results. Samples differ across experiments and cannot be assembled into
+a demonstrated causal chain. Unobserved sponsor identity and task mix remain
+credible explanations. The recommended frame is **AI production and the
+separation of evaluation from acceptance**, requiring new timestamped process
+validation, credible variation, and a quality/throughput consequence before it
+can support a Management Science submission.
+
+## Gate throughput and pre-period reviewer-core test (2026-11-11)
+
+Two later exploratory analyses follow the organizational-design direction. They
+were not in the original plan, and the results are not independent confirmation
+of one another.
+
+### Pre-period core routing
+
+Code: `analysis/core_routing_acceptance.py`. Freeze the top two human reviewers
+using March–August 2025 reviewer–PR incidences, including ties at the cutoff;
+require at least three distinct baseline reviewers. Compare exact Copilot/Devin
+authors with humans who had no reviewer participation in that baseline window.
+In September 2025–August 2026 resolved PRs, estimate within repository × opening
+month with log churn and changed-files controls, repository-clustered errors.
+The cell must include both agent and outsider PRs.
+
+The sample contains 36,957 PRs in 971 cells across 313 repositories. Agent PRs
+are estimated at +4.9pp for baseline-core reviewer involvement (95% CI
+[-9.9, +19.7], p=0.519); any human review is -3.4pp (CI [-13.8, +6.9], p=0.516).
+In the acceptance model, the agent × core-review interaction is +11.2pp (CI
+[-3.2, +25.7], p=0.128; Holm p=0.511 across the declared four-coefficient
+family); agent × peripheral-review is -4.5pp (CI [-14.7, +5.8], p=0.390; Holm
+p=1.000). This does not support the earlier prediction that agents are
+differentially routed to the pre-existing core or that core review changes their
+acceptance association. A conventional non-significant test does not rule out
+moderate differences.
+
+### Acceptance and cycle time
+
+Code: `analysis/gate_throughput.py`; machine-readable estimates and input hashes
+are in `output/management_science/gate_throughput.json`. The cohort is 468,402
+resolved PRs; the comparison period is September 2025–August 2026. Human
+outsiders are defined using only pre-period reviewer participation (March–August
+2025), not direct permission data. The model uses repository × opening-month
+cells, log churn and changed-file controls, and repository-clustered standard
+errors.
+
+In the resolved opening cohort, the adjusted agent–outsider acceptance contrast
+is -4.9pp (95% CI [-14.1, +4.2], p=0.292; 611 repositories, 1,520 cells, 67,935
+overlapping PRs). This is inconclusive and is not evidence of equivalence.
+
+Among merged PRs, the coefficient for `log(1 + hours from opening to merge)` is
+-0.566 (95% CI [-1.066, -0.067], p=0.026; 40,484 observations, 406 repositories,
+965 cells). The point estimate implies 43% lower `1 + hours`; the interval
+implies about 6% to 66% lower. The estimate is similar with owner clustering
+(-0.566, p=0.022) and when merges over 30 days are excluded (-0.514, p=0.028).
+After Holm correction with acceptance in the two-outcome family used here,
+merge-time p=0.0529. The family was set for this analysis, not preregistered
+before the broader project search.
+
+**Role-separated subset, exploratory.** Restrict merged PRs to those with at
+least one recorded human reviewer other than the author and accepting actor and
+a nonbot human accepting actor. On 4,331 PRs across 98 repositories and 260
+common cells, the adjusted log-time coefficient is -0.956 (95% CI [-1.331,
+-0.581], p=1.98e-6). Owner clustering gives p=2.41e-6. Controlling for the
+number of independent reviewers gives -0.985 (95% CI [-1.357, -0.613],
+p=8.65e-7); removing the eight cases with 100 recorded review events gives
+-0.951 (p=2.21e-6). Common-cell raw medians are 19.9 hours for agents and 66.2
+hours for outsiders. The subgroup p-values are not corrected across all
+historical analyses.
+
+Interpretation: accepted agent PRs are associated with shorter opening-to-merge
+time than outsider PRs, especially in the subgroup with a recorded evaluator
+other than the accepting actor. This is not active reviewer time. Merge duration
+includes queueing, author response, and other delays; it conditions on merging;
+task type and difficulty are absent; and review timestamps cannot establish
+that evaluation preceded acceptance. The estimate is not a causal effect of role
+separation or a validated productivity gain.
+
+This contrast is relevant to a new Management Science question: can
+transaction-level separation of evaluation and acceptance preserve fast
+decisions for successful delegated work, even when review capacity constrains
+aggregate output? Chen and Stratton's current November 9, 2026 working paper
+finds firm-level AI-agent adoption increases review-to-approval time, backlog,
+and active-review time ([current paper](https://fion.ac/jellyfish.pdf)). Those
+are different populations and estimands. Our cross-sectional selected-success
+result does not overturn or reconcile their adoption effect; it motivates
+measuring selection and capacity together with complete open cohorts and event
+timestamps.
+
+## November 11, 2026 — open PRs and review-process sample
+
+**Question.** Does the candidate evaluation/acceptance story remain visible when
+we include still-open proposals and observe when formal reviews occur?
+
+**Collection.** `collect_process_data.py` queried current open PRs in the
+2025-03-01 through 2026-10-31 creation window for all 883 preselected repositories.
+It saved 29,435 open PRs (723 repositories; 1,076 agent-authored PRs in 315
+repo-months), with no API failures. It then collected task metadata, linked issue
+state, and up to 100 submitted reviews with timestamps and reviewer affiliation
+for a matched process sample: one hash-selected agent PR per agent-active
+repo-month, a same-cell human control matched on size/date, plus one current
+open agent PR per open-agent repo-month and a nearest-date open human control
+where available. Final counts: 4,787 PRs, 7,387 review records, 1,393 linked
+issues, one PR with a capped (>100) review history. Review API failures: zero.
+
+**Exploratory results.** In 2,027 resolved pairs, any formal review was recorded
+for 50.7% of agent PRs and 63.0% of matched human PRs (difference -12.3 pp,
+95% repository-cluster bootstrap CI [-15.7, -9.0]). Human review was -9.2 pp
+(CI [-12.7, -5.8]); approval was -3.8 pp (CI [-7.0, -0.5]); a
+`CHANGES_REQUESTED` event was +1.7 pp (CI [+0.5, +2.9]). In 219 still-open
+pairs, the formal-review difference was -16.9 pp (CI [-25.2, -8.1]). The
+paired `log(1 + hours to first review)` difference among pairs where both PRs
+were reviewed was +0.128 (CI [-0.078, +0.329]), inconclusive.
+
+Among 420 paired PRs that both merged through a non-self human acceptor, an
+independent human review submitted before merge was +5.5 pp more common for
+agent PRs, but the interval includes zero (95% CI [-0.5, +11.6]). This weak
+timing check does not confirm the earlier full-panel association.
+
+**Interpretation and limits.** New lead: evaluation coverage and corrective
+intervention may be allocated differently across agent and human proposals.
+This is not evidence of review-capacity rationing, lower quality, saved labor,
+or a causal effect. The open comparison is conditioned on still being open at
+collection; matched controls are observational; the resolved-PR file still has
+35 of 883 selected repositories missing. GitHub association and linked-issue
+status do not identify organizational roles or code quality. See
+`analysis/management_science_process.md` and reproduce with
+`analysis/management_science_process.py`.
+
+## November 12, 2026 — closure rationale, CI proxies, reviewer activity, throughput
+
+**Closure explanations.** Restrict to PRs closed by a human nonauthor. Of 973
+agent cases, 295 (30.3%) had public text from the closer before closure in an
+issue comment or submitted review body; for 229 human controls, 161 (70.3%) did.
+Issue-comment-only rates are 28.3% and 68.6%. Only two agent issue-comment
+histories exceeded the 30-comment API cap; no human-control histories did.
+High-specificity phrase screens found stale/inactivity explanations (15 agent,
+13 control), duplicate/supersession explanations (14, 8), and explicit
+technical/test problems (5, 2). One scope/policy hit appeared among agent cases.
+These categories overlap, miss unstated reasons, and are not a validated
+content analysis. They do not support a claim that agent PRs are closed mainly
+for quality defects.
+
+**Quality proxy collection.** `collect_quality_checks.py` queried the latest
+head-commit check rollup for all 4,787 PRs in the process sample, with no API
+failures. At least one completed check was available for 1,437 of 2,226 agent
+PRs and 1,467 of 2,027 human controls. Among contexts completed no later than
+merge/close, a failure flag appeared for 19.5% in each group. In 1,169 matched
+pairs with preterminal checks on both PRs, the agent-control difference was
+-0.7 pp (95% CI [-4.3, +2.9]). As a current-head snapshot sensitivity, failure
+rates were 22.7% and 22.4%, with paired difference -0.5 pp (CI [-4.1, +3.2]).
+The API caps returned check contexts at 100 per PR.
+
+**Linked-issue completion proxy.** Among PRs with a GitHub closing-issue
+reference and at least 90 days of follow-up, the issue was closed within 90 days
+for 83.0% of agent cases (649/782) and 84.6% of human controls (286/338). In
+170 matched pairs where both PRs had linked issues, the agent-control
+difference was -1.2 pp (CI [-9.1, +6.7]). Issue closure is not a validated
+quality measure and may occur for reasons unrelated to the PR.
+
+**Review activity.** Across 2,027 matched resolved pairs, the difference in
+formal review events was -0.17 (CI [-0.35, +0.01]); in human review events,
++0.03 (CI [-0.09, +0.14]); in distinct human reviewers, -0.054 (CI [-0.109,
+-0.002]); and in human-authored issue comments, +0.193 (CI [+0.124, +0.268]).
+The first-review timing difference remains inconclusive. These are recorded
+events and visible comments, not reviewer minutes or cognitive effort.
+
+**Repository-month performance.** In 12,357 repo-months across 844 repositories
+(cohort ends September 2026 for complete 30-day follow-up), repo and calendar-
+month fixed-effect models condition on total PR arrivals. A 10 pp higher agent
+share is associated with 0.55 fewer human merges within 30 days (95% CI
+[-0.95, -0.15], p=.006). Total merges are +0.33 (CI [-0.42, +1.08], p=.39).
+A separate human-PR weighted model finds a +0.86 pp association in the human
+30-day merge rate (CI [+0.05, +1.67], p=.037), without controlling for total
+arrivals. These are exploratory associations, not productivity or displacement
+effects.
+
+Reproduce with `venv/bin/python collect_quality_checks.py` and
+`venv/bin/python analysis/management_science_unverified.py`. Full definitions
+and limitations: `analysis/management_science_unverified.md`.
+
+## November 12, 2026 — censored cohort and closure discussions
+
+**Question.** Does the process pattern survive inclusion of current open PRs and
+can closure discussion identify why human maintainers directly dispose of agent
+proposals?
+
+**Cohort result.** Excluding 38 selected repositories without complete resolved
+data leaves 845 repositories, 27,050 agent PRs, and 381,276 human PRs. Within
+2,147 active repo-month cells, the 30-day probability of a human nonauthor
+closing an unmerged PR is 20.6% for agents and 6.5% for humans. The equal-cell
+difference is +28.9 pp (95% repository-bootstrap CI [+26.5, +31.3]); it is
+positive under contributor-status (+24.4 pp) and exact author-association
+(+26.8 pp) comparisons. PR-weighted repo-month fixed effects give +12.3 pp
+(95% CI [+5.4, +19.2], p=.00045). The difference in reaching any terminal
+decision by 30 days is inconclusive under PR weighting (+1.2 pp, CI
+[-1.2, +3.6]). Merge probability is weighting-sensitive and is not a headline.
+
+**Process corroboration.** In 2,027 size/date-matched resolved pairs, a human
+nonauthor closed 44.3% of agent PRs versus 11.3% of controls (paired difference
++33.0 pp, CI [+30.1, +35.8]). Among closed, unmerged PRs, a formal human review
+preceded closure in 14.7% of agent cases and 29.7% of human controls. A prior
+change request appeared in 3.5% and 6.1%, respectively.
+
+**Discussion collection and interpretation.** Collected comments and submitted
+reviews for 1,461 closed PRs (996 agent, 465 control): 2,479 unique comments and
+940 unique reviews after deduplicating overlapping resumable writes, with no API
+failures. The text provides examples of superseding PRs,
+duplicates, scope decisions, and stalled or incomplete work. It does not support
+a representative reason distribution: generic bot comments and review summaries
+confound phrase searches, and explicit duplicate language appears in few agent
+cases. The best supported framing is that agent proposals more often receive
+direct human disposition without a formal review record, while overall decision
+timing remains similar. This is an organizational routing association, not a
+causal effect or evidence that closures are rejections.
+
+See `analysis/management_science_censored_cohort.py`,
+`analysis/management_science_closure_discussion.md`, and
+`output/process_data/censored_cohort_findings.json`. Next data needed for a
+Management Science contribution: proposal task type and quality, disposition
+reason, reviewer assignment and active time, baseline capacity, and an
+organization-level rollout or routing-policy design.
+
+## Affiliated reviewer interaction in the matched process sample (2026-11-12)
+
+Added after reviewing the existing review-event data; exploratory and not
+pre-registered. Script: `analysis/management_science_authority_review.py`.
+Among 2,027 complete resolved agent--human matches (4,054 PRs, 699 repos),
+estimate a linear probability model with matched-pair fixed effects, log patch
+size and changed files, and repository-clustered standard errors. A formal
+review is eligible only when submitted no later than the terminal disposition
+and the reviewer is not the PR author.
+
+The agent-by-affiliated-review interaction is +16.64 pp (95% CI [+9.53,
++23.75], p=4.5e-6) when affiliation includes GitHub OWNER, COLLABORATOR, or
+MEMBER; it is +15.75 pp (95% CI [+9.16, +22.33], p=2.8e-6) after adding author
+association and heuristic task-category indicators. Under OWNER/COLLABORATOR
+only, estimates are +11.58 pp (95% CI [+3.30, +19.86], p=.0061) and +13.14 pp
+(95% CI [+5.49, +20.80], p=.00077), respectively. The patch-adjusted
+role-definition estimates both survive Holm correction across the two
+definitions.
+
+Broad-definition merge rates are 39.8% without and 87.0% with affiliated
+review for agent PRs; human rates are 70.8% and 92.4%. The estimated
+agent--human acceptance gap is much smaller among PRs with an affiliated review
+in this sample. Candidate interpretation: agent acceptance is more strongly
+associated with visible evaluation by repository-affiliated reviewers. Review
+assignment is endogenous, affiliation is a proxy rather than verified decision
+authority, and the sample is selected on resolved matched PRs. No causal effect
+or performance benefit is identified. Full estimates and limitations:
+`analysis/management_science_unverified.md` and
+`output/management_science/authority_review.json`.
+
+## Manuscript and collaborator guide refreshed (2026-11-13)
+
+Revised `overleaf/paper/paper.tex` to put the evaluator-affiliation interaction
+first, present human-nonauthor closure as complementary evidence, state the
+model and affiliation definitions, and align the abstract, RQ, literature
+position, results, discussion, and conclusion. Added Tsay, Dabbish, and Herbsleb
+(ICSE 2014) to acknowledge that submitter standing/social connection was
+already associated with GitHub acceptance; the paper's narrower extension
+concerns reviewer affiliation and the author-type interaction. This is an
+editorial synthesis of existing estimates; no new empirical results were
+computed in this revision.
+
+Added this log's reader guide and analysis map near the start so collaborators
+can distinguish current candidate findings from superseded historical claims,
+locate the scripts and outputs, and understand the research shift from reviewer
+concentration to acceptance and disposition. Synchronized the collaborator
+introduction, README summary, literature review, and management-science decision
+memo with the manuscript's current exploratory framing. The full chronological
+record below remains intact.
+
+## Standing and bot-filter audit: two headline results fall, closure survives (2026-11-13)
+
+Prompted by a full read of `overleaf/paper/paper.tex` and this log. Code:
+`analysis/standing_sensitivity.py`; estimates in
+`output/management_science/standing_sensitivity.json`. No new collection. The
+program reproduces the published +16.64pp interaction and +32.96pp paired closure
+difference before applying any split, which validates the replication.
+
+**The defect.** The matched process sample pairs each agent PR with a human PR in
+the same repository-month on patch size and date, but **not on standing**. Of the
+2,027 human controls, 1,203 (59.3%) have reviewed someone else's PR in that
+repository (the D2 proxy), and **51.4% of their merges are self-merges** against
+**0.1%** for agents. Any outcome that requires a third party to act is therefore
+mechanically different across the two arms. This is the same failure mode recorded
+on 2026-11-09: comparison-group construction dominating a result.
+
+**Finding 1: the affiliated-review interaction is produced by control-group merge
+authority.** Re-estimating the paper's own model (pair fixed effects, log churn,
+log changed files, repository-clustered errors), varying only the control's
+standing:
+
+| sample | pairs | interaction | 95% CI | p |
+|---|---|---|---|---|
+| all pairs (as published) | 2,027 | +16.64pp | [+9.53, +23.75] | 4.5e-06 |
+| human control is a D2 outsider | 824 | **+4.90pp** | [−5.74, +15.53] | 0.367 |
+| human control is a D2 insider | 1,203 | +27.50pp | [+18.59, +36.41] | 1.4e-09 |
+
+A fully interacted model gives a baseline of +4.70pp (CI [−5.93, +15.32]) and a
+**triple interaction of +23.08pp (CI [+9.44, +36.73], p=0.00091)**, so the two
+subgroup estimates differ statistically rather than merely numerically. The
+mechanism is visible in the cells: human insiders without an affiliated review
+merge at 82.9% and are their own closer 84.9% of the time, which agents cannot
+be. Note the wording limit — this establishes that the estimate is driven by the
+control group's merge authority, not that an evaluator-affiliation mechanism is
+absent; heterogeneity is not the same as artefact, and the outsider interval
+still admits +15pp.
+
+Checked and clean: affiliated-review coverage is near-identical across groups
+(agent 31.8%, human outsider 27.8%, human insider 30.1%), so differential review
+assignment does not drive it. The 2026-09/10 measurement discontinuity does not
+either — 134 of 2,027 pairs open then; excluding them gives +17.67pp, and those
+134 alone give −0.40pp.
+
+**Finding 2: the review-coverage gap is automated reviewers.** 2,667 of the
+sample's 7,387 review records (36%) come from bots, skewed toward human controls:
+`copilot-pull-request-reviewer` 681 vs 468, `coderabbitai` 239 vs 19,
+`gemini-code-assist` 87 vs 14. Bots essentially never approve or block — they
+comment (bot COMMENTED 1,113 on controls vs 565 on agent PRs; bot APPROVED 13 vs
+10). Adding one filter at a time:
+
+| eligibility filter | all pairs | outsider-control pairs |
+|---|---|---|
+| any review record (as published) | −12.33pp | −6.55pp |
+| non-author | −12.23pp | −6.07pp |
+| non-author, non-bot | −3.21pp | −2.06pp |
+| non-author, non-bot, ≤ terminal | −2.71pp | −1.82pp |
+
+The 2026-11-09 extractor validation already established that the panel must
+separate human from automated review; the process-sample headline did not do it.
+
+**Finding 3: every review-side contrast goes to null against outsider controls;
+disposition does not.** Paired agent-minus-control differences, repository
+bootstrap, 2,000 draws:
+
+| outcome | all pairs | outsider-control pairs | insider-control pairs |
+|---|---|---|---|
+| eligible human review | −2.71 [−6.09, +0.76] | **−1.82 [−6.54, +2.74]** | −3.33 [−7.72, +1.21] |
+| affiliated human review | +2.66 [−0.44, +5.88] | **+1.09 [−3.52, +5.54]** | +3.74 [−0.36, +8.09] |
+| human approval | −3.95 [−7.18, −0.49] | **−0.97 [−5.41, +3.41]** | −5.99 [−10.29, −1.16] |
+| human CHANGES_REQUESTED | +2.07 [+1.01, +3.20] | **+0.00 [−1.48, +1.55]** | +3.49 [+1.93, +5.17] |
+| merged | −22.25 [−25.28, −19.25] | **−8.62 [−13.69, −3.91]** | −31.59 [−35.11, −28.08] |
+| human nonauthor closure | +32.96 [+30.13, +35.92] | **+21.24 [+16.28, +26.29]** | +40.98 [+37.76, +44.18] |
+
+So the published −9.2pp human-review, −3.8pp approval and +1.7pp
+`CHANGES_REQUESTED` differences are all jointly produced by bot records and
+insider controls, and all three are null once standing is held fixed. Merge and
+human-nonauthor closure survive, attenuated by roughly a third.
+
+**Correction to an earlier claim in this session.** An intermediate read of these
+data described review and approval as *higher* for agent PRs (+5.0pp, +4.3pp).
+That compared all 2,226 agent PRs against the 824 outsider controls only, which
+breaks the matching. The paired comparison above gives −1.82pp and −0.97pp, both
+spanning zero. The defensible statement is no detectable difference, not more
+oversight. Retracted.
+
+**Consequence for the manuscript.** Direct human disposition becomes the lead
+result and is reported against outsider controls. The affiliation interaction is
+demoted to a reported sensitivity with the triple-interaction test alongside it.
+Every review measure is recomputed with bots excluded and reviews restricted to
+on-or-before the terminal disposition, and reported as bounded nulls with their
+intervals. The fully adjusted +6.2pp closure estimate is labelled a
+mediator-adjusted number, since patch size, files, commits and draft status are
+read from the terminal snapshot.
+
+**Limits of this audit, stated plainly.** The D2 proxy is computed from reviewer
+activity across the whole 2025-03..2026-10 window, so it incorporates
+post-treatment behaviour — the same objection this project raises against the
+full-window standing measure — and 22.5% of its outsiders still self-close their
+own PRs, so the outsider arm is not a verified no-merge-authority group. A
+pre-period-only standing measure would shrink the 824-pair sample and could move
+both the interaction and the closure interval; it is not built. Reviewer
+identities span repositories, so repository clusters are not independent and
+every interval above is too narrow by an unknown amount. The censor-aware 30-day
+cohort has **not** been re-estimated against D2-outsider controls and still rests
+on `authorAssociation` strata, the proxy rejected on 2026-11-09; that is the
+single most important outstanding diagnostic.
+
+Supporting evidence already in this log, not previously carried into the paper:
+in the 286,593-PR wide panel, P(merge | no human review) is 17.6% for agents
+against 55.8% for humans, while P(merge | reviewed) is 80.2% against 90.6%. The
+same observable — zero human reviewers — encodes self-merge for a human and
+abandonment for an agent.
+
+The November 13 audit narrative, the evidence tables, and the required edits are
+in `summary.md`, which also retains an independent critical assessment of the
+audit itself.
+
+## Fourteen identification strategies, and why none yields a causal effect (2026-11-22)
+
+Prompted by a request for a causal treatment effect. Code:
+`analysis/maintainer_exposure.py`, `analysis/causal_audit.py`,
+`collect_ready_for_review.py`, `collect_draft_commits.py`,
+`collect_governance_files.py`. New data: `output/process_data/pr_lifecycle.csv`
+(28,493 PRs), `pr_draft_commits.csv` (18,857), `owner_type.csv` (671 owners),
+`governance_files.csv` (in progress).
+
+**The dilution result, which should have been computed first.** Machine-authored
+PRs are 5.5% of the cohort but 2.7% of the mean repository-month and **0.0% of the
+median**. A 20% effect on the agent stream appears as 0.55pp in a repository
+aggregate, against minimum detectable effects of 3.0-5.9pp. Clearing a 4.7pp MDE
+would require a **171%** within-stream effect. Every repository-level null in this
+project is therefore mechanically guaranteed and carries no information. This
+retroactively explains the multi-outcome nulls of 2026-11-09 and the four-outcome
+null of the first-agent-PR event study, and it invalidates the earlier framing of
+that null as "precise" evidence against enterprise strain findings.
+
+**Designs attempted and why each failed.**
+
+| design | failure |
+|---|---|
+| adoption-date DiD (2026-11 programme) | null; two pre-trend failures |
+| first-agent-PR event study, human-PR outcomes | all four pre-trends pass; precise null, but diluted and so uninformative |
+| outage instrument (4 dated agent incidents) | arrivals fall to 0.847 of baseline consistently, but sd of the daily ratio is 0.351; randomization p=0.158; ~43 events needed |
+| Sonnet 4.5 x owner type (plan-tier proxy) | pre-trend F=9.55, p<1e-4 |
+| model selection x owner type | pre-trend marginal; null, no discontinuity |
+| Sonnet 5 GA x owner type | pre-trend fails; 97 treated PRs post |
+| Copilot vs Devin at Sonnet 4.5 | proper DiD -0.079, p=0.43. An initial "significant" joint post test was my specification error: it tested post coefficients against zero while a persistent level gap existed; pre mean -0.147 vs post mean -0.155 |
+| shift-share IV on primary language | first-stage F=685, but the pool is balanced on six languages so the instrument *is* language with 6 df; exclusion indefensible |
+| within-handler attention scarcity | +0.004, CI [-0.015,+0.023], p=0.67 -- precise null |
+| within-handler habituation | +0.021, p=0.058, signed against habituation |
+| reviewer-absence capacity shock (v1) | absence months show arrivals -0.951, p=1.3e-43 -- confounded with dormancy |
+| reviewer-absence (v2, absence measured in other repos) | **validity passes** (arrivals -0.086, p=0.078). Top reviewer's own reviewing -0.094 (p=0.002); coverage -0.055 (p=0.055); acceptance null; triple difference with author type null (p=0.92) |
+| AI review-bot adoption | -14.2pp human review of agent PRs (p=0.0015, pre-trends pass) **collapses to +0.019 (p=0.10)** when `copilot-pull-request-reviewer` is excluded; it is a Copilot-intensity proxy, not an independent governance choice |
+| new merge authority / top reviewer departure | T3 null; T4's -25.7pp coverage effect is dormancy (arrivals fall 88 log points after "departure") |
+| **person-level staggered DiD (Callaway-Sant'Anna)** | **see below** |
+
+**The person-level design, and the placebo that closes it.** Treatment is the
+month a maintainer first reviews or merges a machine-authored PR; 15 staggered
+cohorts, 840 treated, 1,127 never-treated, 31,840 maintainer-months. The outcome
+counts only human-authored PRs, since total load is mechanically inflated by
+construction. Group-time estimates give +3.32 PRs at e0 decaying through +2.19 and
++1.74, against a baseline of 12.4/month, with the TWFE pre-trend passing (p=0.088).
+
+It does not survive. Within maintainer, the first-exposure month carries +1.67 more
+human PRs than that person's own average (CI [+0.52,+2.82], p=0.005) and sits at
+the **59.4th percentile** of their own activity distribution. Dropping e0 and
+bootstrapping over maintainers gives **+1.03, 95% CI [-0.18,+2.32]** -- includes
+zero. Assigning never-treated maintainers pseudo-exposure months matched on
+activity rank (achieved 0.589 vs 0.594) reproduces a first-month spike of **+1.97,
+or 60% of the real +3.32**, with -0.15 thereafter. CS and TWFE also disagree in
+sign on the log outcome. The apparent effect is selection on activity timing.
+
+**The one outcome immune to that confound is a clean null.** The share of a
+maintainer's activity that is evaluation rather than authoring is a ratio, so a
+general activity spike cancels. Over 36,266 person-months it does not move: CS
+-0.025, TWFE +0.0007 (p=0.92), pre-trend p=0.280 PASS. Own authoring (+0.69) and
+review of others (+1.37) rise together. **Exposure to machine-authored production
+does not shift maintainers from producing toward evaluating**; the
+role-reallocation hypothesis is rejected on its cleanest measure.
+
+**Three recurring failure modes, worth carrying forward.** First, person-level
+events in GitHub panels are confounded with project dormancy -- always test PR
+arrivals before interpreting. Second, apparent organizational treatments are often
+product bundling; check whether the treatment survives excluding the vendor's own
+tooling. Third, the only exogenous shocks available are an order of magnitude
+underpowered.
+
+**The deeper obstacle.** The central comparison has no manipulable treatment.
+Machine authorship is a property of a proposal, not a condition assignable to one.
+The identifying experiment -- randomizing whether a task is written by a person or
+an agent, holding repository, reviewer pool and period fixed -- is a field
+experiment. This is why the one causally identified result in this literature
+(Yeverechyahu, Mayya and Oestreicher-Singer) studied 2021 code completions, where
+GitHub excluded one language ecosystem for business reasons and created an
+arbitrary documented partition. Verified against GitHub's own documentation: no
+comparable exclusion exists for coding agents, which were trained on all
+public-repository languages and gated only on subscription tier, which public
+traces cannot observe.
+
+**Consequence for the manuscript.** `overleaf/paper/paper.tex` now carries the
+person-level design and this audit as Sections 5.8 and 5.9, the two credible nulls
+in the abstract, and no causal claim on the comparative results. Reproduce with
+`venv/bin/python analysis/causal_audit.py`.
+
+---
+
+## 2026-11-22 — Monitoring versus enforcement: the reframe, and what identified it
+
+**Why the paper needed reframing.** The surviving causal result (instruction-file
+adoption raises human review of agent PRs) had no consequence attached. Corrective
+work was a bounded null and failed its pre-trend as a post-adoption outcome; gate
+quality was a precise null (-0.014, joint p=0.199). A paper whose headline is "a
+governance act raises oversight effort and changes nothing" is a null result unless
+the null is *locatable*. Locating it is what the reframe does.
+
+**The distinction.** Every instrument GitHub offers for governing an agent acts on
+*monitoring*: instruction files, setup steps, CODEOWNERS, PR templates. None acts
+on *enforcement* -- whether an adverse signal blocks acceptance. Enforcement lives
+in branch protection, which the API exposes only as current state and which
+therefore cannot be dated from public traces. That asymmetry is not a limitation of
+our data; it is the finding. The tooling is all on one margin.
+
+**The level that makes it legible.** Among agent PRs with an observed check rollup,
+**74.8% of those whose checks are failing are merged anyway**. The signal was
+already produced and already ignored. Governance raised the production of signal.
+Nothing in the instrument touches whether a signal binds. Hence: oversight up,
+outcomes flat, and the reason is identifiable rather than merely unmeasured.
+
+**Ceremonial versus substantive, resolved on the data.** An inert oversight
+increase invites the decoupling reading -- that projects adopt instructions for
+legitimacy and the review increase is display. That reading has a testable
+implication opposite to the substantive one: ceremonial adoption tracks *audience*,
+substantive adoption tracks *operational need*. Splitting adopters at the median of
+pre-adoption agent PR volume: reviewers per agent PR rise **+0.170** in high-volume
+repositories against **-0.123** in low, a difference of **+0.293**, pre-trends
+passing in both strata (p=0.786, p=0.991). Splitting at the median of stars gives
+the wrong sign for signalling with a failing pre-trend in the low arm. The response
+is substantive and correctly targeted. It is still inert. That combination is the
+paper's contribution, and neither half alone would be.
+
+**The treatment-side placebo, which is the strongest single check in the project.**
+Prompted by asking whether Claude Code's release could be used as a shock, we
+instead inverted the question: if committing *any* configuration file predicts a
+contribution jump, the AI-specific reading is wrong and the treatment is a growth
+phase. Collected `CONTRIBUTING.md`, `.github/CONTRIBUTING.md`,
+`.github/PULL_REQUEST_TEMPLATE.md` and `.github/dependabot.yml` as alternative
+treatments on the same outcome. Result: **-0.117** coverage and **-0.272**
+reviewers, against **+0.047** and **+0.077** for the AI files. The sign *reverses*.
+An outcome-side placebo (human PRs) rules out a repository-wide shock; this rules
+out the act of committing configuration. We had been running only the former for
+six months.
+
+**Where it remains weak, stated plainly.** The enforcement margin is the one the
+interpretation makes central, and it was identified only *descriptively*. The
+direct interaction -- does governance improve outcomes where enforcement exists? --
+runs the predicted way (lapse rate -0.103 in enforcing repositories against -0.030
+in lax, difference -0.073) but rests on **17 classifiable repositories** split 10/7
+with the lax arm failing its pre-trend. Reported as underpowered, not as evidence.
+
+**The fix now running.** Enforcement can be dated non-circularly. A repository that
+stops merging *human* PRs whose checks are failing has adopted enforcement, and
+that break is datable from the human stream; the outcome is then measured on the
+*agent* stream. Treatment and outcome come from disjoint pull requests, which is
+what avoids explaining a series with a break detected in that same series -- the
+same logic as dating the instruction file on repository history and measuring the
+outcome on agent PRs. Required extending `collect_merge_quality.py` to sample 120
+human PRs per repository (71,736 added to the existing 25,937 agent PRs).
+`analysis/enforcement_adoption.py` implements the break rule (>=3 failing-gate
+human PRs mostly merged, then >=3 with at most 20% merging) and refuses to estimate
+below 20 classifiable repositories.
+
+**Abstract defect found and fixed.** The abstract had grown to 520 words with the
+substantive-versus-ceremonial finding stated twice in different numbers of the same
+estimate. Rewritten to 224 words. Design count in the audit corrected from eighteen
+to twenty-three, with the five additions named.
+
+**Update, same day: the enforcement margin, tested two ways.** Extended
+`collect_merge_quality.py` to sample human PRs per repository (48,178 rows across
+525 repositories at the time of analysis) so enforcement could be classified on one
+stream and tested on the other.
+
+*The dated design failed, and the placebo is why.* Detecting the month a repository
+stops merging failing-gate human PRs would give a dated treatment. It does not
+survive a shuffle placebo: permuting merge outcomes within each repository --
+destroying real timing while preserving month structure and the repository's own
+override rate -- produces as many detected breaks as the real series (18 against a
+shuffled mean of 17.8 at a drop threshold of 0.4; 30 against 35.3 at 0.3). The rule
+was selecting the maximum of a noisy statistic across split points. Scaling to more
+repositories would not fix this, because it scales real and spurious breaks alike;
+what would fix it is more failing-gate PRs *per repository*, and the median
+repository has five. The placebo is now part of
+`analysis/enforcement_adoption.py` so the design cannot be revived without it.
+
+*The level design worked.* Classifying enforcement as the share of a repository's
+failing-gate HUMAN PRs that merge anyway makes 184 repositories classifiable
+against 17 before. In the enforcing half, governance adoption reduces the agent
+lapse rate by **-0.110** (pre-trend p=0.306, joint p=2.7e-05, 45 adopting
+repositories), **-0.111** excluding the top three owners, and **-0.067** under
+equal-repository weighting (p=0.016) -- the weighting that eliminated most
+candidates in this project. The pooled estimate is -0.014 and indistinguishable
+from zero. Against a pre-adoption lapse rate of 0.152 in these repositories the
+fall is large proportionally.
+
+*What it does not establish.* The lax arm fails its pre-trend (p=0.012), so the
+interaction is not identified and the paper claims the conditional effect only. The
+classifier correlates +0.223 with the agent lapse rate it proxies, so regimes carry
+measurement error that attenuates any contrast -- conservative for the result we
+report. And enforcement regime is a repository characteristic, not a dated
+treatment, so this is a moderator.
+
+**Also corrected today.** Four stale counts in the paper: 845 repositories (matched
+no filter; actual 848), 408,326 PRs (actual 468,402), 27,050 agent PRs (actual
+25,937), and "five configuration files" (actual ten, six governance plus four
+placebos). An unverifiable pair of estimates for the AI treatment paths was removed;
+decomposing properly showed the review effect is carried by
+`copilot-instructions.md` (+0.089/+0.107) and absent for `AGENTS.md`
+(+0.011/+0.005), which is not truncation (matched windows: +0.070/+0.101 against
+-0.016/-0.016), not agent composition (AGENTS.md restricted to Copilot PRs:
++0.011/+0.002), and not lack of operational need (57% of AGENTS.md adopters have
+prior machine-authored work against 41%). Recorded as unexplained heterogeneity and
+as a limitation. Added the first two figures and a table of competing accounts.
+
+**Correction, same day: the enforcement moderator was a composition artefact, and
+I had already written it into the paper.** On 525 repositories the enforcing arm
+gave -0.110 with a passing pre-trend and survived owner exclusions, so it went into
+the abstract, introduction, results and README. The full sample (692 repositories
+with human check data, 280 classifiable) made both arms' pre-trends pass and the
+contrast look even better: -0.067 enforcing against +0.068 lax, difference -0.135.
+Equal-repository weighting collapsed both to zero: +0.004 and -0.006, difference
++0.010. One organization supplies 46.3% of machine-authored PRs in the enforcing
+arm and 86.5% in the lax arm.
+
+This is the tenth claim withdrawn in this project and the third killed by exactly
+this check. The lesson is not new, which is the problem: I ran owner-exclusion
+checks on the partial sample, saw them pass, and wrote the result up without
+equal-repository weighting -- the one check the README already names as "the check
+that kills most candidates here." Owner exclusion and equal-repository weighting
+are not substitutes: excluding the top owner changed nothing here (the exclusion
+operates on owners within the estimation window), while reweighting changed the
+sign. `analysis/enforcement_adoption.py` now runs equal-repository weighting
+automatically for every regime contrast and prints an explicit verdict when the
+contrast fails it, so the step cannot be skipped by whoever runs it next.
+
+The break-design placebo also moved: at the full sample the 0.5 threshold shows a
+real excess (23 against a shuffled mean of 14.7, p=0.010) while 0.3 and 0.4 do not.
+Reporting the 0.5 threshold after seeing those p-values would be selection on the
+outcome, so the verdict string is now computed from the data and names which
+thresholds cleared, rather than asserting a fixed conclusion.
+
+Paper, README and abstract reverted to the descriptive account of the enforcement
+margin. What survives is unchanged: 74.8% of failing agent PRs merge anyway, and
+governance moves monitoring (+0.045 coverage, +0.090 reviewers) and not outcomes
+(-0.014, joint p=0.199).

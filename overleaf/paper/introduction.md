@@ -1,21 +1,51 @@
-# Who Reviews After AI Adoption?
+# Affiliated Review and Direct Disposition of AI-Authored Proposals
 
-## The Distribution and Continuity of Code Review Work
+> **Superseded, November 22, 2026.** This collaborator summary describes the
+> affiliated-review framing, which has been withdrawn. The current paper is
+> *Monitoring Without Enforcement* in [`paper.tex`](paper.tex); the standing/
+> affiliation result it summarises below did not survive the comparison-group
+> check (see the withdrawn-claims table in [`../../README.md`](../../README.md)).
+> Retained as research history. **Do not cite as a current finding.**
 
-*Introduction from the revised working paper, November 1, 2026. The full manuscript is in [paper.tex](paper.tex).*
+*Collaborator summary, November 13, 2026. The integrated manuscript is
+[`paper.tex`](paper.tex); treat that file as the source of truth.*
 
-Generative AI changes the production of software within a system of interdependent human activities. A developer may use an assistant to draft a change, but other participants must understand that change, evaluate its fit with the project, and decide whether to integrate it. Consequently, improvements in code generation need not translate directly into improvements in the development process. Controlled evidence illustrates the importance of context: [Peng et al. (2023)](https://arxiv.org/abs/2302.06590) report faster completion of a bounded programming task, whereas [Becker et al. (2025)](https://metr.org/Early_2025_AI_Experienced_OS_Devs_Study-paper.pdf) find slower completion among experienced developers working on familiar open-source projects with early-2025 tools. The organizational question is therefore how teams adapt the work surrounding code production when AI enters their workflow.
+## Research question
 
-Recent research has begun to answer this question. [Song et al. (2026)](https://doi.org/10.1287/isre.2024.1361) document increased code contributions alongside longer coordination time after Copilot use, including differences between core and peripheral contributors. Their analysis also examines core developers' review volume and participation. In an enterprise setting, [He et al. (2026)](https://arxiv.org/abs/2607.01904v2) document increased review load per reviewer and a shift toward automated review. [Chen and Stratton (2026)](https://fion.ac/jellyfish.pdf) show how review constraints can limit the translation of coding gains into final software output. These studies make review a central organizational concern. They also mean that a claim that AI creates coordination costs or increases review demand is insufficient, by itself, to establish a new research contribution.
+How is the relationship between evaluator affiliation and acceptance different
+for agent-authored proposals, and how are those proposals otherwise disposed
+of? We study public GitHub projects as organizations that divide proposal
+production, evaluation, and acceptance among different actors.
 
-An additional question concerns the allocation of review activity across people. A project can complete more reviews without changing the relative division of that work. Conversely, the share performed by its busiest reviewers can rise even if their own review counts remain constant, because activity elsewhere declines. The identities occupying the busiest positions can also change while the distribution of shares remains similar. Aggregate review volume, relative concentration, and continuity of reviewer identities thus describe distinct features of work organization. Understanding their relationship matters for interpreting whether a project is reinforcing established review roles, reallocating those roles, or experiencing a broader change in participation.
+## Data and central candidate result
 
-This distinction is especially important for claims about burden. A review share records a person's contribution relative to others. It does not measure the hours required, cognitive demands, competing responsibilities, or capacity available to perform the work. The same number of reviews may represent very different demands across changes and reviewers. Information systems research on technostress examines strain and role demands using constructs that cannot be recovered from a concentration statistic alone [Tarafdar et al. (2007)](https://www.jmis-web.org/articles/932). Concentration can describe the distribution of counted work and motivate a workload investigation, but it is not sufficient evidence of individual overload. This study therefore asks about the organization of review activity and leaves its welfare consequences open.
+The broad cohort includes 408,326 agent- or human-authored PRs from 845
+repositories (March 2025–October 2026). The timestamped process sample includes
+2,027 matched resolved agent–human pairs from 699 repositories.
 
-The allocation question also has an established theoretical foundation. Expertise coordination concerns how a team brings relevant knowledge to bear on interdependent tasks [Faraj and Sproull (2000)](https://doi.org/10.1287/mnsc.46.12.1554.12072). Code review contributes to shared understanding and knowledge exchange as well as defect detection [Bacchelli and Bird (2013)](https://www.microsoft.com/en-us/research/publication/expectations-outcomes-and-challenges-of-modern-code-review/). Accordingly, who repeatedly performs review is potentially consequential even when review speed improves. Yet concentrated activity need not be inefficient: it may reflect useful specialization, limited availability, or an uneven distribution of opportunities to participate. Research already examines how reviewer recommendation can balance expertise, workload distribution, and knowledge retention [Hajari et al. (2023)](https://arxiv.org/abs/2312.17236). The remaining question addressed here is narrower than whether review work is unequal: it is whether detected AI adoption is followed by changes in both review-share concentration and the continuity of the people occupying leading review positions.
+In a pair-fixed-effects model, the association between an affiliated formal
+review and merging is 16.6 percentage points stronger for agent PRs than for
+human controls (95% CI [+9.5, +23.8]). It remains 15.7 points (95% CI
+[+9.2, +22.3]) after adding author-association and heuristic task-category
+controls. A narrower OWNER/COLLABORATOR definition yields 11.6 points with
+patch controls and 13.1 points with the additional controls.
 
-We investigate this question using public GitHub activity. The study combines signals of agent-authored pull requests, AI-associated commit messages, and configuration files to identify the first observed evidence of AI-tool use in a repository. We match detected adopters to repositories without detected adoption and estimate repository-month outcomes using an imputation-based event-study design [Borusyak et al. (2024)](https://doi.org/10.1093/restud/rdae007). The main analysis has 1,771 matched pairs and 20,188 repository-month rows before outcome-specific exclusions. Reviewer-identity analyses use narrower coverage. We distinguish the monthly concentration of review activity from the persistence of a fixed pre-adoption lead, and examine elapsed review and merge times as separate process outcomes.
+This is exploratory evidence that agent acceptance is more closely associated
+with visible evaluation by repository-affiliated people. It is not an effect of
+reviewer assignment: review participation is selected, GitHub affiliation is
+only a proxy for authority, and the sample includes resolved PRs only.
 
-The existing estimates suggest two patterns that warrant investigation together. The monthly share held by the busiest two reviewers increases by about 1.5 percentage points in the original extraction. In the reviewer-identity analysis, the pre-adoption lead is less likely to remain the busiest reviewer after adoption. These findings are compatible with a change in who occupies concentrated review roles. They do not establish that the same people face greater absolute demands, that replacements have less expertise, or that membership remains constant. Additional analyses limit stronger interpretations: removing the original sampling cap reduces concentration estimates on a comparable subsample, and evidence of reduced month-to-month leader turnover disappears when controls with observed reviewer overlap are excluded. We therefore separate incumbent displacement from successor stability.
+## Complementary disposition result
 
-The intended contribution is to connect research on AI and collaborative production with the distribution and continuity of code review activity. Empirically, this requires observing both ranked shares and fixed reviewer identities rather than inferring individual consequences from a project-level distribution. Conceptually, it separates allocation from burden and role continuity from formal authority. The current evidence supports a provisional account of review reallocation, with important limits on identification and measurement. It does not establish a mechanism in which AI replaces project knowledge with spare capacity. The remainder of the paper develops these distinctions, explains the data and estimator, presents existing results and their sensitivity, and identifies the tests needed to strengthen that account.
+Within common repository-month cells, 20.6% of agent PRs and 6.5% of human PRs
+are closed without merging by a human nonauthor within 30 days. The equal-cell
+difference is 28.9 points (95% repository-bootstrap CI [+26.5, +31.3]); the
+PR-weighted fixed-effects estimate is 12.3 points (95% CI [+5.4, +19.2]). In
+the separate matched process sample, the contrast falls to 6.2 points after
+patch and timing controls. Neither result identifies closure motives or code
+quality.
+
+Available CI and linked-issue proxies are inconclusive. Repository-month
+models show fewer human merges at higher agent share when arrivals are held
+constant, but no detectable total-merge increase. The study does not establish
+productivity, quality, reviewer-capacity, or welfare effects.
