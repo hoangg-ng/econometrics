@@ -251,7 +251,20 @@ noise within them.
 | lengthen the pre-adoption window | 1,033 → 1,394 merged agent PRs; +14% power |
 | instrument review with adoption | first stage F=1.1 (F=0.1 on full sample) — weak |
 | move to the human-authored stream | 53% → 27% of base — the one real gain |
-| quadruple the repository count | 27% → 25% |
+| widen the repository count (+191 adopters) | 27% → 25%, then plateaus |
+
+**But the shape of the null is informative.** Per-repository pre/post differences:
+median exactly **0.000**, mean −0.005, sd **0.190**. Most projects change by
+nothing; a minority swing widely, almost all with few PRs on one side. Trim the
+extreme 10% → **−0.002, CI [−0.023, +0.019]**, a 15% bound across 104 repos.
+
+Reported untrimmed as the estimate (trimming on the outcome = choosing the bound);
+the trimmed figure is evidence about *where the width comes from*. Restricting on
+*precision* instead — more PRs per side — **widens** it (47% at ≥15/side), because
+it discards repos faster than it gains precision within them.
+
+So the null is not heterogeneous responses cancelling out. **The typical adopting
+repository changes its enforcement behaviour by nothing measurable.**
 
 That is the honest limit of this design. What the evidence supports is that
 governance does not produce a *large* improvement in gate outcomes, and the

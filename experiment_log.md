@@ -2098,3 +2098,27 @@ this as the design's limit rather than as an open question.
 quoted in the manuscript from a run that was never committed. The verifier reads
 the committed JSONs and reports MISMATCH for a drifted number and UNVERIFIABLE for
 a claim with no analysis behind it. 24/24 checks pass.
+
+**What the expansion did establish, after the bound stopped moving.** The pooled
+sample reached 471 adopting repositories and the standard error plateaued at
+0.0211, against 0.0181 that independent sampling predicts. Decomposing the
+variance explains both the plateau and how the null should be read: taking each
+repository's own pre-to-post difference in the lapse rate, the **median is exactly
+zero**, the mean is -0.005, and the standard deviation across repositories is
+0.190. Most projects change by nothing; a minority swing widely, and almost all of
+those have few pull requests on one side of adoption.
+
+Removing the most extreme ten percent gives -0.002 with an interval of
+[-0.023, +0.019] across 104 repositories -- a 15% bound against the untrimmed 25%.
+That is reported as evidence about where the width comes from, not as the
+estimate, because trimming on the outcome is choosing the bound. The defensible
+alternative, restricting on precision by requiring more pull requests each side,
+*widens* the interval (47% at fifteen per side) because it discards repositories
+faster than it gains precision within them -- which is itself the proof that the
+width is across-repository heterogeneity rather than within-repository noise.
+
+The substantive upgrade is that the null is no longer "we cannot tell". It is that
+the typical adopting repository changes its enforcement behaviour by nothing
+measurable, and the pooled interval is widened by a small number of small
+projects. Collection stopped at this point: the bound had plateaued across
+420 to 471 repositories and the remaining 1,290 would not move it.

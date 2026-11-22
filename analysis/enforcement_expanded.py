@@ -191,6 +191,39 @@ def main():
             f"whether a failing check blocks a merge.")
         print(f"\n  READING: {results['reading']}")
 
+    # Is the width driven by a few repositories, or is it general? This matters
+    # for how the null should be read: averaging over genuinely heterogeneous
+    # responses would be a different claim from a precise zero everywhere.
+    w = pooled.copy()
+    w['g'] = w.repo.map(adopt)
+    w['k'] = [(pd.Period(m, 'M') - pd.Period(g[:7], 'M')).n if isinstance(g, str)
+              else np.nan for m, g in zip(w.m, w.g)]
+    w = w[w.k.notna() & w.k.between(-6, 6)].copy()
+    w['post'] = (w.k >= 0).astype(float)
+    diffs = []
+    for repo, group in w.groupby('repo'):
+        pre, post = group[group.post == 0], group[group.post == 1]
+        if len(pre) >= 5 and len(post) >= 5:
+            diffs.append(float(post.lapse.mean() - pre.lapse.mean()))
+    if len(diffs) >= 40:
+        arr = np.array(diffs)
+        base = float(pooled.lapse.mean())
+        lo, hi = np.quantile(arr, [0.05, 0.95])
+        kept = arr[(arr >= lo) & (arr <= hi)]
+        block = {}
+        for label, a in (('all', arr), ('trimmed_5pct', kept)):
+            est = float(a.mean())
+            se = float(a.std(ddof=1) / np.sqrt(len(a)))
+            block[label] = {'repositories': int(len(a)), 'estimate': est, 'se': se,
+                            'ci': [est - 1.96 * se, est + 1.96 * se],
+                            'bound_share_of_base': abs(min(est - 1.96 * se, 0)) / base}
+            print(f'  per-repository differences, {label:12s} {len(a):3d} repos '
+                  f'est={est:+.4f} se={se:.4f} '
+                  f'rules out > {block[label]["bound_share_of_base"]:.0%} of base')
+        block['median_repository_difference'] = float(np.median(arr))
+        block['sd_repository_difference'] = float(arr.std(ddof=1))
+        results['heterogeneity'] = block
+
     results['notes'] = [
         'Expansion repositories contribute only pull requests inside their own '
         'adoption window, so they identify the contrast but carry no information '
@@ -202,7 +235,12 @@ def main():
         'Expansion repositories are smaller than the cohort (median 22 against 42 '
         'contributors), so the pooled estimate shifts weight toward smaller '
         'projects.',
-        'Status-check rollups are read at the current head, in both sources.']
+        'Status-check rollups are read at the current head, in both sources.',
+        'The trimmed figure is reported as a description of where the width comes '
+        'from, not as an estimate: trimming on the outcome would be choosing the '
+        'bound. Restricting instead on precision -- requiring more pull requests '
+        'each side -- widens the interval rather than narrowing it, because it '
+        'drops repositories faster than it gains precision within them.']
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(results, indent=2, default=str))
     print(f'\nwrote {OUT.relative_to(ROOT)}')

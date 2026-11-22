@@ -794,22 +794,36 @@ alone would give, because it gains on repositories and pull requests at once.
 We pursued the implication. Our cohort is 848 of 8,976 repositories that passed
 the original screen for coding-agent use, and dating the agent-instruction file in
 the remainder identifies 1,512 further adopting repositories. Collecting, for each,
-only the pull requests inside its own adoption window widens the estimate to 420
+only the pull requests inside its own adoption window widens the estimate to 471
 adopting repositories, and it moves very little: the contrast becomes $+0.004$ with
 an interval of $[-0.038, +0.045]$, ruling out reductions larger than 25\% of the
-base rate against 27\% on the cohort alone. The gain is far short of what
-independent sampling would predict, because the variance of this contrast is
-dominated by heterogeneity across repositories rather than by sampling noise within
-them, and the added projects are smaller and contribute few in-window observations
-each.
+base rate against 27\% on the cohort alone. The standard error falls from $0.0221$
+to $0.0211$ where independent sampling would predict $0.0181$, and it stops falling
+well before the repositories run out.
 
-That is the honest limit of this design on the consequence question, and we state
-it as such: four separate attempts to sharpen it --- lengthening the pre-adoption
-window, instrumenting review with adoption, moving to the larger human-authored
-stream, and quadrupling the repository count --- buy progressively less. What the
-evidence supports is that governance adoption does not produce a large improvement
-in gate outcomes, and that the cross-sectional bound in
-Section~\ref{sec:enforcement} is the stronger form of the claim. The share of agent PRs whose
+The reason is visible in the distribution, and it changes how the null should be
+read. Taking each repository's own pre-to-post difference in the lapse rate, the
+median is exactly zero and the mean is $-0.005$, but the standard deviation across
+repositories is $0.190$: most projects show no change at all and a minority swing
+widely, almost all of them projects with few pull requests on one side of adoption.
+Removing the most extreme ten percent leaves $-0.002$ with an interval of
+$[-0.023, +0.019]$ across 104 repositories, a bound of 15\% of the base rate. We
+report the untrimmed figure as the estimate, because trimming on the outcome is
+choosing the bound; the trimmed figure is evidence about where the width comes
+from. Restricting on precision instead --- requiring more pull requests each side
+--- \emph{widens} the interval, to 47\% at fifteen per side, because it discards
+repositories faster than it gains precision within them.
+
+So the null is not an average over heterogeneous responses that happens to cancel.
+The typical adopting repository changes its enforcement behaviour by nothing
+measurable, and the width of the pooled interval is contributed by a small number
+of small projects. Four attempts to sharpen this estimate --- lengthening the
+pre-adoption window, instrumenting review with adoption, moving to the larger
+human-authored stream, and widening the repository count --- each bought less than
+the last, and we state that as the design's limit rather than as an open question.
+What the evidence supports is that governance adoption does not produce a large
+improvement in gate outcomes, with the cross-sectional bound in
+Section~\ref{sec:enforcement} the stronger form of the claim. The share of agent PRs whose
 gate reports failure does not move either ($-0.061$, joint $p=0.872$). And
 conditional on the gate failing, merging anyway becomes \emph{more} common after
 adoption, by $+0.110$ (pre-trend $p=0.696$, joint $p=0.0005$) and $+0.141$ under
