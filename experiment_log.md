@@ -1995,3 +1995,37 @@ reduce" and state the bound. This also explains why no consequence measure in th
 project has worked and why trying more would not help: the constraint is the thin
 pre-adoption window, not the choice of outcome. It is the reason the cross-sectional
 bound across 386 repositories is the stronger form of the enforcement claim.
+
+**Three tests against the objections the design cannot answer by construction.**
+A referee presses on two things the main estimates cannot speak to: the treatment
+is chosen, and the setting is not a firm. Pre-trends and placebos answer neither.
+
+*Selection into adopting at all.* Dropping never-adopting repositories leaves a
+sample where every unit adopts eventually and only timing differs, so whatever
+makes a project the kind that writes agent instructions is common to both arms.
+The estimates rise: +0.160 coverage and +0.389 reviewers across the same 281
+adopting repositories, pre-trends 0.411 and 0.456, joint p 1.6e-06 and 8.3e-05.
+Selection into adopting *early* remains and is not removable observationally.
+
+*A rising trajectory.* Removing a repository-specific linear trend before
+estimation absorbs the alternative that adoption merely coincides with a project
+on the way up. It attenuates, as a seven-month post window should: coverage
++0.0153 (joint p=0.0004) and reviewers +0.0585 (p=0.082). Direction survives,
+magnitude does not -- which is why the late-window figures are not claimed.
+
+*The setting.* GitHub records whether an owner is a User or an Organization.
+Organization-owned projects are the firm-like arm available in public data. The
+effect is cleaner there: +0.044 coverage (p=0.003) and +0.095 reviewers (p=0.024)
+across 204 adopting organizations, pre-trends passing, +0.097/+0.175 under
+equal-repository weighting; user-owned repositories run the same direction on 71
+repositories with weaker precision. So this is not a volunteer-community
+phenomenon. Organization ownership proxies an institutional owner rather than a
+firm -- many are foundations -- so it is a lower bound on how firm-like the
+setting can be made from public traces.
+
+**What is still not resolved, and why it cannot be here.** The consequence
+question. Widening the pre-adoption window from six months to twelve raises merged
+agent PRs only from 1,033 to 1,394, because machine-authored activity barely
+predates instruction-file adoption in this corpus. That is a 14% power gain
+against an MDE of 19% of the lapse base rate. No choice of outcome measure fixes
+it; the constraint is the window. `analysis/identification_robustness.py`.

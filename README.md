@@ -46,7 +46,7 @@ agent stream is essential; see [Dilution](#the-dilution-trap).
 Joint post-period tests: **p=1.7e-07** and **p=0.0004** on the agent review
 outcomes; p ≥ 0.20 on all three placebo outcomes.
 
-**Six robustness checks, all passing:**
+**Nine robustness checks:**
 
 1. **Staggered-robust estimator — agrees on sign, not on dynamics.** With 21
    monthly cohorts, Callaway–Sant'Anna gives +0.145 coverage and +0.226 reviewers,
@@ -73,7 +73,20 @@ outcomes; p ≥ 0.20 on all three placebo outcomes.
    coverage +33.4pp and reviewers +0.842, through an identifiable platform
    mechanism (automatic reviewer requests, +10.1pp). 40 repositories, marginal
    pre-trends — corroboration, not an independent finding.
-6. **Composition — the check that kills most candidates here.** One organization
+6. **Selection into adopting at all — removed, and the effect grows.** Drop
+   never-adopters entirely, so every unit adopts eventually and only timing
+   differs: **+0.160 coverage / +0.389 reviewers**, pre-trends 0.411/0.456, joint
+   p=1.6e-06 / 8.3e-05. What remains is selection into adopting *early*, which no
+   observational design removes.
+7. **Repository-specific linear trends — the direction survives, the magnitude
+   doesn't.** Removing a per-repo linear trend absorbs the "rising trajectory"
+   alternative. Coverage falls to +0.015 but stays jointly significant (p=0.0004);
+   reviewers to +0.059 (p=0.082). The late-window figures are not claimed.
+8. **It is not a volunteer-community effect.** In **204 organization-owned**
+   (firm-like) adopting repos: **+0.044 coverage (p=0.003), +0.095 reviewers
+   (p=0.024)**, pre-trends passing, +0.097/+0.175 equal-weighted. User-owned repos
+   run the same direction, weaker (71 repos).
+9. **Composition — the check that kills most candidates here.** One organization
    supplies 44.4% of the treated agent PRs, the top three 65.6%. The estimate
    barely moves: dropping the largest owner gives +0.054 / +0.107, dropping the top
    five +0.036 / +0.096, and **equal-repository weighting +0.074 / +0.118** —
@@ -360,6 +373,7 @@ Analysis for the current claims:
 venv/bin/python analysis/instruction_adoption.py  # THE causal result + placebo + validity
 venv/bin/python analysis/gate_quality.py          # the enforcement null + the 74.8%
 venv/bin/python analysis/monitoring_enforcement.py # the bounded null across 386 repos
+venv/bin/python analysis/identification_robustness.py # selection, trends, firm-like arm
 venv/bin/python analysis/corrective_share.py      # quality ratio -- NOT reportable, see script
 venv/bin/python analysis/enforcement_adoption.py  # enforcement dated on humans, tested on agents
 venv/bin/python analysis/corrective_work.py       # quality bound

@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and public git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend test passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are used as the treatment. The agent's own output is unchanged, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. Ex ante rules and ex post inspection are therefore complements here, not the substitutes agency theory assumes. The response is substantive, scaling with machine-authored volume rather than with visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate, ruling out improvements of a fifth or more. Nor is the pattern specific to this instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, with any protective association bounded at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
+Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. It survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's own output is unchanged, so the channel is inspection, not production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes, and the response is substantive, scaling with machine-authored volume rather than visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate, ruling out improvements of a fifth or more. Nor is this specific to one instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, bounding any protective association at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
 }
 
 
@@ -459,7 +459,7 @@ $p \geq 0.20$ for all three placebo outcomes.
 
 \subsection{Robustness}
 
-Six checks, and the first qualifies the headline. A group-time estimator robust to
+Nine checks, and the first qualifies the headline. A group-time estimator robust to
 staggered adoption \citep{callaway2021difference} agrees on sign but not on
 dynamics, and its magnitude is sensitive to how cohorts are defined. With the 21
 monthly adoption cohorts it returns post-period means of $+0.145$ for review
@@ -560,7 +560,40 @@ legibility mechanism --- a convention that is kept current is one against which
 deviation remains detectable --- and with the substantive rather than ceremonial
 character of the response documented in Section~\ref{sec:enforcement}.
 
-A sixth check matters because PR-weighted estimates in this
+Three further checks answer objections the main design cannot address by
+construction, and we group them because each targets a different one.
+
+The treatment is chosen, so the first asks whether selection into adopting at all
+drives the estimate. Dropping never-adopting repositories entirely leaves a sample
+in which every unit adopts eventually and only the timing differs, so whatever
+makes a project the kind that writes agent instructions is common to treated and
+control units. The estimates rise rather than fall: $+0.160$ for coverage and
+$+0.389$ for reviewers across the same 281 adopting repositories, with pre-trends
+at $p=0.411$ and $p=0.456$ and joint post-period tests of $1.6\times10^{-6}$ and
+$8.3\times10^{-5}$. What this cannot remove is selection into adopting
+\emph{early}, which no design on observational adoption can.
+
+The effect emerges from month four, which is as consistent with a rising
+trajectory as with rules taking time to bind, so the second removes a
+repository-specific linear trend from the outcome before estimation. This is
+demanding on a seven-month post window and it attenuates, as expected: coverage
+falls to $+0.015$ but remains jointly significant ($p=0.0004$), and reviewers to
+$+0.059$ at $p=0.082$. The direction survives a test designed to absorb precisely
+the alternative explanation we cannot otherwise rule out; the magnitude does not.
+
+The setting is not a firm, so the third splits on whether GitHub records the owner
+account as an Organization rather than a User. Organization-owned projects have
+institutional owners and formal membership, and are the firm-like arm available in
+public data. The effect is if anything cleaner there: $+0.044$ coverage
+($p=0.003$) and $+0.095$ reviewers ($p=0.024$) across 204 adopting organizations,
+pre-trends passing, and $+0.097$ and $+0.175$ under equal-repository weighting.
+The user-owned arm runs the same direction on 71 repositories with weaker
+precision ($+0.053$ and $+0.035$). The result is therefore not a property of
+volunteer communities. Organization ownership is a proxy for an institutional
+owner rather than for a firm --- many organizations here are foundations --- so
+this is a lower bound on how firm-like the setting can be made with public traces.
+
+A ninth check matters because PR-weighted estimates in this
 corpus are routinely dominated by a few high-volume owners: one organization
 supplies 44.4\% of the treated agent PRs and the top three supply 65.6\%. The
 estimate is nonetheless stable. Dropping the largest owner moves the post-period
@@ -901,12 +934,16 @@ the second stage and labels both stages' failures identically, so reading the po
 record as evidence that machine-authored work meets a harder gate inverts the
 relationship holding among proposals actually submitted for evaluation.
 
-The limitations are substantial. Adoption of an instruction file is self-selected: a
-project that writes agent instructions is already attending to agents, and
-pre-trends plus the placebo are the only evidence for parallel trends. The effect
-emerges from month four rather than immediately, consistent with written rules
-taking time to bind but equally consistent with a slow-moving trajectory we cannot
-separate. The comparative estimates are conditional associations on populations we
+The limitations are substantial. Adoption of an instruction file is self-selected:
+a project that writes agent instructions is already attending to agents. Restricting
+controls to not-yet-adopting repositories removes selection into ever-adopting, and
+the estimate survives and grows; what remains is selection into adopting early,
+which no design on observational adoption removes. The effect emerges from month
+four rather than immediately, consistent with written rules taking time to bind but
+equally consistent with a slow-moving trajectory. Removing repository-specific
+linear trends, which absorbs that trajectory, leaves coverage jointly significant
+and reviewers at $p=0.082$: the direction survives, the magnitude does not, and we
+do not claim the late-window figures. The comparative estimates are conditional associations on populations we
 argue are comparable, not causal effects, and conditioning on promotion selects on
 a post-opening decision. The standing measure is behavioral and leaves 22.5\% of
 its outsiders closing their own PRs. The draft stage is a design feature of one
