@@ -789,11 +789,27 @@ exactly zero and the bound is half as wide.
 Both margins bind the precision. The human stream carries 3.6 times the pull
 requests and 280 rather than 212 adopting repositories, and its standard error is
 0.41 times the agent stream's --- better than the 0.53 that independent sampling
-alone would give, because it gains on repositories and pull requests at once. The
-route to a tighter consequence estimate is therefore more adopting repositories
-with observable check state, which is also why the cross-sectional evidence in
-Section~\ref{sec:enforcement}, resting on 386 repositories, carries more weight
-here than the event study does. The share of agent PRs whose
+alone would give, because it gains on repositories and pull requests at once.
+
+We pursued the implication. Our cohort is 848 of 8,976 repositories that passed
+the original screen for coding-agent use, and dating the agent-instruction file in
+the remainder identifies 1,512 further adopting repositories. Collecting, for each,
+only the pull requests inside its own adoption window widens the estimate to 420
+adopting repositories, and it moves very little: the contrast becomes $+0.004$ with
+an interval of $[-0.038, +0.045]$, ruling out reductions larger than 25\% of the
+base rate against 27\% on the cohort alone. The gain is far short of what
+independent sampling would predict, because the variance of this contrast is
+dominated by heterogeneity across repositories rather than by sampling noise within
+them, and the added projects are smaller and contribute few in-window observations
+each.
+
+That is the honest limit of this design on the consequence question, and we state
+it as such: four separate attempts to sharpen it --- lengthening the pre-adoption
+window, instrumenting review with adoption, moving to the larger human-authored
+stream, and quadrupling the repository count --- buy progressively less. What the
+evidence supports is that governance adoption does not produce a large improvement
+in gate outcomes, and that the cross-sectional bound in
+Section~\ref{sec:enforcement} is the stronger form of the claim. The share of agent PRs whose
 gate reports failure does not move either ($-0.061$, joint $p=0.872$). And
 conditional on the gate failing, merging anyway becomes \emph{more} common after
 adoption, by $+0.110$ (pre-trend $p=0.696$, joint $p=0.0005$) and $+0.141$ under

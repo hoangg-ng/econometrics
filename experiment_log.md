@@ -2062,3 +2062,39 @@ does not reproduce exactly.
 **The IV is not viable and is not claimed.** Weak first stage on every
 specification tried. Reported here so the attempt is on record: the exclusion
 restriction is defensible in this design, but relevance is not.
+
+**The repository expansion: built, run, and honestly disappointing.**
+analysis/enforcement_power.py showed the human stream's standard error is 0.41x
+the agent stream's against the 0.53x independent sampling predicts, because it
+gains repositories and pull requests at once. That implied more adopting
+repositories would tighten the consequence bound, and the cohort is only 848 of
+8,976 screened repositories.
+
+Dating the instruction file across the uncollected pool found **1,512 further
+adopting repositories** -- more than five times what the cohort supplies. The
+collection itself needed three attempts to run at a usable rate: search per
+repository managed 1.2 repositories a minute; aliasing six searches into one
+GraphQL call was *slower*, because search is rate limited by query complexity
+rather than per call; listing over REST never reached the event window for large
+active repositories, since newest-first paging exhausts the page budget on PRs
+created long after adoption. What works is grouping adopters by adoption month and
+putting fifteen `repo:` qualifiers in one search, at 4.5 repositories a minute.
+
+The payoff is small. At 420 pooled adopting repositories the contrast is +0.004
+with an interval of [-0.038, +0.045], ruling out reductions beyond 25% of the base
+rate against 27% on the cohort alone. The standard error moved 0.0221 to 0.0211
+where sqrt scaling predicts 0.0181. The variance of this contrast is dominated by
+heterogeneity across repositories, not sampling noise within them, and the added
+projects are smaller and contribute few in-window observations each.
+
+**Four attempts on the consequence question, each buying less than the last:**
+lengthening the pre-adoption window (1,033 to 1,394 merged agent PRs, +14% power);
+instrumenting review with adoption (first stage F=1.1, and F=0.1 on the full
+sample -- not viable); moving to the human-authored stream (53% to 27% of base,
+the one real gain); quadrupling repositories (27% to 25%). The paper now states
+this as the design's limit rather than as an open question.
+
+**Added analysis/verify_paper_numbers.py.** Twice in this project a figure was
+quoted in the manuscript from a run that was never committed. The verifier reads
+the committed JSONs and reports MISMATCH for a drifted number and UNVERIFIABLE for
+a claim with no analysis behind it. 24/24 checks pass.

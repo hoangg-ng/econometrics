@@ -235,10 +235,30 @@ this one.) The estimate is essentially exactly zero and the bound is half as wid
 
 Both margins bind: the human stream has 3.6× the PRs *and* 280 vs 212 repositories,
 and its SE is 0.41× the agent stream's — better than the 0.53× independent sampling
-would give. More adopting repositories with check data is the route to a tighter
-bound.
+would give.
 
-Reproduce: `venv/bin/python analysis/enforcement_power.py`
+**We pursued that and hit diminishing returns.** The cohort is 848 of 8,976 screened
+repositories; dating the instruction file in the rest found **1,512 more adopting
+repositories**. Collecting each one's in-window PRs widens the estimate to 420
+adopting repos — and the bound moves only **27% → 25%**, far short of √n, because
+the variance is dominated by across-repository heterogeneity rather than sampling
+noise within them.
+
+**Four attempts to sharpen the consequence question, each buying less:**
+
+| attempt | result |
+|---|---|
+| lengthen the pre-adoption window | 1,033 → 1,394 merged agent PRs; +14% power |
+| instrument review with adoption | first stage F=1.1 (F=0.1 on full sample) — weak |
+| move to the human-authored stream | 53% → 27% of base — the one real gain |
+| quadruple the repository count | 27% → 25% |
+
+That is the honest limit of this design. What the evidence supports is that
+governance does not produce a *large* improvement in gate outcomes, and the
+386-repository cross-sectional bound is the stronger form of the claim.
+
+Reproduce: `venv/bin/python analysis/enforcement_power.py`,
+`analysis/enforcement_expanded.py`
 
 The reason is visible in the level, not the change: **74.8% of agent PRs with a
 failing gate are merged anyway.** The signal was already there and already ignored.
