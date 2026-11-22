@@ -690,17 +690,33 @@ repository-months carrying both, machine-authored work faces a marginally
 \emph{tighter} gate ($-0.084$, interval $[-0.168, +0.001]$), so this is not
 leniency toward machines. It is how these organizations treat failing tests.
 
-Whether that is costly is a separate question, and we cannot show that it is.
-Among merged pull requests with 90-day follow-up, those merged over a substantive
-failing check attract corrective work at 18.4\% against 9.0\% for those merged
-green --- but within repository-months containing both, the difference is
-$-0.002$ with an interval of $[-0.048, +0.043]$. The pooled gap is composition:
-projects that merge over failing checks have higher corrective rates generally. A
-second channel, whether overriding degrades the gate for subsequent work, does not
-survive either: the within-repository association between this month's override
-rate and next month's failure rate is $+0.36$ on 33 repository-month pairs and
-falls to $+0.01$ once the sample threshold is relaxed to 471 pairs across 191
-repositories.
+Whether the practice is costly is a separate question, and across every channel
+these traces support we cannot show that it is. Within repository-months
+containing both kinds of merge, pull requests merged over a substantive failing
+check attract no more corrective work than those merged green ($-0.005$, interval
+$[-0.045, +0.035]$) and no more bug reports, measured as issues opened referencing
+the merge within ninety days ($-0.017$, $[-0.057, +0.023]$). At the repository
+level, across 3,101 consecutive month pairs, a month with a higher share of
+overridden merges is followed by no loss of contributors ($-0.022$,
+$[-0.124, +0.081]$) and no fall in throughput ($-0.051$, $[-0.218, +0.116]$). A
+contagion channel --- overriding degrading the gate for later work --- is $+0.36$
+on 33 repository-month pairs and falls to $+0.01$ at 471 pairs across 191
+repositories, so it is a small-sample artefact.
+
+Pooled contrasts point the other way and are composition. Merged over a failing
+check, corrective work runs at 18.4\% against 9.0\% for green merges; the gap
+disappears within repository-months because projects that override more have
+higher baseline rates of nearly everything. This is the error the comparative
+literature on machine-authored contributions most often makes, and it is the same
+error that inflates the raw override rate itself.
+
+None of this proves the practice harmless. It bounds the harm that public traces
+can see, and the bound excludes incidents, security events, and anything a user
+experiences outside the repository. But it carries a specific implication, and it
+is the one that organizes the rest of this paper: if a failing check does not
+predict any consequence we can observe, then it is not decision-grade, and
+producing more signal --- which is what every available governance instrument
+does --- addresses the wrong constraint.
 
 Governance adoption does not visibly change that. The rate of merging with a
 failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$
