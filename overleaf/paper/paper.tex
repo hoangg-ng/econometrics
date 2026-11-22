@@ -459,22 +459,35 @@ $p \geq 0.20$ for all three placebo outcomes.
 
 \subsection{Robustness}
 
-Nine checks, and the first qualifies the headline. A group-time estimator robust to
-staggered adoption \citep{callaway2021difference} agrees on sign but not on
-dynamics, and its magnitude is sensitive to how cohorts are defined. With the 21
-monthly adoption cohorts it returns post-period means of $+0.145$ for review
-coverage and $+0.226$ for reviewers per PR, larger than the fixed-effects
-estimates; but too few repositories adopt in any one month for event times beyond
-$+3$ to be estimable, so that figure covers $e=0$ to $e=3$ only. Pooling adoption
-to eight quarterly cohorts makes $e=4$ estimable and shrinks the post-period means
-to $+0.029$ and $+0.041$, with the $e=4$ coefficients turning negative ($-0.122$
-and $-0.185$). We therefore report the positive post-period direction as robust
-across specifications, and the late-emerging pattern visible in the fixed-effects
-event study as \emph{not} robust: it is not reproduced once later event times can
-be estimated, and the magnitude depends on cohort definition. Neither estimator is
-clean here --- two-way fixed effects can carry negative weights across 21 cohorts,
-while quarterly pooling introduces up to two months of error in the treatment date
---- and we state the disagreement rather than selecting between them. Adoption does
+Nine checks, and the first two qualify the headline.
+
+The first is the estimator. A pooled two-way fixed effects regression --- a single
+post indicator with repository and month fixed effects, which is what a reader
+checks first --- returns $-0.010$ for coverage and $-0.015$ for reviewers, both
+indistinguishable from zero. We report this because it is easy to compute and
+because the resolution is informative rather than defensive. Under staggered
+adoption with effects that grow over event time, the pooled estimator uses
+already-treated repositories as controls for later-treated ones; by then those
+units have high outcomes, so they are poor controls and the negative weights
+attenuate the estimate toward zero and past it
+\citep{goodman2021difference, dechaisemartin2020two}. The two estimators that
+handle staggered timing disagree with it and agree with each other. The
+fixed-effects event study gives $+0.057$ and $+0.120$ with joint post-period tests
+of $1.7\times10^{-7}$ and $0.0004$. A group-time estimator comparing each cohort
+only with never-treated and not-yet-treated units
+\citep{callaway2021difference} gives post-period means of $+0.144$ and $+0.244$
+with monthly cohorts, and $+0.059$ and $+0.081$ when adoption is pooled to
+quarterly cohorts. The direction is common to both; the magnitude is not, and we
+do not claim one.
+
+The second is dynamics. Too few repositories adopt in any single month for the
+group-time estimator to reach event times beyond $+3$, so its monthly figure
+covers $e=0$ to $e=3$. Quarterly pooling enlarges cohorts enough to estimate
+$e=4$, at the cost of up to two months of error in the treatment date, and it
+shrinks the post-period means substantially. We therefore report the positive
+post-period direction as robust across the staggered-robust specifications, and
+the late-emerging pattern visible in the fixed-effects event study as \emph{not}
+robust. Adoption does
 not coincide with a sustained change in agent PR arrivals (pre mean $-0.159$, post
 mean $+0.012$ in logs), so this is not the project-dormancy confound that
 invalidated several designs in Section~\ref{sec:audit}. A second governance act

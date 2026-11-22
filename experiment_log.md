@@ -2029,3 +2029,36 @@ agent PRs only from 1,033 to 1,394, because machine-authored activity barely
 predates instruction-file adoption in this corpus. That is a 14% power gain
 against an MDE of 19% of the lapse base rate. No choice of outcome measure fixes
 it; the constraint is the window. `analysis/identification_robustness.py`.
+
+**The check I should have run months ago: a pooled TWFE regression returns zero.**
+Attempting an instrumental-variables estimate of review on gate outcomes --
+instruction adoption as the instrument, licensed by the unusually well-supported
+exclusion restriction that adoption moves review but provably not agent output on
+four measures -- the first stage came back at F=1.1. Chasing that found the
+first stage is weak on the FULL sample too (F=0.1), because a pooled post
+indicator returns -0.015 for reviewers and -0.010 for coverage where the event
+study returns +0.120 and +0.057.
+
+Two things had to be ruled out before accepting the explanation. Weighting: the
+headline is an unweighted mean of event-time coefficients, so if the effect lived
+in sparse late cells it would be an artefact. It does not -- observation-weighted
+post mean is +0.0856 against the unweighted +0.0899, and post cells hold 422-927
+observations across 57-126 repositories. And the estimator comparison itself,
+which had never been committed: the Callaway-Sant'Anna figures the paper has been
+quoting (+0.145/+0.226 monthly, +0.029/+0.041 quarterly) existed only in a
+scratchpad run.
+
+Implemented properly in `analysis/staggered_estimators.py`, which runs all three
+side by side: pooled TWFE -0.010/-0.015; event study +0.057/+0.120; CS monthly
++0.144/+0.244 (e=0..3, too few repositories adopt per month to reach further); CS
+quarterly +0.059/+0.081 (e=0..4). The two estimators that handle staggered timing
+agree on direction and disagree on magnitude; the one known to be biased under
+staggered adoption with growing effects returns zero. That is the textbook
+negative-weighting signature, and the paper now states it in the robustness
+section with both citations rather than leaving a referee to discover it. The
+quarterly figures also replace the scratchpad numbers, which this implementation
+does not reproduce exactly.
+
+**The IV is not viable and is not claimed.** Weak first stage on every
+specification tried. Reported here so the attempt is on record: the exclusion
+restriction is defensible in this design, but relevance is not.

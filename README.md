@@ -46,9 +46,25 @@ agent stream is essential; see [Dilution](#the-dilution-trap).
 Joint post-period tests: **p=1.7e-07** and **p=0.0004** on the agent review
 outcomes; p ≥ 0.20 on all three placebo outcomes.
 
-**Nine robustness checks:**
+**Ten robustness checks:**
 
-1. **Staggered-robust estimator — agrees on sign, not on dynamics.** With 21
+1. **A pooled TWFE regression gives zero — and that is the expected artefact.**
+   A single post dummy with repo and month FE returns **−0.010 / −0.015**, null.
+   It's what a reader checks first, so the paper reports it. Under staggered
+   adoption with growing effects, the pooled estimator uses already-treated repos
+   as controls for later-treated ones, and negative weights drag it to zero
+   (Goodman-Bacon; de Chaisemartin–D'Haultfœuille). The two estimators that handle
+   staggered timing disagree with it and agree with each other:
+
+   | estimator | coverage | reviewers |
+   |---|---|---|
+   | pooled TWFE (biased here) | −0.010 | −0.015 |
+   | event study | **+0.057** | **+0.120** |
+   | Callaway–Sant'Anna, monthly cohorts | **+0.144** | **+0.244** |
+   | Callaway–Sant'Anna, quarterly cohorts | **+0.059** | **+0.081** |
+
+   Reproduce: `venv/bin/python analysis/staggered_estimators.py`
+2. **Dynamics are not robust.** With 21
    monthly cohorts, Callaway–Sant'Anna gives +0.145 coverage and +0.226 reviewers,
    but too few repositories adopt per month for event times past +3 to be
    estimable. Pooling to 8 quarterly cohorts makes e4 estimable and shrinks the
@@ -56,37 +72,37 @@ outcomes; p ≥ 0.20 on all three placebo outcomes.
    −0.185). **The post-period direction is robust; the late-window magnitude is
    not.** The headline is therefore the post-period mean (+0.045 / +0.090), not the
    months 4–6 figure.
-2. **Treatment-side placebo — the sign reverses.** Adopting a *non*-AI
+3. **Treatment-side placebo — the sign reverses.** Adopting a *non*-AI
    configuration file (`CONTRIBUTING.md`, a PR template, `dependabot.yml`) moves
    the same outcomes the *other* way: −0.117 coverage and −0.272 reviewers, against
    +0.047 and +0.077 for the AI files. So the effect is specific to agent
    governance, not to the act of committing configuration or to a growth phase.
-3. **Volume validity.** Adoption does not coincide with a sustained change in agent
+4. **Volume validity.** Adoption does not coincide with a sustained change in agent
    PR arrivals (pre −0.159, post +0.012 in logs). This is the check that killed
    several other designs.
-4. **Channel isolated.** The same treatment leaves the agent's output and the
+5. **Channel isolated.** The same treatment leaves the agent's output and the
    sponsor's private screening unchanged: draft abandonment +0.038, log patch size
    −0.036, log changed files −0.019, hours-to-ready +0.003, all pre-trends passing.
    So the effect runs through reviewers, not through the agent producing different
    work.
-5. **Second treatment, same direction.** `CODEOWNERS` adoption raises review
+6. **Second treatment, same direction.** `CODEOWNERS` adoption raises review
    coverage +33.4pp and reviewers +0.842, through an identifiable platform
    mechanism (automatic reviewer requests, +10.1pp). 40 repositories, marginal
    pre-trends — corroboration, not an independent finding.
-6. **Selection into adopting at all — removed, and the effect grows.** Drop
+7. **Selection into adopting at all — removed, and the effect grows.** Drop
    never-adopters entirely, so every unit adopts eventually and only timing
    differs: **+0.160 coverage / +0.389 reviewers**, pre-trends 0.411/0.456, joint
    p=1.6e-06 / 8.3e-05. What remains is selection into adopting *early*, which no
    observational design removes.
-7. **Repository-specific linear trends — the direction survives, the magnitude
+8. **Repository-specific linear trends — the direction survives, the magnitude
    doesn't.** Removing a per-repo linear trend absorbs the "rising trajectory"
    alternative. Coverage falls to +0.015 but stays jointly significant (p=0.0004);
    reviewers to +0.059 (p=0.082). The late-window figures are not claimed.
-8. **It is not a volunteer-community effect.** In **204 organization-owned**
+9. **It is not a volunteer-community effect.** In **204 organization-owned**
    (firm-like) adopting repos: **+0.044 coverage (p=0.003), +0.095 reviewers
    (p=0.024)**, pre-trends passing, +0.097/+0.175 equal-weighted. User-owned repos
    run the same direction, weaker (71 repos).
-9. **Composition — the check that kills most candidates here.** One organization
+10. **Composition — the check that kills most candidates here.** One organization
    supplies 44.4% of the treated agent PRs, the top three 65.6%. The estimate
    barely moves: dropping the largest owner gives +0.054 / +0.107, dropping the top
    five +0.036 / +0.096, and **equal-repository weighting +0.074 / +0.118** —
@@ -374,6 +390,7 @@ venv/bin/python analysis/instruction_adoption.py  # THE causal result + placebo 
 venv/bin/python analysis/gate_quality.py          # the enforcement null + the 74.8%
 venv/bin/python analysis/monitoring_enforcement.py # the bounded null across 386 repos
 venv/bin/python analysis/identification_robustness.py # selection, trends, firm-like arm
+venv/bin/python analysis/staggered_estimators.py  # pooled TWFE vs event study vs CS
 venv/bin/python analysis/corrective_share.py      # quality ratio -- NOT reportable, see script
 venv/bin/python analysis/enforcement_adoption.py  # enforcement dated on humans, tested on agents
 venv/bin/python analysis/corrective_work.py       # quality bound
