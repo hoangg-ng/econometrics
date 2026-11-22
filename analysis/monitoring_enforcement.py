@@ -80,6 +80,9 @@ def fit(frame, regressors):
                   sm.add_constant(frame[regressors])).fit(cov_type='HC1')
 
 
+EXPANSION = ROOT / 'output/process_data/expansion_prs.csv'
+
+
 def load():
     quality = {}
     for row in csv.DictReader(open(QUALITY, newline='')):
@@ -87,6 +90,22 @@ def load():
     failing = collections.defaultdict(list)
     n_prs = collections.Counter()
     n_agent = collections.Counter()
+    # Repositories collected by collect_expansion_prs.py carry their check state
+    # inline. They widen this cross-section substantially, which is the point:
+    # the bound reported here is the paper's general claim and it is governed by
+    # how many repositories can be classified.
+    if EXPANSION.exists():
+        for row in csv.DictReader(open(EXPANSION, newline='')):
+            author = (row['author_login'] or '').lower()
+            if not author:
+                continue
+            n_prs[row['repo']] += 1
+            if author in AGENTS:
+                n_agent[row['repo']] += 1
+            if not (row.get('rollup_state') or '').strip():
+                continue
+            if _gq.failing(row):
+                failing[row['repo']].append(float(row['state'] == 'MERGED'))
     for row in csv.DictReader(open(COHORT, newline='')):
         author = (row['author_login'] or '').lower()
         if not author:
@@ -130,6 +149,7 @@ def main():
     selftest()
     data = load()
     print(f'repositories with >={MIN_FAILING} failing-gate PRs: {len(data)}')
+    print(f'  (cohort plus candidate-pool expansion where collected)')
     print(f'  mean override rate {data.override.mean():.3f}  '
           f'median {data.override.median():.3f}')
     results = {'repositories': int(len(data)),
