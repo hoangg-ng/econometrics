@@ -80,11 +80,20 @@ outcomes; p ≥ 0.20 on all three placebo outcomes.
 4. **Volume validity.** Adoption does not coincide with a sustained change in agent
    PR arrivals (pre −0.159, post +0.012 in logs). This is the check that killed
    several other designs.
-5. **Channel isolated.** The same treatment leaves the agent's output and the
-   sponsor's private screening unchanged: draft abandonment +0.038, log patch size
-   −0.036, log changed files −0.019, hours-to-ready +0.003, all pre-trends passing.
-   So the effect runs through reviewers, not through the agent producing different
-   work.
+5. **Channel isolated — and the review is consequential.** The treatment leaves
+   the agent's *delivered output* unchanged: draft abandonment +0.038, log patch
+   size −0.036, log changed files −0.019, hours-to-ready +0.003, all pre-trends
+   passing. But **holding size fixed, commits on an agent PR rise +0.049
+   (p=3.1e-06), +0.098 equal-weighted (p=0.043)** on a 4.93-commit baseline, while
+   patch size and file count stay flat (p=0.861, p=0.821). Human placebo does not
+   survive equal weighting (+0.057, p=0.221).
+
+   Same code, same files, **more revision rounds.** The extra review is not
+   observational — reviewers obtain *revisions, not rejections*. Which is why the
+   gate does not improve: a control system whose sanction is revision rather than
+   refusal leaves the acceptance rate where it was.
+
+   Reproduce: `venv/bin/python analysis/revision_cycles.py`
 6. **Second treatment, same direction.** `CODEOWNERS` adoption raises review
    coverage +33.4pp and reviewers +0.842, through an identifiable platform
    mechanism (automatic reviewer requests, +10.1pp). 40 repositories, marginal

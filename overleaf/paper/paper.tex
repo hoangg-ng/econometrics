@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. It survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's own output is unchanged, so the channel is inspection, not production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes, and the response is substantive, scaling with machine-authored volume rather than visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate --- on the better-powered human-authored stream the estimate is $+0.001$ with an interval ruling out reductions beyond a quarter of the base rate. Nor is this specific to one instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, bounding any protective association at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
+Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. We show that organizations respond substantively to the first and that the second does not follow. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises --- 4.5 percentage points in coverage and 0.090 distinct reviewers --- with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. It survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's delivered output is unchanged in size and breadth, so the channel is inspection, not production: writing a convention down does not make the machine comply, it makes deviation detectable, which raises the return to looking. The additional inspection is consequential rather than ceremonial --- holding patch size fixed, machine-authored pull requests accumulate more commits before disposition --- but what reviewers obtain is revision, not refusal. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes, and the response is substantive, scaling with machine-authored volume rather than visibility. Yet 74.8\% of agent PRs with failing checks are merged anyway, and governance does not detectably reduce that rate --- on the better-powered human-authored stream the estimate is $+0.001$ with an interval ruling out reductions beyond a quarter of the base rate. Nor is this specific to one instrument: across 386 repositories, how much monitoring machinery a project maintains does not predict whether a failing check blocks a merge, bounding any protective association at four percent of the mean override rate. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
 }
 
 
@@ -91,11 +91,24 @@ moves the same outcome in the opposite direction, so the effect is specific to
 agent governance rather than to the act of committing configuration.
 
 The channel is review and not production, and that distinction identifies the
-mechanism. Re-estimating on the agent's own output, nothing moves: the probability
-a draft is abandoned before review changes by $+0.038$, log patch size by
-$-0.036$, log changed files by $-0.019$, time to readiness by $+0.003$. Governance
-does not make the agent produce different work, nor change how often its sponsor
-discards a draft privately.
+mechanism. Re-estimating on the agent's delivered output, nothing moves: the
+probability a draft is abandoned before review changes by $+0.038$, log patch size
+by $-0.036$, log changed files by $-0.019$, time to readiness by $+0.003$.
+Governance does not make the agent produce different work, nor change how often its
+sponsor discards a draft privately.
+
+What does move is how much the work is revised before it is disposed of. Holding
+patch size and changed files fixed, commits on a machine-authored pull request rise
+$+0.049$ in logs ($p=3.1\times10^{-6}$), and $+0.098$ under equal-repository
+weighting ($p=0.043$), on a baseline of 4.93 commits. The same specification leaves
+patch size and file count flat ($p=0.861$ and $p=0.821$ equal-weighted), so this is
+additional revision on identical deliverables rather than more work delivered, and
+the human-authored placebo does not survive equal-repository weighting ($+0.057$,
+$p=0.221$). The additional review is therefore consequential for the work rather
+than purely observational. That matters for how the gate result should be read:
+reviewers who look harder obtain \emph{revisions}, not rejections, and a control
+system whose sanction is revision rather than refusal leaves the acceptance rate --
+and the rate of accepting work whose checks are failing -- where it was.
 
 This matters for theory. Agency theory treats ex ante rules and ex post inspection
 as substitutes, because a rule that constrains the agent leaves inspection less to

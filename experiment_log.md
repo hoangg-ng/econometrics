@@ -2122,3 +2122,36 @@ the typical adopting repository changes its enforcement behaviour by nothing
 measurable, and the pooled interval is widened by a small number of small
 projects. Collection stopped at this point: the bound had plateaued across
 420 to 471 repositories and the remaining 1,290 would not move it.
+
+**A positive consequence, found by scanning the outcome family rather than the
+outcomes I had chosen.** Pressed on whether the paper shows governance doing
+anything beyond raising effort, I ran a pre-specified family over every outcome
+the cohort supports: merge rate, time to disposition, review events, commits,
+gate-failing rate, lapse rate.
+
+Two moved. Time to disposition rose +0.238 PR-weighted (joint p=0.004) and
+**reversed to -0.168 under equal-repository weighting** -- composition again, not
+reportable. Commits on the pull request rose and survived everything: +0.049 with
+size controls (p=3.1e-06), +0.077 without, +0.098 equal-repository (p=0.043),
++0.051 excluding the largest owner, +0.048 excluding the top three, every
+pre-trend passing. The human-authored placebo does not survive equal-repository
+weighting (+0.057, p=0.221).
+
+The interpretation turns on what else moved, which is nothing: log patch size
++0.000 (p=0.286; +0.142, p=0.861 equal-weighted) and log changed files +0.000
+(p=0.982; -0.027, p=0.821). Same code, same files, more commits -- additional
+revision on identical deliverables, on a baseline of 4.93 commits per PR.
+
+This changes the paper's story in a way that strengthens it. The claim had been
+that review rises and nothing follows, which reads as pure waste and invites the
+objection that the paper demonstrates only a null. What the data show is that the
+extra review is consequential for the work -- reviewers who look harder obtain
+**revisions, not rejections** -- and that this is precisely why the gate does not
+improve. A control system whose sanction is revision rather than refusal leaves
+both the acceptance rate and the rate of accepting work with failing checks where
+they were. The monitoring/enforcement thesis is not weakened by this; it is
+mechanised by it.
+
+It also corrects an overstatement. The paper said "the agent's own output is
+unchanged". Delivered output is unchanged; revision activity is not.
+analysis/revision_cycles.py.
