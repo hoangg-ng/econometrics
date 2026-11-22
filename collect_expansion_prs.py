@@ -40,7 +40,15 @@ FIELDS = ['repo', 'pr_number', 'created_at', 'state', 'author_login',
           'rollup_state', 'n_failed', 'additions', 'deletions', 'changed_files']
 FAILING = {'FAILURE', 'ERROR', 'TIMED_OUT', 'ACTION_REQUIRED', 'CANCELLED'}
 
-QUERY = '''query($q:String!,$after:String){
+REPOS_PER_SEARCH = 15       # repo: qualifiers per search; GitHub allows many
+PAGES_PER_SEARCH = 6
+
+# GitHub search is rate limited by query complexity, so the throughput lever is
+# covering more repositories per call rather than more results. Search accepts
+# several `repo:` qualifiers at once, and repositories that adopt in the same
+# month share an event window -- so grouping adopters by adoption month lets one
+# query serve fifteen repositories instead of one.
+SEARCH_QUERY = '''query($q:String!,$after:String){
   search(query:$q, type:ISSUE, first:%d, after:$after){
     pageInfo{hasNextPage endCursor}
     nodes{ ... on PullRequest {
@@ -52,6 +60,14 @@ QUERY = '''query($q:String!,$after:String){
           ... on CheckRun {conclusion status}
           ... on StatusContext {state}}}}}}}
     }}}}''' % PAGE
+
+
+def group_query(repos, adopted_month):
+    """One search over several repositories sharing an adoption month."""
+    lo = shift_month(adopted_month, WINDOW_MONTHS[0])
+    hi = shift_month(adopted_month, WINDOW_MONTHS[1])
+    qualifiers = ' '.join(f'repo:{r}' for r in repos)
+    return f'{qualifiers} is:pr created:{lo}-01..{month_end(hi)}'
 
 
 def shift_month(month, delta):
@@ -74,6 +90,16 @@ def search_query(repo, adopted):
     return (f'repo:{repo} is:pr created:{lo}-01..{month_end(hi)}')
 
 
+def in_window(created_at, adopted):
+    """Was the PR created inside the event window around this repository's adoption?"""
+    if not created_at or not adopted:
+        return False
+    month = created_at[:7]
+    lo = shift_month(adopted, WINDOW_MONTHS[0])
+    hi = shift_month(adopted, WINDOW_MONTHS[1])
+    return lo <= month <= hi
+
+
 def parse(node):
     if not node or node.get('number') is None:
         return None
@@ -88,7 +114,7 @@ def parse(node):
                 failed += 1
         elif (item.get('state') or '').upper() in FAILING:
             failed += 1
-    return {'repo': (node.get('repository') or {}).get('nameWithOwner') or '',
+    return {'repo': (node.get('repository') or {}).get('nameWithOwner') or '',  # filled by caller on the REST path
             'pr_number': node['number'],
             'created_at': node.get('createdAt') or '',
             'state': node.get('state') or '',
@@ -121,6 +147,10 @@ def selftest():
     # a PR with no author (deleted account) must still parse
     assert parse({'number': 5, 'author': None, 'repository': {'nameWithOwner': 'o/r'},
                   'commits': {'nodes': []}})['author_login'] == ''
+    gq = group_query(['a/b', 'c/d'], '2025-07')
+    assert 'repo:a/b repo:c/d is:pr created:2025-01-01..2026-01-31' == gq, gq
+    assert in_window('2025-03-15T00:00:00Z', '2025-07') is True
+    assert in_window('2024-01-01T00:00:00Z', '2025-07') is False
 
 
 def read(path):
@@ -166,47 +196,53 @@ def main():
     client = GitHubClient()
     written = failures = with_rollup = 0
     repos_done = 0
+    by_month = collections.defaultdict(list)
     for repo in todo:
-        q = search_query(repo, adopted[repo])
-        after = None
-        got = 0
-        while got < cap:
-            data = None
-            for attempt in range(3):
-                try:
-                    data = client.graphql(QUERY, {'q': q, 'after': after})
+        by_month[adopted[repo]].append(repo)
+    print(f'  grouped into {len(by_month)} adoption months')
+
+    for month in sorted(by_month):
+        group = by_month[month]
+        for start in range(0, len(group), REPOS_PER_SEARCH):
+            chunk = group[start:start + REPOS_PER_SEARCH]
+            q = group_query(chunk, month)
+            after = None
+            per_repo = collections.Counter()
+            for _ in range(PAGES_PER_SEARCH):
+                data = None
+                for attempt in range(3):
+                    try:
+                        data = client.graphql(SEARCH_QUERY, {'q': q, 'after': after})
+                        break
+                    except Exception as error:
+                        if attempt == 2:
+                            failures += 1
+                            print(f'  FAIL {chunk[0]}+{len(chunk)-1}: '
+                                  f'{type(error).__name__}')
+                        else:
+                            time.sleep(3 * (attempt + 1))
+                if data is None:
                     break
-                except Exception as error:
-                    # GitHub returns HTML on a 502/504, which surfaces here as a
-                    # JSON decode error rather than an HTTP error; retry before
-                    # giving up on the repository.
-                    if attempt == 2:
-                        failures += 1
-                        print(f'  FAIL {repo}: {type(error).__name__}')
-                    else:
-                        time.sleep(3 * (attempt + 1))
-            if data is None:
-                break
-            search = (data or {}).get('search') or {}
-            for node in search.get('nodes') or []:
-                if got >= cap:
+                search = (data or {}).get('search') or {}
+                for node in search.get('nodes') or []:
+                    row = parse(node)
+                    if row is None or not row['repo']:
+                        continue
+                    if per_repo[row['repo']] >= cap:
+                        continue
+                    writer.writerow(row)
+                    written += 1
+                    per_repo[row['repo']] += 1
+                    with_rollup += int(bool(row['rollup_state']))
+                page = search.get('pageInfo') or {}
+                if not page.get('hasNextPage'):
                     break
-                row = parse(node)
-                if row is None or not row['repo']:
-                    continue
-                writer.writerow(row)
-                written += 1
-                got += 1
-                with_rollup += int(bool(row['rollup_state']))
-            page = search.get('pageInfo') or {}
-            if not page.get('hasNextPage') or got >= cap:
-                break
-            after = page.get('endCursor')
-        handle.flush()
-        repos_done += 1
-        if repos_done % 25 == 0:
-            print(f'  {repos_done}/{len(todo)} repositories, {written} PRs, '
-                  f'{with_rollup} with a rollup, {failures} failed')
+                after = page.get('endCursor')
+            handle.flush()
+            repos_done += len(chunk)
+            if repos_done % 90 < REPOS_PER_SEARCH:
+                print(f'  {repos_done}/{len(todo)} repositories, {written} PRs, '
+                      f'{with_rollup} with a rollup, {failures} failed')
     handle.close()
     PROGRESS.write_text(json.dumps({'repositories': repos_done, 'prs': written,
                                     'with_rollup': with_rollup,
