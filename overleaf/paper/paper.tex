@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises, by 4.5 percentage points in coverage and 0.090 distinct reviewers, with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. The estimate survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's delivered output is unchanged in size and breadth, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes. The inspection is consequential --- holding patch size fixed, machine-authored pull requests accumulate more commits before disposition --- but what reviewers obtain is revision, not refusal. Accordingly 74.8\% of agent PRs with failing checks are merged anyway, governance does not detectably reduce that rate, and across 386 repositories the amount of monitoring machinery a project maintains does not predict whether a failing check blocks a merge. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
+Every instrument offered for governing an AI contributor acts on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting the conventions it should follow. Whether delegated work is controlled depends instead on \emph{enforcement} --- whether an adverse signal blocks acceptance. Studying 468,402 pull requests from 848 open-source repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises, by 4.5 percentage points in coverage and 0.090 distinct reviewers, with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. The estimate survives not-yet-adopting controls, repository-specific trends, and restriction to organization-owned projects. The agent's delivered output is unchanged in size and breadth, so the channel is inspection rather than production: writing a convention down does not make the machine comply, it makes deviation detectable. Ex ante rules and ex post inspection are therefore complements, not the substitutes agency theory assumes. The inspection is consequential --- holding patch size fixed, machine-authored pull requests accumulate more commits before disposition --- but what reviewers obtain is revision, not refusal. Accordingly 71.5\% of agent PRs with failing checks are merged anyway, governance does not detectably reduce that rate, and across 386 repositories the amount of monitoring machinery a project maintains does not predict whether a failing check blocks a merge. Monitoring was never the binding margin, and as delegation scales it is monitoring that scales with it.
 }
 
 
@@ -129,7 +129,7 @@ volume, reviewers per agent PR rise $+0.170$ where volume is high against $-0.12
 where it is low, a difference of $+0.293$ with pre-trends passing in both strata;
 splitting at the median of repository stars gives the wrong sign on review
 coverage and fails its pre-trend in the low-star stratum.
-The response is substantive and correctly targeted. Yet 74.8\% of agent PRs whose
+The response is substantive and correctly targeted. Yet 71.5\% of agent PRs whose
 continuous-integration checks are failing are merged anyway. A control system that
 withholds the sanction three times in four does not measurably improve when
 monitoring rises by a tenth. On the better-powered human-authored stream, where
@@ -674,9 +674,33 @@ repositories have one.
 
 The descriptive baseline is itself notable. The gate reports failure on 29.9\% of
 agent PRs, 73.4\% of agent PRs merge, and 22.3\% merge while the gate reports
-failure. Among the 5,121 agent PRs with a failing gate, \textbf{74.8\% merge
+failure. Among the 5,121 agent PRs with a failing gate, \textbf{71.5\% merge
 anyway}. Failing checks are not, in this population, a binding constraint on
 machine-authored work.
+
+That figure is the substantive one. GitHub's rollup reports failure if any check
+on the head commit concluded badly, and it does not distinguish a broken test suite
+from a coverage bot, so we collected the names of every failing check on all 15,647
+failing pull requests. Only 56.4\% carry a hard, non-advisory failure: the rest are
+coverage thresholds, linters, pull-request-title validators, deploy previews, or
+runs merely cancelled by a later push. Restricting to genuine test and build
+failures barely moves the override rate --- 71.5\% for machine-authored work
+against 74.8\% unrestricted, and 67.5\% for human-authored work. Within
+repository-months carrying both, machine-authored work faces a marginally
+\emph{tighter} gate ($-0.084$, interval $[-0.168, +0.001]$), so this is not
+leniency toward machines. It is how these organizations treat failing tests.
+
+Whether that is costly is a separate question, and we cannot show that it is.
+Among merged pull requests with 90-day follow-up, those merged over a substantive
+failing check attract corrective work at 18.4\% against 9.0\% for those merged
+green --- but within repository-months containing both, the difference is
+$-0.002$ with an interval of $[-0.048, +0.043]$. The pooled gap is composition:
+projects that merge over failing checks have higher corrective rates generally. A
+second channel, whether overriding degrades the gate for subsequent work, does not
+survive either: the within-repository association between this month's override
+rate and next month's failure rate is $+0.36$ on 33 repository-month pairs and
+falls to $+0.01$ once the sample threshold is relaxed to 471 pairs across 191
+repositories.
 
 Governance adoption does not visibly change that. The rate of merging with a
 failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$
@@ -723,7 +747,7 @@ machine-authored work get more review from writing instructions; projects with
 larger audiences do not.
 
 That leaves a sharper explanation for the null. The constraint on this gate is not
-the quantity of inspection. Recall that 74.8\% of agent PRs whose checks are
+the quantity of inspection. Recall that 71.5\% of agent PRs whose checks are
 failing are merged anyway. A control system in which the sanction is withheld
 three times out of four does not improve when monitoring intensity rises 9 to 14
 percent, because monitoring was never the binding margin. Governance adoption

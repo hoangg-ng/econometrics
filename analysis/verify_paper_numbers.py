@@ -67,8 +67,17 @@ def main():
     if gq:
         check(report, 'agent PRs with checks (17,151)',
               17151, gq['agent_prs_with_checks'], tol=0.5)
-        check(report, 'merged given failure (74.8%)',
+        check(report, 'merged given failure, unrestricted (74.8%)',
               0.748, gq['merged_given_failure_rate'], tol=1e-3)
+
+    sub = load('gate_substantive')
+    if sub:
+        check(report, 'override on substantive failures, agent (71.5%)',
+              0.715, sub['override']['substantive_only']['agent'], tol=1e-3)
+        check(report, 'override on substantive failures, human (67.5%)',
+              0.675, sub['override']['substantive_only']['human'], tol=1e-3)
+        check(report, 'share of FAILURE rollups that are substantive (56.4%)',
+              0.564, sub['share_substantive'], tol=1e-3)
         check(report, 'lapse post-minus-pre (-0.014)',
               -0.014, gq['blocks']['merged_with_failure']['all']['post_minus_pre'], tol=1e-3)
 
@@ -121,7 +130,7 @@ def main():
         ('848 open-source repositories', '848 open-source repositories'),
         ('468,402 pull requests', '468,402'),
         ('335 adopting projects', '335'),
-        ('74.8% override quoted in text', '74.8'),
+        ('71.5% override quoted in text', '71.5'),
     ]
     for label, needle in textual:
         report.append(('OK' if present(text, needle) else 'MISSING', label, needle, None))
