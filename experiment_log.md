@@ -1917,3 +1917,65 @@ Paper, README and abstract reverted to the descriptive account of the enforcemen
 margin. What survives is unchanged: 74.8% of failing agent PRs merge anyway, and
 governance moves monitoring (+0.045 coverage, +0.090 reviewers) and not outcomes
 (-0.014, joint p=0.199).
+
+---
+
+## 2026-11-22 (later) — Making it an MS submission rather than an SE paper
+
+**The diagnosis.** The paper's problem for Management Science was never rigor. It
+was contribution shape: the outcome is effort rather than performance, the effect
+is small, and the main text read as empirical software engineering with management
+vocabulary attached. Three things were done about it, and one attempted and killed.
+
+**Attempted and killed: corrective work as a ratio.** Corrective work in levels
+fails its pre-trend because post-merge cross-references of every kind rise after
+adoption. A ratio -- corrective references over all references -- should net that
+out, and `corrective_pr_share` appeared to deliver: -0.561 with a pre-trend passing
+at p=0.445, composition-stable, and -0.697 under equal-repository weighting.
+
+It is an artefact of the omitted reference month. Pre-period cells hold 23, 28, 38
+and 65 observations at k=-4..-1, and the raw means run 0.130, 0.214, 0.329, 0.626.
+The event study measures every coefficient against k=-1, whose mean is nearly
+double the month before it, so every post coefficient inherits roughly -0.5 from
+the reference period alone. The "passing" pre-trend is a power failure on cells
+that small, not a flat trend. This is the same specification error -- reading
+coefficients against an unstable baseline -- that cost three attempts earlier in
+this project. `analysis/corrective_share.py` now ships
+`reference_period_is_safe()`, which flags a reference month that is thin
+(<100 treated observations) or an outlier (>1.5x the largest other pre-period
+mean), and the script's own reading prints NOT REPORTABLE rather than the estimate.
+
+**Added: the bounded null, which is the general form of the thesis.** The causal
+result concerns one instrument in the repositories that adopt it. The cross-section
+asks whether monitoring machinery predicts enforcement at all. Across 386
+repositories with at least six failing-gate PRs, regressing the override rate on
+the count of monitoring artefacts gives **+0.022 per artefact** (se 0.013, p=0.094)
+with controls for PR volume, machine-authored volume, audience and failing-gate
+count -- more overrides, not fewer -- and the gradient agrees (0.546 at zero
+artefacts, 0.626 at five). The interval [-0.004, +0.048] bounds any protective
+association at 0.023 across all six artefacts against a mean override of 0.558,
+four percent of it. A bound is worth far more than the point null it replaces:
+a protective effect is ruled out rather than merely unfound.
+`analysis/monitoring_enforcement.py`.
+
+**Added: what the effect implies as delegation scales.** The magnitude section
+argued the effect was small and left it there, which reads as an apology. Machine
+work is 3.4% of PRs in the mean adopting repository-month; holding the per-PR
+effect fixed and varying only that share gives 1.7 added reviewer-PR incidences per
+repository-year today (0.34% of human review load), 6.3 at a 10% machine share,
+15.8 at 25%, 31.5 at 50% (12.1%). The smallness is a fact about how little
+organizations currently delegate, not about the estimate. Combined with the
+enforcement results, the managerial claim is that oversight *effort* scales linearly
+with delegation while oversight *efficacy* does not move at all.
+
+**Restructured for the venue.** "What Five Measurement Choices Are Worth" and the
+twenty-three-design identification audit moved to an Electronic Companion
+(`\ECSwitch`), leaving a single main-text section that states what they establish.
+Added a "Why this setting" subsection defending open source as the only setting
+where the instruments, their adoption dates and every acceptance decision are all
+observable -- and stating the limit that cuts against us: firms attenuate the
+no-private-cost condition through employment and liability, so a firm plausibly
+enforces more than the one-in-four we observe. Rewrote the contributions paragraph
+to lead with the theoretical claim rather than the measurement result.
+
+Paper now 24 pages including the EC, zero undefined citations or references.

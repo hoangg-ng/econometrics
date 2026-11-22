@@ -203,6 +203,39 @@ GitHub exposes branch protection only as current state. The asymmetry the paper
 describes — every governance instrument acting on monitoring, none on enforcement —
 is also an asymmetry in what public traces can date.
 
+**The general version, as a bound.** Across **386 repositories** with ≥6
+failing-gate PRs, regress the override rate on how many monitoring artefacts the
+project maintains (instruction files, `CLAUDE.md`, `CODEOWNERS`, agent setup
+steps). If documenting more went with gating more, the coefficient would be
+negative. It is **+0.022 per artefact** (se 0.013, p=0.094) with controls for PR
+volume, agent volume, stars and failing-gate count — and the gradient runs the same
+way: 0.546 override at zero artefacts, 0.626 at five.
+
+The interval is the point. At **[−0.004, +0.048]**, adopting all six artefacts
+could reduce the override rate by at most **0.023 against a mean of 0.558 — four
+percent of it.** A protective association is not merely unfound, it is bounded away
+from anything consequential. Cross-sectional and descriptive, but it is the general
+form of the causal result.
+
+Reproduce: `venv/bin/python analysis/monitoring_enforcement.py`
+
+### What the effect implies as delegation scales
+
+Machine-authored work is 3.4% of PRs in the mean adopting repository-month. Holding
+the per-PR effect fixed and varying only that share:
+
+| agent share of PRs | added reviewer-PR incidences / repo-year | as % of human review load |
+|---|---|---|
+| 2.7% (today) | 1.7 | 0.34% |
+| 10% | 6.3 | 1.35% |
+| 25% | 15.8 | 4.05% |
+| 50% | 31.5 | 12.1% |
+
+The oversight burden scales linearly with delegation. What scales is **monitoring**
+— enforcement moves with neither governance adoption nor monitoring intensity. So
+the gap between oversight *effort* and oversight *efficacy* widens in proportion to
+how much an organization delegates.
+
 ---
 
 ## The story of this project
@@ -298,6 +331,8 @@ Analysis for the current claims:
 ```sh
 venv/bin/python analysis/instruction_adoption.py  # THE causal result + placebo + validity
 venv/bin/python analysis/gate_quality.py          # the enforcement null + the 74.8%
+venv/bin/python analysis/monitoring_enforcement.py # the bounded null across 386 repos
+venv/bin/python analysis/corrective_share.py      # quality ratio -- NOT reportable, see script
 venv/bin/python analysis/enforcement_adoption.py  # enforcement dated on humans, tested on agents
 venv/bin/python analysis/corrective_work.py       # quality bound
 venv/bin/python analysis/causal_audit.py          # dilution, person-level design, placebo
