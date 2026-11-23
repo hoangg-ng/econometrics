@@ -117,6 +117,18 @@ def main():
         check(report, 'human-stream CI upper (+0.045)', 0.045,
               human['ci'][1], tol=1e-3)
 
+    cm = load('check_mechanism')
+    if cm:
+        check(report, 'per-check failure probability (1.48%)',
+              0.0148, cm['per_check_failure_probability'], tol=1e-4)
+        check(report, 'median checks per PR (32)', 32, cm['median_checks_per_pr'], tol=0.5)
+        check(report, 'observed any-failure rate (20.1%)',
+              0.201, cm['observed_any_failure'], tol=1e-3)
+        check(report, 'policy check failure rate (2.55%)',
+              0.0255, cm['categories']['policy']['failure_rate'], tol=1e-4)
+        check(report, 'test check failure rate (1.48%)',
+              0.0148, cm['categories']['test']['failure_rate'], tol=1e-4)
+
     me = load('monitoring_enforcement')
     if me:
         full = me['models']['full_controls']

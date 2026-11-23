@@ -27,9 +27,11 @@ ROOT = Path(__file__).resolve().parents[1]
 QUALITY = ROOT / 'output/process_data/merge_quality.csv'
 EXPANSION = ROOT / 'output/process_data/expansion_prs.csv'
 OUT = ROOT / 'output/process_data/check_names.csv'
+OUT_ALL = ROOT / 'output/process_data/check_names_all.csv'
 PROGRESS = ROOT / 'output/process_data/check_names_progress.json'
 
-FIELDS = ['repo', 'pr_number', 'failing_names', 'failing_conclusions']
+FIELDS = ['repo', 'pr_number', 'failing_names', 'failing_conclusions',
+          'all_names', 'all_conclusions']
 PER_CALL = 25
 CONTEXTS = 40
 
@@ -63,8 +65,14 @@ def parse(node):
         if state in FAILING or state == 'CANCELLED':
             names.append(label.replace('|', '/').replace(';', ','))
             concl.append(state)
+    every, every_state = [], []
+    for item in ((rollup.get('contexts') or {}).get('nodes') or []):
+        every.append((item.get('name') or item.get('context') or '')
+                     .replace('|', '/').replace(';', ','))
+        every_state.append(((item.get('conclusion') or item.get('state')) or '').upper())
     return {'pr_number': node['number'], 'failing_names': ';'.join(names),
-            'failing_conclusions': ';'.join(concl)}
+            'failing_conclusions': ';'.join(concl),
+            'all_names': ';'.join(every), 'all_conclusions': ';'.join(every_state)}
 
 
 def selftest():
@@ -77,6 +85,8 @@ def selftest():
             {'__typename': 'StatusContext', 'context': 'codecov/patch', 'state': 'FAILURE'},
             {'__typename': 'CheckRun', 'name': 'e2e', 'conclusion': 'CANCELLED'}]}}}}]}})
     assert row['failing_names'] == 'build;codecov/patch;e2e', row['failing_names']
+    assert row['all_names'] == 'build;lint;codecov/patch;e2e', row['all_names']
+    assert row['all_conclusions'] == 'FAILURE;SUCCESS;FAILURE;CANCELLED'
     assert row['failing_conclusions'] == 'FAILURE;FAILURE;CANCELLED'
     assert parse({'number': 5, 'commits': {'nodes': []}})['failing_names'] == ''
     # a name containing the delimiter must not corrupt the CSV round-trip
@@ -93,14 +103,33 @@ def read(path):
         return list(csv.DictReader(f))
 
 
-def targets():
+AGENTS = {'copilot-swe-agent', 'devin-ai-integration'}
+
+
+def targets(all_agent=False):
+    """Failing PRs by default; every agent PR with a rollup when all_agent.
+
+    The wider set exists to measure CONFORMANCE rather than failure. Whether an
+    instruction file changes what the agent produces cannot be answered from patch
+    size or file count, which is what we had; it needs an outcome that tracks
+    adherence to the convention. A style or lint check is exactly that, and it is
+    only interpretable with its denominator -- the agent PRs on which it passed.
+    """
     out = []
-    for row in read(QUALITY):
-        if (row.get('rollup_state') or '').upper() == 'FAILURE':
-            out.append((row['repo'], int(row['pr_number'])))
-    for row in read(EXPANSION):
-        if (row.get('rollup_state') or '').upper() == 'FAILURE':
-            out.append((row['repo'], int(row['pr_number'])))
+    for path in (QUALITY, EXPANSION):
+        for row in read(path):
+            state = (row.get('rollup_state') or '').upper()
+            if not all_agent:
+                if state == 'FAILURE':
+                    out.append((row['repo'], int(row['pr_number'])))
+            elif state in ('FAILURE', 'SUCCESS'):
+                out.append((row['repo'], int(row['pr_number'])))
+    if all_agent:
+        agent = set()
+        for row in read(ROOT / 'output/agent_sample/pr_level_agent.csv'):
+            if (row['author_login'] or '').lower() in AGENTS:
+                agent.add((row['repo'], int(row['pr_number'])))
+        out = [k for k in out if k in agent]
     return sorted(set(out))
 
 
@@ -111,8 +140,11 @@ def main():
     sys.path.insert(0, str(ROOT))
     from src.github_client import GitHubClient
 
+    global OUT
+    if '--all-agent' in argv:
+        OUT = OUT_ALL
     done = {(r['repo'], int(r['pr_number'])) for r in read(OUT)}
-    todo = [k for k in targets() if k not in done]
+    todo = [k for k in targets(all_agent='--all-agent' in argv) if k not in done]
     if limit:
         todo = todo[:limit]
     by_repo = {}

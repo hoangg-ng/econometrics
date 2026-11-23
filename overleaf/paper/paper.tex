@@ -463,6 +463,68 @@ anyway, against 74.8\% unrestricted and 67.5\% for human-authored work. Within
 repository-months carrying both, machine work faces a marginally \emph{tighter}
 gate ($-0.084$, interval $[-0.168, +0.001]$). This is not leniency toward machines. It is how these organizations treat failing tests.
 
+\subsection{What a check asserts, and why the gate fires}
+\label{sec:mechanism}
+
+A pull request passes its gate only if every check on it passes, so the gate is a
+conjunction. That structure, rather than any weakness in the individual checks, is
+what produces the override rate.
+
+We recorded the name and conclusion of every check on all 16,231 agent pull
+requests with a resolved rollup: 413,588 check runs. A single check is reliable.
+It passes 98.5\% of the time. But the median pull request faces 32 of them, and
+the probability that at least one turns red grows with the count. Under
+independence, five checks give a 7.2\% chance of a red gate, twenty give 25.8\%,
+and thirty-two give 38.0\%. At the observed mean of 25.5 checks the benchmark is
+31.7\% against an observed 20.1\%; the gap is positive correlation, since checks in
+a repository share infrastructure and fail together. The pattern holds across the
+distribution: pull requests running one to five checks show a failure somewhere
+4.2\% of the time, those running thirty-one to sixty show one 27.6\% of the time.
+
+Table~\ref{tab:checks} reports what the checks assert. Tests are the largest
+category at 27.0\% of runs and build at 10.7\%, but the category that fails most
+often is neither. Policy checks, which validate pull-request titles, commit
+conventions, contributor agreements and labels, fail at 2.55\%, above lint and
+style at 2.12\% and roughly twice the rate of tests at 1.48\% or builds at 1.26\%.
+The checks most likely to turn a gate red are among those saying least about
+whether the code works.
+
+\begin{table}[t]
+\caption{What the checks assert, and how often each kind fails}
+\label{tab:checks}
+\centering\small
+\begin{tabular}{lrrr}
+\toprule
+Category & Check runs & Share & Failure rate \\
+\midrule
+Test & 111,473 & 27.0\% & 1.48\% \\
+Build or compile & 44,047 & 10.7\% & 1.26\% \\
+Policy (title, licence, labels) & 22,277 & 5.4\% & \textbf{2.55\%} \\
+Lint or style & 21,168 & 5.1\% & 2.12\% \\
+Coverage & 14,803 & 3.6\% & 0.55\% \\
+Type or static analysis & 14,300 & 3.5\% & 0.91\% \\
+Security & 12,744 & 3.1\% & 0.31\% \\
+Deploy or preview & 8,944 & 2.2\% & 1.13\% \\
+Documentation & 806 & 0.2\% & 0.37\% \\
+Unclassified & 163,011 & 39.4\% & 1.57\% \\
+\midrule
+All & 413,588 & 100\% & 1.48\% \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}
+\footnotesize Agent pull requests with a resolved check list. Categories are
+regular expressions over check names, first match wins, and are coarse: a job
+named for its deploy target is classified away from what it asserts. Cancelled
+runs are excluded.
+\end{table}
+
+Two consequences follow for the paper. The gate is not noisy because projects
+write bad checks; it is noisy because a conjunction over thirty-two accurate
+signals is not itself accurate, and adding checks makes it worse. And because the
+most failure-prone categories are the least diagnostic, a red gate carries less
+information about whether the change works than its presence suggests. Both are
+reasons a rational merger learns to read past it.
+
 \subsection{Why the gate cannot gate}
 
 Automated checks were not designed to be what they have become. Continuous
