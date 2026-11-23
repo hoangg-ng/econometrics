@@ -507,38 +507,27 @@ asked for it. Written rules substitute for the personal knowledge that would
 otherwise restrict competent review to the dispatcher, which is why the effect
 appears on the identity of the reviewer rather than on the quantity of review.
 
-\subsection{Mechanism and magnitude}
+\subsection{The channel is access, not effort}
 
-The channel is review and not production. Re-estimating on the agent's delivered
-output, nothing moves: draft abandonment $+0.038$, log patch size $-0.036$, log
-changed files $-0.019$, time to readiness $+0.003$. What does move is revision. Holding patch size and changed files fixed, commits on a machine-authored PR rise
-$+0.049$ in logs ($p=3.1\times10^{-6}$), and $+0.098$ under equal-repository
-weighting ($p=0.043$), on a baseline of 4.93 commits; the same specification leaves
-patch size and file count flat ($p=0.861$ and $p=0.821$), so this is additional
-revision on identical deliverables, and the human-authored placebo does not survive
-equal-repository weighting ($+0.057$, $p=0.221$). The additional review is
-consequential for the work. What it obtains is revision, not refusal.
+The mechanism is visible in what does \emph{not} move. Re-estimating on the
+agent's delivered output, nothing changes: draft abandonment $+0.038$, log patch
+size $-0.036$, log changed files $-0.019$, time to readiness $+0.003$, every
+pre-trend passing. Governance does not make the machine produce different work.
 
-The effect is modest in level and meaningful in proportion. Against baselines of
-0.470 coverage and 0.645 reviewers, the contrasts are relative increases of 12.1\%
-and 18.6\%. At the mean adopting repository's throughput the
-reviewer estimate implies about 19.5 additional reviewer-PR incidences per
-repository-year. Machine-authored work is 3.4\% of pull requests in the mean
-adopting repository-month, so this is 0.34\% of the human review load today; the
-burden scales linearly with delegation, reaching 12.1\% at a 50\% machine share. What scales is monitoring.
+Nor does it mainly make an individual reviewer look harder. The increase in review
+coverage is concentrated on the extensive margin, whether any review happens at
+all ($+0.074$ equal-weighted, $p=0.033$), rather than among pull requests already
+under review, where the estimate is imprecise ($+0.092$, $p=0.772$). Combined with
+the result above, the pattern is that more people become able to participate
+rather than that any one person inspects more intensively.
 
-The pattern identifies the legibility case of Section~\ref{sec:theory}. Review
-rises and the agent's delivered output does not, so substitution is rejected, and
-so is compliance: the rule does not make the machine behave differently, so the
-additional inspection is not explained by anything the agent did.
-
-Finally, the response is substantive rather than ceremonial. Ceremonial adoption
-would track audience; substantive adoption would track operational need. Splitting
-adopters at the median of pre-adoption machine-authored volume, reviewers per agent
-PR rise $+0.170$ where volume is high against $-0.123$ where it is low, a difference
-of $+0.293$ with pre-trends passing in both strata ($p=0.786$ and $p=0.991$);
-splitting at the median of repository stars gives the wrong sign on review coverage
-and fails its pre-trend in the low-star stratum.
+That identifies the mechanism as access. Before a convention is written down, the
+knowledge of what the agent was asked to do and what correct work looks like in
+this project is held by the person who dispatched it. A colleague cannot form a
+judgement about machine-authored work without it. Committing the file transfers
+that knowledge into the repository, which is why the effect appears on the
+identity of the reviewer rather than on the quantity of review, and why it is
+absent when the file committed is not about the agent.
 
 \section{A Control System Made of Warnings}
 \label{sec:warnings}
@@ -721,42 +710,23 @@ large a protective association could be hiding.
 
 \subsection{What proceeding past a warning costs}
 
-Whether the practice is costly is a separate question, and across every channel
-these traces support we cannot show that it is. Within repository-months containing
-both kinds of merge, pull requests merged over a substantive failing check attract
-no more corrective work than those merged green ($-0.005$, interval
-$[-0.045, +0.035]$) and no more bug reports, measured as issues opened referencing
-the merge within ninety days ($-0.017$, $[-0.057, +0.023]$). Across 3,101
-consecutive repository-month pairs, a month with a higher share of overridden
-merges is followed by no loss of contributors ($-0.022$) and no fall in throughput
-($-0.051$). Pooled contrasts point the other way, corrective work at 18.4\%
-against 9.0\%, and are composition: projects that override more have higher
-baseline rates of nearly everything.
+Whether the practice is costly we cannot establish, and we are explicit about the
+division of labour. These traces show that the signal is noisy and that it is
+proceeded past; they do not show whether a consequence follows. Four channels ---
+later corrective work, bug reports, contributor retention and throughput --- return
+null within repository-months, and the sharpest proxy explains why: a revert
+referencing the merge occurs for 0.39\% of merged pull requests, supporting a
+minimum detectable effect of 140\% of the base rate. Section~\ref{ec:consequences}
+reports all four.
 
-We are explicit about the division of labour. These traces establish that the
-signal is noisy, that it is overridden, and that no consequence is visible. They
-cannot establish whether a consequence exists, and the sharpest available proxy
-shows why: a later revert referencing the merge occurs for 0.39\% of merged pull
-requests, 42 cases in all, supporting a minimum detectable effect of 140\% of the
-base rate. We could not detect a real effect if one existed.
-
-Evidence that the consequence is real comes from settings with ground truth we do
-not have. In Google's Chromium continuous-integration system, false alerts account
+Evidence that the consequence is real comes from a setting with ground truth we do
+not have. In Google's Chromium continuous-integration system false alerts account
 for roughly four fifths of observed failures, and yet ignoring every failure of a
 test known to be flaky would have missed about three quarters of true regression
-faults \citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it
-affects a sixth of Google's test corpus and appears in roughly a quarter of
-Microsoft builds, and a majority of developers report ignoring
-continuous-integration failures because of flaky history \citep{parry2021survey}.
-
-Placing those findings beside ours gives the mechanism, and it is a learning
-failure rather than a discipline failure. The signal is mostly noise, so overriding
-it is individually rational. The harm it conceals is real but arrives later, in a
-different artifact, and never attributes back to the merge that caused it: which
-is why it is absent from our traces and, more importantly, from the traces
-available to the organizations themselves. Nothing in the feedback loop informs a
-project that its gate has stopped gating. The practice persists, the checks are
-never repaired, and the margin stays non-binding.
+faults \citep{rwemalika2023discerning}. The harm is real, arrives later, in a
+different artifact, and never attributes back to the merge that caused it --- which
+is why it is absent from our traces and from the organization's own. Nothing in the
+feedback loop tells a project that its gate has stopped gating.
 
 \section{Measurement and Identification}
 \label{sec:measurement}
@@ -870,6 +840,48 @@ Match on covariates, not the baseline outcome, in a bounded reverting outcome & 
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{What Proceeding Past a Warning Costs}
+\label{ec:consequences}
+
+
+Whether the practice is costly is a separate question, and across every channel
+these traces support we cannot show that it is. Within repository-months containing
+both kinds of merge, pull requests merged over a substantive failing check attract
+no more corrective work than those merged green ($-0.005$, interval
+$[-0.045, +0.035]$) and no more bug reports, measured as issues opened referencing
+the merge within ninety days ($-0.017$, $[-0.057, +0.023]$). Across 3,101
+consecutive repository-month pairs, a month with a higher share of overridden
+merges is followed by no loss of contributors ($-0.022$) and no fall in throughput
+($-0.051$). Pooled contrasts point the other way, corrective work at 18.4\%
+against 9.0\%, and are composition: projects that override more have higher
+baseline rates of nearly everything.
+
+We are explicit about the division of labour. These traces establish that the
+signal is noisy, that it is overridden, and that no consequence is visible. They
+cannot establish whether a consequence exists, and the sharpest available proxy
+shows why: a later revert referencing the merge occurs for 0.39\% of merged pull
+requests, 42 cases in all, supporting a minimum detectable effect of 140\% of the
+base rate. We could not detect a real effect if one existed.
+
+Evidence that the consequence is real comes from settings with ground truth we do
+not have. In Google's Chromium continuous-integration system, false alerts account
+for roughly four fifths of observed failures, and yet ignoring every failure of a
+test known to be flaky would have missed about three quarters of true regression
+faults \citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it
+affects a sixth of Google's test corpus and appears in roughly a quarter of
+Microsoft builds, and a majority of developers report ignoring
+continuous-integration failures because of flaky history \citep{parry2021survey}.
+
+Placing those findings beside ours gives the mechanism, and it is a learning
+failure rather than a discipline failure. The signal is mostly noise, so overriding
+it is individually rational. The harm it conceals is real but arrives later, in a
+different artifact, and never attributes back to the merge that caused it: which
+is why it is absent from our traces and, more importantly, from the traces
+available to the organizations themselves. Nothing in the feedback loop informs a
+project that its gate has stopped gating. The practice persists, the checks are
+never repaired, and the margin stays non-binding.
+
 
 \section{What Bounds the Consequence Estimates}
 \label{ec:power}

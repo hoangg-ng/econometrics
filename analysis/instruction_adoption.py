@@ -25,6 +25,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 GOV = ROOT / 'output/process_data/governance_files.csv'
@@ -123,6 +124,22 @@ def event_study(frame, outcome, leads=LEADS, lags=LAGS):
         wald = model.f_test(np.eye(len(idx))[[idx.index(c) for c in pre]])
         out['pretrend_p'] = float(wald.pvalue)
         out['pre_mean'] = float(np.mean([model.params[c] for c in pre]))
+        # The joint test asks whether every lead is exactly zero, so one anomalous
+        # period fails it even when nothing is drifting. Anticipation -- the thing
+        # a pre-trend test exists to detect -- is a SLOPE. Both are reported for
+        # every estimate so that neither can be selected after the fact.
+        ks = np.array([float(c[1:].split('_')[0]) for c in pre])
+        if len(ks) >= 3 and ks.std() > 0:
+            centred = ks - ks.mean()
+            contrast = np.zeros(len(idx))
+            for i, name in enumerate(pre):
+                contrast[idx.index(name)] = centred[i] / (centred ** 2).sum()
+            slope = float(contrast @ model.params.values)
+            slope_se = float(np.sqrt(contrast @ model.cov_params().values @ contrast))
+            out['pretrend_slope'] = slope
+            out['pretrend_slope_se'] = slope_se
+            out['pretrend_slope_p'] = float(
+                2 * (1 - stats.norm.cdf(abs(slope / slope_se)))) if slope_se > 0 else None
     if post:
         wald2 = model.f_test(np.eye(len(idx))[[idx.index(c) for c in post]])
         out['post_joint_p'] = float(wald2.pvalue)
