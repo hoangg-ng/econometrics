@@ -678,6 +678,20 @@ failure. Among the 5,121 agent PRs with a failing gate, \textbf{71.5\% merge
 anyway}. Failing checks are not, in this population, a binding constraint on
 machine-authored work.
 
+Automated checks were not designed to be what they have become. Continuous
+integration was proposed to end ``integration hell'', the multi-day reconciliation
+that followed weeks of isolated work \citep{booch1994ooad}, and the practice that
+operationalised it set a deliberately austere target: a ten-minute build, a small
+number of fast and trustworthy signals run constantly \citep{beck2000xp}. What we
+observe is that design inverted. The median repository in our corpus runs 26 checks
+on a pull request, and among repositories with enough failures to characterise, the
+single worst-behaving check accounts for 29.3\% of all substantive failures and the
+worst three for 64.8\%. That check fails on a median 11.5\% of the repository's
+pull requests, and on more than a fifth of them in 28\% of repositories. A signal
+that fires on a fifth of all work cannot function as a gate: making every
+substantive check required would block more than one pull request in five in 28\%
+of these projects, and fewer than one in twenty in only 31\%.
+
 That figure is the substantive one. GitHub's rollup reports failure if any check
 on the head commit concluded badly, and it does not distinguish a broken test suite
 from a coverage bot, so we collected the names of every failing check on all 15,647
@@ -710,13 +724,40 @@ higher baseline rates of nearly everything. This is the error the comparative
 literature on machine-authored contributions most often makes, and it is the same
 error that inflates the raw override rate itself.
 
-None of this proves the practice harmless. It bounds the harm that public traces
-can see, and the bound excludes incidents, security events, and anything a user
-experiences outside the repository. But it carries a specific implication, and it
-is the one that organizes the rest of this paper: if a failing check does not
-predict any consequence we can observe, then it is not decision-grade, and
-producing more signal --- which is what every available governance instrument
-does --- addresses the wrong constraint.
+None of this proves the practice harmless, and we are explicit about the division
+of labour. What these traces can establish is that the signal is noisy, that it is
+overridden, and that no consequence is visible. What they cannot establish is
+whether a consequence exists, and the sharpest available proxy shows why: a later
+revert referencing the merge occurs for 0.39\% of merged pull requests, 42 cases in
+all, which supports a minimum detectable effect of 140\% of the base rate. The
+pooled contrast looks alarming --- 1.02\% after a broken merge against 0.24\% after
+a green one --- and dissolves within repository-months like every other pooled
+contrast here. We could not detect a real effect if one existed.
+
+Evidence that the consequence is real comes from settings with ground truth we do
+not have. In Google's Chromium continuous-integration system, false alerts account
+for roughly four fifths of observed failures, and yet ignoring every failure of a
+test known to be flaky would have missed about three quarters of true regression
+faults, with flaky tests revealing more than a third of all regressions
+\citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it affects
+a sixth of Google's test corpus and appears in roughly a quarter of Microsoft
+builds, and a majority of developers report ignoring continuous-integration
+failures because of flaky history \citep{parry2021survey}.
+
+Placing those findings beside ours gives the mechanism, and it is a learning
+failure rather than a discipline failure. The signal is mostly noise, so overriding
+it is individually rational. The harm it conceals is real but arrives later, in a
+different artifact, and never attributes back to the merge that caused it --- which
+is why it is absent from our traces and, more importantly, from the traces
+available to the organizations themselves. Nothing in the feedback loop informs a
+project that its gate is failing to gate. The practice therefore persists, the
+checks are never repaired, and the margin stays non-binding.
+
+That is what makes the governance result more than a null. The instruments
+organizations adopt when they begin delegating to machines all add signal to a
+system whose existing signal already cannot be acted upon. The binding constraint
+was never how much is observed. It is that almost none of it is trustworthy enough
+to block on, and no instrument on offer changes that.
 
 Governance adoption does not visibly change that. The rate of merging with a
 failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$

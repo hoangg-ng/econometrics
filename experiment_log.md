@@ -2155,3 +2155,44 @@ mechanised by it.
 It also corrects an overstatement. The paper said "the agent's own output is
 unchanged". Delivered output is unchanged; revision activity is not.
 analysis/revision_cycles.py.
+
+**What checks were for, and whether ignoring them harms anyone.** Asked to explain
+what a failing check actually is and whether anyone has shown harm, two things
+came out that change the paper.
+
+*The design intent, and how far it has drifted.* Continuous integration was
+proposed to end "integration hell" (Booch) and operationalised by Extreme
+Programming around a ten-minute build: a few fast, trustworthy signals run
+constantly (Beck). The corpus shows the inverse. The median repository runs 26
+checks per pull request; among repositories with enough failures to characterise,
+the single worst check accounts for 29.3% of all substantive failures and the worst
+three for 64.8%. That check fails on a median 11.5% of the repository's pull
+requests, and on more than a fifth in 28% of repositories. Making every substantive
+check required would block more than one PR in five in 28% of projects, and fewer
+than one in twenty in only 31%. A gate that stops a fifth of all work is not
+enforceable, so the override is forced by precision rather than chosen by laxity.
+
+*Harm: we cannot test it, and we now say so.* The sharpest available proxy is a
+later revert referencing the merge. It occurs for 0.39% of merged PRs -- 42 cases
+-- giving a minimum detectable effect of 140% of the base rate. The pooled contrast
+(1.02% after a broken merge against 0.24% after a green one) dissolves within
+repository-months like every other pooled contrast here. The test exists, it is
+reported, and it is uninformative.
+
+*So the harm premise is borrowed, and cited as such.* In Chromium's CI, false
+alerts are roughly four fifths of observed failures, yet ignoring every failure of
+a known-flaky test would have missed about three quarters of true regression
+faults. Flakiness affects a sixth of Google's test corpus and about a quarter of
+Microsoft builds, and a majority of developers report ignoring CI failures because
+of flaky history.
+
+*The synthesis is ours and it is the mechanism.* Noise makes overriding rational;
+the harm it conceals arrives later, in a different artifact, and never attributes
+back to the merge -- so it is missing from our traces and from the organization's
+own. Nothing in the loop tells a project its gate has stopped gating, so the checks
+are never repaired and the margin stays non-binding. That is a learning failure,
+not a discipline failure, and it is why adding more signal cannot fix it.
+
+Division of labour stated explicitly in the paper: ours that the signal is noisy,
+that it is overridden, and that no consequence is visible; borrowed that a
+consequence exists.
