@@ -56,10 +56,13 @@ def main():
     ia = load('instruction_adoption')
     if ia:
         agent = ia['blocks']['agent_prs']
-        check(report, 'coverage post mean (abstract: 4.5 points)',
-              0.045, agent['anyrev']['post_mean'], tol=1e-3)
-        check(report, 'reviewers post mean (abstract: 0.090)',
-              0.090, agent['nrev']['post_mean'], tol=1e-3)
+        # the manuscript reports the post-minus-pre contrast throughout
+        check(report, 'coverage contrast (5.7 points)',
+              0.057, agent['anyrev']['post_mean'] - agent['anyrev']['pre_mean'], tol=1e-3)
+        check(report, 'reviewers contrast (0.120)',
+              0.120, agent['nrev']['post_mean'] - agent['nrev']['pre_mean'], tol=1e-3)
+        check(report, 'coverage baseline (0.470)', 0.470, agent['anyrev']['baseline'], tol=1e-3)
+        check(report, 'reviewers baseline (0.645)', 0.645, agent['nrev']['baseline'], tol=1e-3)
         check(report, 'coverage pre-trend p', 0.889, agent['anyrev']['pretrend_p'], tol=5e-3)
         check(report, 'reviewers pre-trend p', 0.767, agent['nrev']['pretrend_p'], tol=5e-3)
 
@@ -114,6 +117,14 @@ def main():
         check(report, 'human-stream CI upper (+0.045)', 0.045,
               human['ci'][1], tol=1e-3)
 
+    me = load('monitoring_enforcement')
+    if me:
+        full = me['models']['full_controls']
+        check(report, 'monitoring-enforcement coefficient (+0.015)',
+              0.015, full['coefficient'], tol=1e-3)
+        check(report, 'monitoring-enforcement CI lower (-0.010)',
+              -0.010, full['ci'][0], tol=1e-3)
+
     ir = load('identification_robustness')
     if ir:
         nyt = ir['blocks'].get('not_yet_treated_only', {})
@@ -131,6 +142,7 @@ def main():
         ('468,402 pull requests', '468,402'),
         ('335 adopting projects', '335'),
         ('71.5% override quoted in text', '71.5'),
+        ('contrast 5.7 quoted in text', '5.7 percentage points'),
     ]
     for label, needle in textual:
         report.append(('OK' if present(text, needle) else 'MISSING', label, needle, None))

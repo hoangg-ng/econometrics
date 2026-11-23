@@ -28,7 +28,7 @@ from collections import defaultdict
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/placebo_reversion'
 SEED = 20261102
 DRAWS = 200

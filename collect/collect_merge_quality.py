@@ -30,7 +30,7 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 COHORT = ROOT / 'output/agent_sample/pr_level_agent.csv'
 OUT = ROOT / 'output/process_data/merge_quality.csv'
 PROGRESS = ROOT / 'output/process_data/merge_quality_progress.json'

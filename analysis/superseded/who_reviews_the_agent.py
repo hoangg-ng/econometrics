@@ -27,7 +27,7 @@ from collections import defaultdict, Counter
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/who_reviews_the_agent'
 
 csv.field_size_limit(10_000_000)

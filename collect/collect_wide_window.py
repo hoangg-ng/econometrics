@@ -32,7 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.github_client import GitHubClient
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'output/wide_window'
 TARGET = OUT / 'pr_level_wide.csv'
 PROGRESS = OUT / 'progress.json'

@@ -11,7 +11,7 @@ import csv, json, statistics, sys
 from pathlib import Path
 from collections import Counter, defaultdict
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/existing_data_program'
 CAP = 40  # the monthly PR cap used by the original capped panel
 

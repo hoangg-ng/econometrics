@@ -26,7 +26,7 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'output/process_data'
 SAMPLE = DATA / 'review_sample_prs.csv'
 COHORT = ROOT / 'output/agent_sample/pr_level_agent.csv'

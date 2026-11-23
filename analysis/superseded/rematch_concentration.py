@@ -36,7 +36,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import norm
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/rematch_concentration'
 SEED = 20261109
 B = 1000

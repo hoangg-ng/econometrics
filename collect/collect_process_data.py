@@ -18,7 +18,7 @@ from src.github_client import GitHubClient
 import collect_topup as T
 import collect_agent_sample as A
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'output/agent_sample/pr_level_agent.csv'
 OUT = ROOT / 'output/process_data'
 OPEN_FILE = OUT / 'open_prs.csv'

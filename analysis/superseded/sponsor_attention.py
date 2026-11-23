@@ -36,12 +36,12 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / 'output/process_data'
 LIFECYCLE = DATA / 'pr_lifecycle.csv'
 COHORT = ROOT / 'output/agent_sample/pr_level_agent.csv'
 OUT = ROOT / 'output/management_science/sponsor_attention.json'
-sys.path.insert(0, str(ROOT / 'analysis'))
+sys.path.insert(0, str(ROOT / 'analysis'))  # common.py lives there
 import common as C
 
 COPILOT = 'copilot-swe-agent'

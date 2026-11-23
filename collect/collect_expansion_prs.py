@@ -26,7 +26,7 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 COHORT = ROOT / 'output/agent_sample/pr_level_agent.csv'
 GOV = ROOT / 'output/process_data/governance_files.csv'
 OUT = ROOT / 'output/process_data/expansion_prs.csv'

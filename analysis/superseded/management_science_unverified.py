@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 import collect_topup as T
 

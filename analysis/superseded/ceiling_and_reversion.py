@@ -27,7 +27,7 @@ from collections import defaultdict
 import numpy as np
 from scipy.stats import norm
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/ceiling_and_reversion'
 SEED = 20261102
 B = 1000

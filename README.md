@@ -415,6 +415,24 @@ treatment. The identifying experiment is a field experiment.
 
 ---
 
+## Repository layout
+
+```
+analysis/              the analyses the paper's claims rest on (20 scripts)
+  common.py            author kind, bot detection, insider standing -- import, never redefine
+  superseded/          earlier designs, kept as research history (26 scripts)
+collect/               GitHub collectors, all resumable (14 scripts)
+docs/                  working notes, literature review, referee comments
+overleaf/paper/        paper.tex, references.bib, figures
+output/                collected data and analysis JSON (gitignored, 239MB)
+src/                   GitHub API client
+```
+
+Every script in `analysis/` and `collect/` carries a `selftest()` that runs on
+import; 34 of 34 pass. `analysis/verify_paper_numbers.py` checks that every
+headline figure in `paper.tex` still matches the committed JSON, and reports
+UNVERIFIABLE for any claim with no analysis behind it.
+
 ## Reproducing
 
 ```sh
@@ -425,15 +443,15 @@ pip install -r requirements.txt            # .env needs GITHUB_TOKEN=ghp_... (gi
 Collection, in order:
 
 ```sh
-venv/bin/python collect_agent_sample.py           # primary resolved cohort
-venv/bin/python collect_topup.py                  # authorAssociation, close actor
-venv/bin/python collect_merged_by.py              # mergedBy validation set
-venv/bin/python collect_process_data.py           # open-PR census + timestamped reviews
-venv/bin/python collect_quality_checks.py         # CI check rollups
-venv/bin/python collect_ready_for_review.py       # draft lifecycle + review requests
-venv/bin/python collect_draft_commits.py          # commit timestamps at a decision
-venv/bin/python collect_governance_files.py       # dated adoption of governance files
-venv/bin/python collect_followup_references.py    # post-merge corrective work
+venv/bin/python collect/collect_agent_sample.py           # primary resolved cohort
+venv/bin/python collect/collect_topup.py                  # authorAssociation, close actor
+venv/bin/python collect/collect_merged_by.py              # mergedBy validation set
+venv/bin/python collect/collect_process_data.py           # open-PR census + timestamped reviews
+venv/bin/python collect/collect_quality_checks.py         # CI check rollups
+venv/bin/python collect/collect_ready_for_review.py       # draft lifecycle + review requests
+venv/bin/python collect/collect_draft_commits.py          # commit timestamps at a decision
+venv/bin/python collect/collect_governance_files.py       # dated adoption of governance files
+venv/bin/python collect/collect_followup_references.py    # post-merge corrective work
 ```
 
 Analysis for the current claims:
@@ -452,7 +470,7 @@ venv/bin/python analysis/causal_audit.py          # dilution, person-level desig
 venv/bin/python analysis/maintainer_exposure.py   # Callaway-Sant'Anna implementation
 venv/bin/python analysis/standing_sensitivity.py  # the comparison-group check -- run before reporting
 venv/bin/python analysis/ready_restricted.py      # two-stage decomposition
-venv/bin/python analysis/management_science_censored_cohort.py
+venv/bin/python analysis/superseded/management_science_censored_cohort.py
 ```
 
 Every analysis script carries a `selftest()` and writes machine-readable output to

@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.github_client import GitHubClient
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'output/process_data'
 SAMPLE = DATA / 'review_sample_prs.csv'
 SUMMARY = DATA / 'closure_discussion_prs.csv'

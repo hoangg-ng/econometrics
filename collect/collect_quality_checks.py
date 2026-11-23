@@ -9,7 +9,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'output/process_data'
 SAMPLE = DATA / 'review_sample_prs.csv'
 SUMMARY = DATA / 'pr_quality_checks.csv'

@@ -20,7 +20,7 @@ from collections import Counter, defaultdict
 import numpy as np
 from scipy.stats import norm
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'output/activity_decomposition'
 SEED = 20261102
 B = 1000

@@ -35,7 +35,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.github_client import GitHubClient
 import collect_topup as T
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'output/agent_sample'
 TARGET = OUT / 'pr_level_agent.csv'
 PROGRESS = OUT / 'progress.json'

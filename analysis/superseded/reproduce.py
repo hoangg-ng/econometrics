@@ -14,7 +14,7 @@ Stages are independent; a failure is recorded and the rest still run.
 import hashlib, importlib.util, json, subprocess, sys, time, traceback
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 ANALYSIS = ROOT / 'analysis'
 OUT = ROOT / 'output/REPRODUCE.json'
 
