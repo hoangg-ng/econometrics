@@ -409,6 +409,60 @@ follow adoption, so this conditions on a post-treatment variable and we report i
 as descriptive: what moves review is a maintained convention rather than a
 committed file, which is what the legibility mechanism predicts.
 
+\subsection{Who inspects, not how much}
+
+The estimates so far measure how much inspection machine-authored work receives.
+A control question asks something different: by whom. Delegation to a machine
+creates a concentration problem that human-authored work does not have. The agent
+cannot merge, so a human must act for it, and in practice one person does
+everything. Across 16,473 agent pull requests with a recorded promoter, the person
+who promotes the draft into review is also the person who closes or merges it
+90.8\% of the time, and only 16.0\% carry a review from anyone else. An entire
+acceptance decision sits with one individual, which is the condition that
+separation of duties exists to prevent.
+
+Formalising agent governance changes that, and by more than it changes inspection
+volume. Defining the outcome as whether a pull request carries a review from at
+least one human who is not its promoter, adoption raises it by $+0.109$ against a
+baseline of $0.160$, a 68\% relative increase. Table~\ref{tab:independent} reports
+the robustness. The point estimate sits between $+0.086$ and $+0.113$ across
+equal-repository weighting and exclusions up to the ten largest owners, and non-AI
+configuration files move the same outcome in the opposite direction ($-0.103$,
+joint $p=0.0016$).
+
+\begin{table}[t]
+\caption{Independent review of machine-authored work after instruction-file adoption}
+\label{tab:independent}
+\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Specification & Estimate & Pre-trend $p$ & Joint $p$ & Repositories \\
+\midrule
+All owners & $+0.109$ & 0.013 & 0.042 & 216 \\
+Equal-repository weighting & $+0.107$ & 0.829 & 0.418 & 216 \\
+Excluding the largest owner & $+0.105$ & 0.022 & 0.014 & 214 \\
+Excluding the three largest & $+0.099$ & 0.136 & 0.0026 & 212 \\
+Excluding the five largest & $+0.086$ & 0.722 & 0.092 & 194 \\
+Excluding the ten largest & $+0.113$ & 0.738 & 0.216 & 188 \\[3pt]
+\emph{Placebo:} non-AI configuration files & $-0.103$ & 0.385 & 0.0016 & 67 \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}
+\footnotesize Outcome: the pull request carries a review from at least one human
+who is not the person who promoted it out of draft. Baseline 0.160. One
+organization supplies 59.6\% of treated observations, which is why the full-sample
+pre-trend fails while every exclusion and the equal-repository specification pass;
+the exclusions raise rather than lower the estimate. Significance varies across
+cuts; the magnitude does not.
+\end{table}
+
+This is the sharper statement of what governance does. It does not make the
+machine comply, and it does not mainly make any one reviewer look harder. It
+widens the set of people who look at machine-authored work beyond the person who
+asked for it. Written rules substitute for the personal knowledge that would
+otherwise restrict competent review to the dispatcher, which is why the effect
+appears on the identity of the reviewer rather than on the quantity of review.
+
 \subsection{Mechanism and magnitude}
 
 The channel is review and not production. Re-estimating on the agent's delivered
