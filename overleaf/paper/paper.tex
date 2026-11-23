@@ -59,212 +59,134 @@ Every instrument offered for governing an AI contributor acts on \emph{monitorin
 \section{Introduction}
 
 Organizations are delegating production to artificial intelligence faster than they
-can evaluate the result, and the tools offered for governing it all act on one
-margin. Write down how the machine should work, configure what it may do, document
-the conventions it should follow: each of these is an instrument of
-\emph{monitoring}. Whether delegated work is actually controlled, however, depends
-on \emph{enforcement} --- whether an adverse signal blocks acceptance. This paper
-shows that organizations respond substantively to the first and that the second
-does not follow, which is why governance tooling raises oversight effort without
-improving outcomes.
+can evaluate the result, and the instruments offered for governing it all act on
+one margin. Write down how the machine should work, configure what it may do,
+document the conventions it should follow: each is an instrument of
+\emph{monitoring}. Whether delegated work is actually controlled depends on
+\emph{enforcement} --- whether an adverse signal blocks acceptance. This paper
+shows that organizations respond substantively to the first, that the second does
+not follow, and that the reason is a property of the signal rather than a failure
+of discipline.
 
-Studying 468,402 pull requests (PRs) from 848 open-source repositories that adopted
-coding agents, we exploit a dated organizational act. A project can commit an
+We study 468,402 pull requests (PRs) from 848 open-source repositories that adopted
+coding agents, and exploit a dated organizational act. A project can commit an
 \emph{agent-instruction file} --- \texttt{copilot-instructions.md} or
 \texttt{AGENTS.md} --- which tells the coding agent how to work in that repository.
 The act is deliberate, 335 of our repositories perform it, and public git history
 dates it to the day. Outcomes are measured on the machine-authored stream, which
-matters: agent PRs are 2.7\% of the average repository-month and 0\% of the median,
+matters: agent PRs are 3.4\% of the average repository-month and 0\% of the median,
 so repository-level aggregates cannot detect any plausible effect.
 
 After a project commits an agent-instruction file, human review of its
-machine-authored PRs rises. Across the post-adoption period agent PRs are 4.5
-percentage points more likely to carry a human review and attract 0.090 more
-distinct human reviewers, against baselines of 0.500 and 0.702; a fixed-effects
-event study shows the effect growing to 10.8 points and 0.214 reviewers by months
-four to six, though that late-emerging pattern is not reproduced by a
-staggered-robust estimator and we do not rest on it. All six pre-trend tests pass,
-the same treatment leaves human review of \emph{human}-authored PRs unmoved on
-three outcomes, adoption does not coincide with a sustained change in agent PR
-volume, and --- most tellingly --- adoption of \emph{non}-AI configuration files
-moves the same outcome in the opposite direction, so the effect is specific to
-agent governance rather than to the act of committing configuration.
+machine-authored PRs rises. Agent PRs become 4.5 percentage points more likely to
+carry a human review and attract 0.090 more distinct human reviewers, against
+baselines of 0.500 and 0.702. Every pre-trend test passes, the same treatment
+leaves human review of \emph{human}-authored PRs unmoved, adoption does not
+coincide with a change in agent PR volume, and --- most tellingly --- adoption of
+\emph{non}-AI configuration files moves the same outcome in the opposite
+direction. The estimate survives restricting controls to not-yet-adopting
+repositories, removing repository-specific linear trends, restricting to
+organization-owned projects, and equal-repository weighting.
 
-The channel is review and not production, and that distinction identifies the
-mechanism: what governance changes is the reviewer, not the machine. Patch size,
-file count, time to readiness and the rate at which a sponsor privately discards a
-draft all stay where they were, so the rise in review cannot be explained by the
-agent producing different work.
-
-What does move is how much that work is revised before it is disposed of. Holding
-patch size and changed files fixed, commits on a machine-authored pull request rise
-$+0.049$ in logs ($p=3.1\times10^{-6}$), and $+0.098$ under equal-repository
-weighting ($p=0.043$), on a baseline of 4.93 commits. The same specification leaves
-patch size and file count flat ($p=0.861$ and $p=0.821$ equal-weighted), so this is
-additional revision on identical deliverables rather than more work delivered, and
-the human-authored placebo does not survive equal-repository weighting ($+0.057$,
-$p=0.221$). The additional review is therefore consequential for the work rather
-than purely observational. That matters for how the gate result should be read:
-reviewers who look harder obtain \emph{revisions}, not rejections, and a control
-system whose sanction is revision rather than refusal leaves the acceptance rate --
-and the rate of accepting work whose checks are failing -- where it was.
+The channel is the reviewer, not the machine. Patch size, file count, time to
+readiness, and the rate at which a sponsor privately discards a draft all stay
+where they were, so the rise in review cannot be explained by the agent producing
+different work. What does move is revision: holding patch size and file count
+fixed, machine-authored PRs accumulate more commits before disposition. The
+additional review is consequential for the work --- reviewers obtain revisions ---
+but it is revision, not refusal.
 
 This matters for theory. Agency theory treats ex ante rules and ex post inspection
 as substitutes, because a rule that constrains the agent leaves inspection less to
 find \citep{eisenhardt1985control}. That logic requires the rule to change
 behaviour. An instruction file cannot do so through incentives, since the agent has
-none; it can only change what the agent is told and, crucially, what a reviewer can
-detect. A documented convention makes departures from it legible where an
-undocumented one does not. So governance raises the informativeness of inspection
-while leaving production untouched, and the return to looking rises rather than
-falls. Our estimates are the signature of that case: review up, output unchanged.
-Substitutability fails for this class of delegation, and it fails for an
-informational rather than a behavioural reason.
+none; it can only change what a reviewer can detect. A documented convention makes
+departures from it legible where an undocumented one does not, so governance raises
+the informativeness of inspection while leaving production untouched, and the
+return to looking rises rather than falls. Substitutability fails for this class of
+delegation, and it fails for an informational rather than a behavioural reason.
 
-The null is not an absence of evidence but a locatable fact. Two readings of it
-are separable, and the data choose between them. Ceremonial adoption would make
-the review increase track audience; substantive adoption would make it track
-operational need. Splitting adopters at the median of pre-adoption machine-authored
-volume, reviewers per agent PR rise $+0.170$ where volume is high against $-0.123$
-where it is low, a difference of $+0.293$ with pre-trends passing in both strata;
-splitting at the median of repository stars gives the wrong sign on review
-coverage and fails its pre-trend in the low-star stratum.
-The response is substantive and correctly targeted. Yet 71.5\% of agent PRs whose
-continuous-integration checks are failing are merged anyway. A control system that
-withholds the sanction three times in four does not measurably improve when
-monitoring rises by a tenth. On the better-powered human-authored stream, where
-enforcement is the same repository-wide policy, the estimate is $+0.001$ with an
-interval that rules out reductions beyond a quarter of the base rate. What we rule
-out is therefore a substantial gain rather than any gain, and the cross-sectional
-bound below is the stronger version of the claim.
+The response is substantive rather than ceremonial. Splitting adopters at the
+median of pre-adoption machine-authored volume, reviewers per agent PR rise
+$+0.170$ where volume is high against $-0.123$ where it is low, a difference of
+$+0.293$ with pre-trends passing in both strata; splitting at the median of
+repository stars gives the wrong sign on review coverage. Projects direct the extra
+attention precisely where machine work is heaviest.
 
-One further result belongs here, because it corrects what the published record
-appears to say. Delegated production passes through two organizational stages that
-public traces collapse into one. A coding agent opens its proposal as a draft,
-which cannot be merged; the stage ends when a human either promotes it into review
-or abandons it, and both endings are recorded identically, as a pull request closed
-by someone other than its author. Pooled, we reproduce the literature: agent
-proposals are 34.8 points more likely to end in a recorded human-nonauthor closure.
-The 39.6\% abandoned before review account for all of it. Among proposals that
-actually entered review, compared with human contributors who likewise cannot merge
-their own work, agent proposals are 17.3 points \emph{more} likely to be accepted.
-Reading the pooled record as evidence that machine-authored work meets a harder
-gate inverts the relationship holding among proposals submitted for evaluation.
+Yet outcomes do not follow, and the reason is the paper's second contribution.
+Among machine-authored PRs whose own continuous-integration checks report a genuine
+test or build failure, 71.5\% are merged anyway; the figure for human-authored work
+is 67.5\%, and within repository-months carrying both, machine work faces a
+marginally \emph{tighter} gate. This is not leniency toward machines. It is that
+the gate is not enforceable: the single worst-behaving check in a repository
+accounts for 29.3\% of its substantive failures, fires on a median 11.5\% of all
+its pull requests, and making every substantive check required would block more
+than one PR in five in 28\% of these projects. A signal that stops a fifth of all
+work cannot gate it. Governance adoption does not change the override rate, and
+across 386 repositories the amount of monitoring machinery a project maintains does
+not predict whether a failing check blocks a merge.
 
-We make three contributions. The first is theoretical. Agency theory treats ex
-ante rules and ex post inspection as substitutes, and that logic requires the rule
-to change the agent's behavior. Delegation to a machine breaks the premise, because
-an instruction file cannot alter incentives the agent does not have; what it alters
-is what a reviewer can detect. We show that written rules and inspection are
-therefore complements in this class of delegation, and that the reason is
-informational rather than behavioral. The second is to separate monitoring from
-enforcement empirically and to locate which binds. Every instrument currently
-offered for governing a machine contributor acts on monitoring; organizations adopt
-them substantively, directing attention where machine-authored work is heaviest;
-and outcomes do not follow, because a failing signal blocks acceptance only one
-time in four and no available instrument touches that. The third is a boundary
-result for a fast-growing empirical literature: five construction choices each flip
-a headline on these data, and twenty-three identification strategies yield one
-surviving causal estimate. Both are reported in the Electronic Companion, because
-the absence of causal estimates for the comparative findings is itself a fact about
-this setting rather than a shortfall of effort.
+We make three contributions. The first is theoretical: ex ante rules and ex post
+inspection are complements rather than substitutes when the delegate has no
+incentives to realign, for an informational reason we state formally and test on
+two observables. The second is to separate monitoring from enforcement empirically
+and locate which binds --- organizations adopt monitoring instruments substantively
+and correctly targeted, and outcomes do not follow because enforcement was never
+available to begin with. The third is a boundary result for a fast-growing
+empirical literature: five construction choices each flip a headline on these data,
+and twenty-three identification strategies yield one surviving causal estimate.
 
 \section{Theory}
 \label{sec:theory}
 
-The distinction between formal and real authority organizes what follows
-\citep{aghion1997authority}. Delegating production to a machine leaves formal
-authority untouched --- an agent account cannot merge --- but changes the
-information environment in which the right is exercised. The attention-based view
-treats rules and relationships as channels directing decision-makers toward
-particular issues \citep{ocasio1997attention}; work on control modes holds that
-principals shift toward monitoring behavior when outcomes are costly to verify
-\citep{eisenhardt1985control}; expertise coordination requires mobilizing relevant
-knowledge rather than accumulating activity \citep{faraj2000expertise,
-kudaravalli2017configural}. Recent evidence shows digital coordination technologies
-reducing supervisory layers without reducing supervision
-\citep{gulati2026collaborative}, and generative AI raising contribution alongside
-coordination cost \citep{song2026impact,he2026aiwrites}.
-
 Controlling a delegated task requires two distinct things: observing what the agent
-produced, and acting on what the observation reveals. Agency theory has always
-contained both --- a monitoring technology and a sanction --- but empirical work on
-control usually varies monitoring and takes enforcement as given
-\citep{eisenhardt1985control}. That is defensible when the sanction is
-automatic. It is not when accepting flawed output carries little private cost to
-the accepting party, which is the case we study: in our setting a merge is
-performed by a project member whose own position is unaffected by a later defect,
-and the acceptance decision is the same person's as the decision to dispatch the
-agent in the first place.
+produced, and acting on what the observation reveals. Agency theory contains both
+--- a monitoring technology and a sanction --- but empirical work on control
+usually varies monitoring and takes enforcement as given
+\citep{eisenhardt1985control}. That is defensible when the sanction is automatic.
+It is not when accepting flawed output carries little private cost to the accepting
+party, which is the case we study: a merge is performed by a project member whose
+own position is unaffected by a later defect, and who is often the same person who
+dispatched the agent.
 
-The distinction organizes our results. Every instrument currently offered for
-governing machine contributors --- instruction files, agent configuration,
-documented conventions --- acts on monitoring, by making the agent's intended
-behaviour legible and therefore its departures detectable. None acts on
-enforcement. If monitoring is the binding margin, adoption should improve
-outcomes; if enforcement is, adoption should raise observation and leave outcomes
-alone. The two are separable because we observe both the amount of review and
-whether an adverse signal is acted upon.
-
-Written rules and review are also the two classical instruments for controlling a
+Written rules and review are the two classical instruments for controlling a
 delegated task, and agency theory treats them as substitutes: an \emph{ex ante}
 control that constrains what the agent does should reduce the need for \emph{ex
-post} inspection of what it produced \citep{eisenhardt1985control}. That logic
-rests on the rules changing the agent's behavior. If instructions induce
-compliance, the distribution of output tightens, fewer deviations arise, and
-inspection has less to find.
+post} inspection of what it produced. That logic rests on the rule changing the
+agent's behaviour. Machine delegation breaks the premise in a specific way. An
+instruction file does not alter the agent's incentives, because the agent has none;
+it alters what the agent is \emph{told}, and --- crucially --- what a reviewer can
+\emph{detect}. A documented convention makes a deviation from it legible; an
+undocumented one does not.
 
-Machine delegation breaks the premise in a specific way, and this yields the
-prediction we test. An instruction file does not alter the agent's incentives,
-because the agent has none; it alters what the agent is \emph{told} to do. Two
-consequences follow. First, compliance need not improve: the agent may produce
-output of the same character whether or not a rule is written, in which case the
-variance that review must police is unchanged. Second, and more importantly,
-writing the rule down changes what a reviewer can \emph{detect}. A documented
-convention makes a deviation from it legible; an undocumented one does not. Formal
-governance therefore raises the informativeness of inspection even when it leaves
-production untouched --- and when inspection becomes more informative, its return
-rises rather than falls.
-
-The argument can be stated compactly, and doing so shows exactly which primitive
-each account moves. Let $d \geq 0$ be the expected rate at which the agent's output
+The argument can be stated compactly, and doing so shows which primitive each
+account moves. Let $d \geq 0$ be the expected rate at which the agent's output
 departs from the project's conventions, and let a reviewer choose inspection effort
-$e \geq 0$. Let $\pi(e,\tau)$ be the probability that a departure is detected,
-where $\tau \in \{0,1\}$ records whether the convention is written down. Detection
-is worth $B$ and effort costs $c(e)$, increasing and convex. The reviewer solves
+$e \geq 0$. Let $\pi(e,\tau)$ be the probability a departure is detected, where
+$\tau \in \{0,1\}$ records whether the convention is written down. Detection is
+worth $B$ and effort costs $c(e)$, increasing and convex. The reviewer solves
 \begin{equation}
-\max_{e \geq 0}\; d\,\pi(e,\tau)\,B - c(e),
+\max_{e \geq 0}\ d\,\pi(e,\tau)\,B - c(e),
 \label{eq:reviewer}
 \end{equation}
 with interior optimum characterized by $d\,\pi_e(e^{*},\tau)B = c'(e^{*})$.
 
 Writing a rule down can act on two primitives. It can lower $d$, by changing what
-the agent does; and it can raise $\pi_e$, by making a departure from a documented
-convention legible where a departure from an undocumented one is not. Convexity of
-$c$ makes $e^{*}$ increasing in the left-hand side of the first-order condition, so
-the two act in opposite directions: a fall in $d$ reduces optimal inspection, a
-rise in $\pi_e$ increases it.
+the agent does; and it can raise $\pi_e$, by making departures legible. Convexity
+of $c$ makes $e^{*}$ increasing in the left-hand side of the first-order condition,
+so the two act in opposite directions: a fall in $d$ reduces optimal inspection, a
+rise in $\pi_e$ increases it. Agency theory's substitution result is the case in
+which the first channel operates, and it requires the rule to change behaviour. A
+machine agent has no incentives to realign, so $d$ is unchanged and only the second
+channel is available: $\partial e^{*}/\partial \tau > 0$. Substitutability is
+therefore a property of delegation to an agent whose behaviour responds to rules,
+not a general property of ex ante and ex post control.
 
-Agency theory's substitution result is the case in which the first channel
-operates. It requires the rule to change behavior, which for a human agent it does
-through incentives. A machine agent has no incentives to realign, so $d$ is
-unchanged by assumption and only the second channel is available:
-$\partial e^{*} / \partial \tau > 0$. Substitutability is therefore not a general
-property of ex ante and ex post control; it is a property of delegation to an agent
-whose behavior responds to rules. This is the paper's theoretical claim, and it is
-refutable on two observables --- the sign of the inspection response and whether
-agent output moves.
-
-This gives three separable implications. Under \emph{substitution}, adoption lowers
-review and the agent's output changes. Under \emph{compliance}, adoption lowers
-review \emph{because} output improves. Under \emph{legibility}, adoption raises
-review and output is unchanged, because the rule makes examination worth more
-rather than less necessary. The three differ in the sign of the review effect and
-in whether agent output moves, and both are observable with a dated adoption
-event. Table~\ref{tab:predictions} states the three accounts together with the
-monitoring-versus-enforcement question, and the signs that separate them.
-Section~\ref{sec:causal} finds review rising with output unchanged, which is the
-legibility case and rejects substitutability for this class of delegation.
+Table~\ref{tab:predictions} states the competing accounts and the signs that
+separate them. Each question is answered by a sign the others do not share: the
+first turns on the direction of the review effect jointly with whether agent output
+moves, the second on whether gate outcomes follow, the third on which repository
+characteristic moderates it.
 
 \begin{table}[t]
 \caption{Competing accounts and the signs that separate them}
@@ -280,7 +202,7 @@ Substitution & rules replace inspection & falls & changes & improve \\
 Compliance & rules improve output & falls & changes & improve \\
 \textbf{Legibility} & rules make deviation detectable & \textbf{rises} & \textbf{unchanged} & \textbf{---} \\[3pt]
 \multicolumn{5}{l}{\emph{Which margin binds, given review rises?}} \\
-Monitoring binds & too little was being observed & rises & unchanged & improve \\
+Monitoring binds & too little was observed & rises & unchanged & improve \\
 \textbf{Enforcement binds} & signal observed, not acted on & \textbf{rises} & \textbf{unchanged} & \textbf{flat} \\[3pt]
 \multicolumn{5}{l}{\emph{Is the response real, given outcomes are flat?}} \\
 Ceremonial & adoption answers an audience & tracks visibility & --- & flat \\
@@ -288,137 +210,58 @@ Ceremonial & adoption answers an audience & tracks visibility & --- & flat \\
 \bottomrule
 \end{tabular}
 \par\vspace{2pt}
-\footnotesize Rows in bold are the accounts the data select. Each question is
-answered by a sign the others do not share, so the three tests are not
-restatements of one another: the first turns on the direction of the review effect
-jointly with whether agent output moves, the second on whether gate outcomes follow
-the review increase, the third on which repository characteristic moderates it.
+\footnotesize Rows in bold are the accounts the data select.
 \end{table}
-
-A second question concerns where screening occurs. When the marginal cost of
-producing a candidate output falls toward zero, an organization that cannot cheaply
-verify quality can loosen acceptance, expand evaluation capacity, or screen
-candidates before they are presented for evaluation. The third response is
-available only when a producer's work is visible to a sponsor before it becomes a
-formal proposal --- which is exactly the condition machine delegation creates.
 
 \section{Setting, Data, and Measurement}
 \label{sec:data}
 
-\subsection{Why this setting}
-
 Open-source projects are organizations that divide production, evaluation and
 acceptance among different people, and they are the only setting in which the
 instruments for governing a machine contributor, the date each was adopted, and
-every subsequent acceptance decision are all observable. The instruments
-themselves are not peculiar to open source: \texttt{copilot-instructions.md} is
-the same artefact inside a firm as outside it, and the platform that reads it is
-the same platform. Nor is the mechanism we test. Rules change what a reviewer can
-detect rather than what the agent does, and that holds wherever the delegate has
-no incentives to realign --- which is to say, wherever the delegate is a machine.
-
-The condition that makes enforcement the binding margin is sharper here than in a
-firm but not unique to it. A merge is performed by a project member whose own
-position is unaffected by a later defect, and who is frequently the same person who
-dispatched the agent. Firms attenuate this through employment relationships,
-performance review and liability, none of which operate in our setting. That cuts
-against generalizing the level we report: a firm plausibly enforces more than the
-one-time-in-four we observe. It does not cut against the comparative claim, which
-is that the instruments on offer act on monitoring and that adopting them does not
-change enforcement. A firm adopting the same instruction files acquires the same
-monitoring capability and the same silence on whether a failing check blocks a
-merge.
-
-Two further limits are worth stating at the outset. Contributors here are not
-employees, so the labour-supply response to governance differs. And the projects
-that adopt coding agents early are more technically sophisticated than the median
-software organization, which likely makes our estimates an upper bound on what
-less sophisticated adopters obtain.
-
-\subsection{Data}
+every subsequent acceptance decision are all observable. The instruments are not
+peculiar to open source: \texttt{copilot-instructions.md} is the same artefact
+inside a firm, read by the same platform. Nor is the mechanism, which holds
+wherever the delegate has no incentives to realign. The condition that makes
+enforcement the binding margin is sharper here than in a firm but not unique to it:
+firms attenuate it through employment, performance review and liability, so a firm
+plausibly enforces more than the one-in-four we observe. That limits generalizing
+the \emph{level}, not the comparative claim that the instruments on offer act on
+monitoring and that adopting them does not change enforcement.
 
 The cohort covers PRs opened between March 2025 and October 2026 in 848
 repositories selected on evidence of coding-agent use: 468,402 PRs of which 25,937
-are authored by coding-agent accounts. The primary analysis uses the exact accounts
-\texttt{copilot-swe-agent} and \texttt{devin-ai-integration}. The human category
-excludes known agent and dependency-bot accounts; it does not detect AI-assisted
-human authorship, which therefore remains in the comparison group.
+are authored by coding-agent accounts, specifically \texttt{copilot-swe-agent} and
+\texttt{devin-ai-integration}. The human category excludes known agent and
+dependency-bot accounts; it does not detect AI-assisted human authorship, which
+remains in the comparison group. Governance records give the first-commit date of
+ten configuration files across 846 repositories --- six governance paths and four
+non-AI files used as treatment-side placebos. Status-check records cover 52,911 PRs
+with an observed rollup, and for the 15,647 with a failing rollup we additionally
+record the name of every failing check.
 
-A matched process sample adds dated review events, reviewer affiliation and linked
-issues for one hash-selected agent PR per agent-active repository-month with a
-same-cell human match on patch size and opening date: 2,021 complete resolved
-pairs, 1,846 with a Copilot agent side. Lifecycle records, new to this study, give
-draft status and \texttt{ready\_for\_review}, \texttt{convert\_to\_draft} and
-\texttt{review\_requested} events with timestamps and actors for 28,493 PRs, one
-failed call and no truncated timelines. Governance records give the first-commit
-date of ten configuration files across 846 repositories --- six governance paths and
-four non-AI files that serve as treatment-side placebos. Of the two agent-instruction
-paths, \texttt{AGENTS.md} is present in 287 repositories and
-\texttt{copilot-instructions.md} in 123. Post-merge cross-references cover 19,584
-merged PRs.
-
-Three measurement decisions are preconditions rather than refinements, and
-Section~\ref{sec:measurement} shows what each is worth.
-
-\emph{Stage.} A PR opened as a normal pull request has no
-\texttt{ready\_for\_review} event, so the absence of that event does not indicate
-that a proposal never entered review. We classify each PR as \emph{abandoned as
-draft} (no ready event, still a draft), \emph{promoted} (a ready event exists), or
-\emph{opened ready}. The structure is vendor-specific: Copilot opens 100\% of its
-PRs as drafts and promotes 80.2\%, while Devin opens 77.8\% ready. Because
-promotion is well-defined only for Copilot, primary comparative estimates are
-Copilot-only.
-
-\emph{Merge authority.} An agent account never merges its own work: one of 1,111
-agent merges in the process sample records the author as the closing actor, against
-51.4\% of 1,562 control merges. We classify a human author as an \emph{insider} in
-a repository when recorded as a reviewer on another author's PR there; 59.3\% of
-matched controls are insiders, and primary contrasts use outsider controls. The
-measure is behavioral, spans the full window, and leaves 22.5\% of its outsiders
-closing their own PRs --- a residual that raises the outsider baseline and so
-attenuates the contrasts we report. We prefer it to the platform's
-\texttt{authorAssociation} field, 24.2\% of whose outside contributors merge their
-own PRs.
-
-\emph{Automated review.} Of 7,387 review records in the process sample, 2,667
-(36\%) come from bot accounts, disproportionately on human controls. These accounts
-comment rather than approve or block: bot-authored COMMENTED reviews number 1,113
-on controls against 565 on agent PRs, while bot approvals number 13 and 10. All
-measures of human evaluation exclude bots and author self-reviews and count only
-reviews submitted on or before terminal disposition.
-
-\emph{Dilution.} Agent PRs are 2.7\% of the mean repository-month and 0\% of the
-median, so a 20\% within-stream effect appears as 0.55 points in a repository
-aggregate against minimum detectable effects of 3 to 6 points. Clearing 4.7 points
-would require a 171\% within-stream effect. Repository-level designs in this
-setting are therefore uninformative, and every outcome below is measured either on
-the agent stream or within matched pairs.
+Three measurement decisions are preconditions rather than refinements, and each
+individually flips a headline on these data. Review events must exclude bots, which
+supply 36\% of review records and are skewed toward human controls. Human
+comparison groups must exclude contributors who can merge their own work, since an
+agent account cannot. And outcomes must be measured on the machine-authored stream
+rather than on repository aggregates, because agent PRs are 3.4\% of the mean
+repository-month and 0\% of the median, so a 20\% within-stream effect appears as
+0.55 points against minimum detectable effects of 3 to 6 points. Every
+repository-level null in this literature is mechanically guaranteed. These and two
+further construction choices are quantified in the Electronic Companion.
 
 \section{Governance and Human Oversight}
 \label{sec:causal}
 
-\subsection{Design}
+\subsection{Design and result}
 
-Treatment is a project's first commit of an agent-instruction file, dated from git
-history. Controls are repositories that never commit one, plus not-yet-adopting
-ones. We estimate a staggered event study on 8,821 agent PRs in 753 repositories
-with repository and calendar-month fixed effects, log patch size and changed files,
-and errors clustered by repository, with leads $-4$ to $-2$ and lags $0$ to $+6$.
-The placebo re-runs the identical specification with human-authored PRs as the
-outcome.
-
-\subsection{Result}
-
-Figure~\ref{fig:eventstudy} plots the event study and Table~\ref{tab:causal}
-reports the estimates. Human scrutiny of machine-authored
-work rises: across the post-adoption period agent PRs are 4.5 points more likely to
-carry a human review and attract 0.090 more distinct human reviewers, and the
-event study shows this growing to 10.8 points and 0.214 reviewers by months four to
-six. Acceptance moves little and is not distinguishable from zero. The same treatment does not move human
-review of human-authored work on any of three outcomes. The figure shows the
-pattern the table summarizes: coefficients indistinguishable from zero in the three
-pre-adoption months, divergence from month four, and a placebo arm that does
-neither.
+We estimate a staggered event study on 8,821 agent PRs in 753 repositories, with
+repository and calendar-month fixed effects, controls for log patch size and log
+changed files, and errors clustered by repository. Treatment is the month a
+repository first commits an agent-instruction file; controls are repositories that
+never commit one, plus not-yet-adopting ones. Figure~\ref{fig:eventstudy} plots the
+estimates with human-authored PRs as an outcome-side placebo.
 
 \begin{figure}[t]
 \centering
@@ -426,45 +269,27 @@ neither.
 \caption{Human review of machine-authored pull requests around agent-instruction
 file adoption, with human-authored pull requests as an outcome-side placebo.
 Repository and calendar-month fixed effects, 95\% intervals clustered by
-repository. Month $-1$ is omitted as the reference period.}
+repository. Month $-1$ is the reference period.}
 \label{fig:eventstudy}
 \end{figure}
 
-\begin{table}[t]
-\caption{Agent-instruction file adoption: event study with internal placebo}
-\label{tab:causal}
-\centering\small
-\begin{tabular}{lcccc}
-\toprule
-Outcome & Pre-trend $p$ & Pre mean & Post mean & Months 4--6 \\
-\midrule
-\multicolumn{5}{l}{\emph{Agent-authored PRs}} \\
-Any human review & 0.889 & $-0.012$ & $+0.045$ & $\mathbf{+0.108}$ \\
-Distinct human reviewers & 0.767 & $-0.030$ & $+0.090$ & $\mathbf{+0.214}$ \\
-Merged & 0.725 & $+0.019$ & $+0.035$ & $+0.058$ \\[3pt]
-\multicolumn{5}{l}{\emph{Human-authored PRs (placebo)}} \\
-Any human review & 0.187 & $-0.022$ & $-0.004$ & $+0.018$ \\
-Distinct human reviewers & 0.790 & $-0.015$ & $+0.012$ & $+0.048$ \\
-Merged & 0.332 & $-0.009$ & $-0.005$ & $+0.008$ \\[3pt]
-\multicolumn{5}{l}{\emph{Agent output and the private screen (channel check)}} \\
-Draft abandoned before review & 0.704 & $-0.014$ & $+0.024$ & $+0.017$ \\
-Log patch size & 0.095 & $+0.121$ & $+0.085$ & $+0.126$ \\
-Log changed files & 0.753 & $+0.005$ & $-0.014$ & $-0.026$ \\
-Log hours to ready & 0.073 & $+0.116$ & $+0.119$ & $+0.265$ \\
-\bottomrule
-\end{tabular}
-\par\vspace{2pt}
-\footnotesize Repository and calendar-month fixed effects, log patch size and
-changed files, errors clustered by repository. 8,821 agent PRs and 303,735 human
-PRs. All ten pre-trend tests pass. Joint tests on the post-period coefficients give
-$p=1.7\times10^{-7}$ and $p=0.0004$ for the two agent review outcomes and
-$p \geq 0.20$ for all three placebo outcomes.
-\end{table}
+Human scrutiny of machine-authored work rises: across the post-adoption period
+agent PRs are 4.5 points more likely to carry a human review ($p=1.7\times10^{-7}$
+on the joint post-period test) and attract 0.090 more distinct human reviewers
+($p=0.0004$). Pre-trends pass at $p=0.889$ and $p=0.767$. The same treatment does
+not move human review of human-authored work on any of three outcomes. Acceptance
+moves little and is not distinguishable from zero.
+
+The increase is breadth rather than depth. Coverage --- whether any review happens
+--- rises $+0.074$ under equal-repository weighting ($p=0.033$), while among PRs
+already being reviewed the number of reviewers does not move ($+0.092$,
+$p=0.772$). Writing a convention down makes surface compliance cheap to verify, so
+more people look; it does not deepen the scrutiny of work already under review.
 
 \subsection{Robustness}
 
-Table~\ref{tab:robust} reports ten checks. Two need explanation because they
-qualify the headline rather than support it.
+Table~\ref{tab:robust} reports ten checks. Two qualify the headline and need
+explanation.
 
 \begin{table}[t]
 \caption{Robustness of the governance effect on human review of agent PRs}
@@ -489,260 +314,191 @@ Excluding the largest owner & owner concentration & $+0.054$ & $+0.107$ \\
 \bottomrule
 \end{tabular}
 \par\vspace{2pt}
-\footnotesize Post-minus-pre contrasts. All pre-trend tests pass except where
-noted in the text. The non-AI row averages \texttt{CONTRIBUTING.md}, a pull-request
-template and \texttt{dependabot.yml}, estimated separately.
+\footnotesize Post-minus-pre contrasts. All pre-trend tests pass except as noted in
+the text. The non-AI row averages \texttt{CONTRIBUTING.md}, a pull-request template
+and \texttt{dependabot.yml}, each estimated separately.
 \end{table}
 
 The first is the estimator. A pooled two-way fixed effects regression --- a single
 post indicator, which is what a reader checks first --- returns $-0.010$ and
-$-0.015$, indistinguishable from zero. The resolution is informative rather than
-defensive: under staggered adoption with effects that grow over event time, the
-pooled estimator uses already-treated repositories as controls for later-treated
-ones, and because those units have high outcomes by then the negative weights
-attenuate the estimate toward zero and past it
+$-0.015$, indistinguishable from zero. Under staggered adoption with effects that
+grow over event time, the pooled estimator uses already-treated repositories as
+controls for later-treated ones, and because those units have high outcomes by then
+the negative weights attenuate the estimate toward zero and past it
 \citep{goodman2021difference, dechaisemartin2020two}. The two estimators that
 handle staggered timing disagree with it and agree with each other on direction,
 though not on magnitude, and we claim neither as a point estimate.
 
 The second is dynamics. Too few repositories adopt in any single month for the
-group-time estimator to reach event times beyond $+3$; quarterly pooling reaches
-$e=4$ at the cost of up to two months of error in the treatment date, and shrinks
-the post-period means substantially. We therefore report the positive post-period
-direction as robust and the late-emerging pattern in the fixed-effects event study
-as \emph{not} robust.
+group-time estimator \citep{callaway2021difference} to reach event times beyond
+$+3$; quarterly pooling reaches $e=4$ at the cost of up to two months of error in
+the treatment date, and shrinks the post-period means substantially. We report the
+positive post-period direction as robust and the late-emerging pattern as
+\emph{not} robust.
 
-Three further results in the table carry the weight a referee will want. Adoption
-of \emph{non}-AI configuration files moves the same outcome in the opposite
-direction, so the effect is specific to agent governance rather than to committing
-configuration during a growth phase --- which matters because every such file
-predicts a contribution increase of $+0.20$ to $+0.43$ log points, as large as the
-rise following an AI-instruction file. Restricting controls to not-yet-adopting
-repositories removes selection into ever-adopting and the estimate grows; removing
-repository-specific linear trends absorbs the rising-trajectory alternative and
-leaves coverage jointly significant at $p=0.0004$ with reviewers at $p=0.082$, so
-the direction survives and the magnitude does not. And the effect is if anything
-cleaner in the 204 organization-owned adopting repositories, the firm-like arm
-available in public data, so it is not a property of volunteer communities.
+Three rows carry particular weight. Adoption of \emph{non}-AI configuration files
+moves the same outcome in the opposite direction, so the effect is specific to
+agent governance rather than to committing configuration during a growth phase ---
+which matters because every such file predicts a contribution increase of $+0.20$
+to $+0.43$ log points, as large as the rise following an AI-instruction file
+(Figure~\ref{fig:placebo}). Restricting controls to not-yet-adopting repositories
+removes selection into ever-adopting and the estimate grows. And the effect is if
+anything cleaner in the 204 organization-owned adopting repositories, the firm-like
+arm available in public data.
 
-The pooled treatment conceals heterogeneity that identifies what the treatment
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{treatment_placebo.pdf}
+\caption{Treatment-side placebo. The same specification and outcome --- human
+review of machine-authored pull requests --- with non-AI configuration files
+substituted as the treatment. Every non-AI path moves the outcome in the opposite
+direction.}
+\label{fig:placebo}
+\end{figure}
+
+The pooled treatment also conceals heterogeneity that identifies what the treatment
 is. Estimated separately, \texttt{copilot-instructions.md} gives $+0.089$ and
 $+0.107$ while \texttt{AGENTS.md} gives $+0.011$ and $+0.005$ --- which is not
 truncation, not agent composition, and not operational need, but a pooling
-artefact. Splitting each path at its own median revision count,
-\texttt{AGENTS.md} gives $+0.184$ for reviewers where the file is maintained and
-$-0.053$ where it is not, and \texttt{copilot-instructions.md} shows the same
-pattern. Pooling both paths and splitting on maintenance gives $+0.067$ against
-$-0.067$, and $+0.170$ against $-0.002$ under equal-repository weighting, with
-pre-trends passing in all four. Revisions necessarily follow adoption, so this
-conditions on a post-treatment variable and we report it as descriptive: the
-treatment that moves review is a maintained convention rather than a committed
-file, which is what the legibility mechanism predicts.
+artefact. Splitting each path at its own median revision count, \texttt{AGENTS.md}
+gives $+0.184$ for reviewers where the file is maintained and $-0.053$ where it is
+not, and \texttt{copilot-instructions.md} shows the same pattern; pooling both
+paths and splitting on maintenance gives $+0.170$ against $-0.002$ under
+equal-repository weighting, pre-trends passing in all four. Revisions necessarily
+follow adoption, so this conditions on a post-treatment variable and we report it
+as descriptive: what moves review is a maintained convention rather than a
+committed file, which is what the legibility mechanism predicts.
 
-\subsection{Magnitude}
+\subsection{Mechanism and magnitude}
+
+The channel is review and not production. Re-estimating on the agent's delivered
+output, nothing moves: draft abandonment $+0.038$, log patch size $-0.036$, log
+changed files $-0.019$, time to readiness $+0.003$. What does move is revision.
+Holding patch size and changed files fixed, commits on a machine-authored PR rise
+$+0.049$ in logs ($p=3.1\times10^{-6}$), and $+0.098$ under equal-repository
+weighting ($p=0.043$), on a baseline of 4.93 commits; the same specification leaves
+patch size and file count flat ($p=0.861$ and $p=0.821$), so this is additional
+revision on identical deliverables, and the human-authored placebo does not survive
+equal-repository weighting ($+0.057$, $p=0.221$). The additional review is
+consequential for the work. What it obtains is revision, not refusal.
 
 The effect is modest in level and meaningful in proportion. Against baselines of
-0.488 review coverage and 0.668 reviewers per agent PR, the post-period estimates
-of $+0.045$ and $+0.090$ are relative increases of 9.2\% and 13.5\%; under
-equal-repository weighting they are 15.2\% and 17.7\%. At the mean adopting
-repository's throughput of 18.0 agent PRs per month, the reviewer estimate implies
-1.6 additional reviewer-PR incidences per month, or about 19.5 per
-repository-year; across the 313 adopting repositories with agent activity that is
-roughly 6,100 additional incidences annually.
-
-Two features of that number deserve emphasis. The median adopting
-repository-month contains only 2 agent PRs, so for most projects the effect is
-fractions of a reviewer-PR incidence per month and the aggregate is carried by
-high-throughput repositories. And in adopting repositories the machine-authored
-stream generates 15,240 reviewer-PR incidences against 237,659 for human-authored
-work, so it is 6.0\% of total human review effort. Written governance therefore
-redirects attention within a small share of a project's review load rather than
-changing review effort overall --- consistent with the repository-level nulls
-reported in Section~\ref{sec:audit}, which could not have detected a change of this
-size.
-
-That smallness is a fact about the current scale of machine delegation, not a
-limitation of the estimate, and it is the quantity that makes the result forward
-looking. Machine-authored work is 3.4\% of pull requests in the mean adopting
-repository-month. Holding the per-PR effect fixed and varying only that share, the
-governance response adds 1.7 reviewer-PR incidences per repository-year today,
-which is 0.34\% of the human review load; at a 10\% machine share it is 6.3 and
-1.35\%; at 25\%, 15.8 and 4.05\%; at 50\%, 31.5 and 12.1\%. The oversight
-burden organizations take on when they govern a machine contributor therefore
-scales linearly with how much they delegate, and it is currently near zero because
-they delegate very little.
-
-The managerial implication follows from combining that scaling with the enforcement
-result. What scales is monitoring. Enforcement does not move with governance
-adoption, and across the cross-section it does not move with how much monitoring
-machinery a project maintains either. So the gap between oversight effort and
-oversight efficacy widens in proportion to delegation: an organization that
-multiplies its machine-authored volume tenfold while adopting the instruments
-currently on offer multiplies its inspection burden and leaves unchanged the rate
-at which an adverse signal actually blocks acceptance.
+0.500 coverage and 0.702 reviewers, the post-period estimates are relative
+increases of 9.2\% and 13.5\%. At the mean adopting repository's throughput the
+reviewer estimate implies about 19.5 additional reviewer-PR incidences per
+repository-year. Machine-authored work is 3.4\% of pull requests in the mean
+adopting repository-month, so this is 0.34\% of the human review load today; the
+burden scales linearly with delegation, reaching 12.1\% at a 50\% machine share.
+What scales is monitoring.
 
 The pattern identifies the legibility case of Section~\ref{sec:theory}. Review
-rises, and the agent's output --- patch size, file count, time to readiness, and the
-rate at which its sponsor discards a draft --- does not move. Substitution is
-rejected, and so is compliance: the rule does not make the machine behave
-differently, so the additional inspection is not explained by anything the agent
-did. What changes is that a written convention makes deviation from it detectable,
-which raises the return to looking. Ex ante and ex post control are complements
-here, not substitutes, and the reason is informational rather than behavioral.
+rises and the agent's delivered output does not, so substitution is rejected, and
+so is compliance: the rule does not make the machine behave differently, so the
+additional inspection is not explained by anything the agent did.
 
-\section{Two Stages, and What Pooling Them Does}
-\label{sec:stages}
+Finally, the response is substantive rather than ceremonial. Ceremonial adoption
+would track audience; substantive adoption would track operational need. Splitting
+adopters at the median of pre-adoption machine-authored volume, reviewers per agent
+PR rise $+0.170$ where volume is high against $-0.123$ where it is low, a difference
+of $+0.293$ with pre-trends passing in both strata ($p=0.786$ and $p=0.991$);
+splitting at the median of repository stars gives the wrong sign on review coverage
+and fails its pre-trend in the low-star stratum.
 
-Table~\ref{tab:stages} decomposes disposition by lifecycle stage and reports the
-matched contrasts. Abandoned drafts almost never merge and are almost always
-recorded as closed by a human other than the author; the magnitude is near
-mechanical, since a draft cannot be merged. Pooled across all 1,846 Copilot pairs
-we recover the published pattern. The 731 pairs whose agent side was abandoned
-carry it entirely. Among pairs where the agent proposal was promoted and the
-control also entered review, with controls restricted to outsiders, the closure
-difference becomes $-7.7$ points and merging $+17.3$. The pooled direction does not
-attenuate; it reverses. Machine-authored proposals that enter review are also 56.6
-points more likely to have had review formally \emph{requested}, which is an act of
-assignment rather than of participation.
+\section{Why Outcomes Do Not Follow}
+\label{sec:enforcement}
 
-\begin{table}[t]
-\caption{Lifecycle stages and matched paired contrasts, Copilot}
-\label{tab:stages}
-\centering\small
-\begin{tabular}{lccc}
-\toprule
-\emph{Cohort disposition by stage} & $n$ & Nonauthor closure & Merged \\
-\midrule
-Never entered review (abandoned as draft) & 3,304 & 98.6\% & 0.3\% \\
-Drafted, then promoted & 15,221 & 8.7\% & 91.3\% \\
-Opened ready for review & 5,193 & 19.8\% & 72.9\% \\
-\midrule
-\emph{Paired agent-minus-control differences} & Pairs & Closure & Merged \\
-\midrule
-All Copilot pairs & 1,846 & $+34.8$ & $-23.4$ \\
-Abandoned as draft & 731 & $+85.9$ & $-71.0$ \\
-Promoted; control entered review & 1,089 & $+1.9$ & $+6.0$ \\
-\textbf{Promoted; outsider control} & \textbf{452} & $\mathbf{-7.7}$ & $\mathbf{+17.3}$ \\
-\bottomrule
-\end{tabular}
-\par\vspace{2pt}
-\footnotesize Percentage points with 95\% repository-cluster bootstrap intervals.
-For the final row, closure $[-12.9,-2.4]$ and merged $[11.5,22.9]$; review
-requested is $+56.6$ $[50.8,62.7]$.
-\end{table}
+\subsection{The gate does not gate}
 
-The screener is identifiable. Across 15,221 promotions the promoting account is
-human 98.8\% of the time, a repository insider 96.3\%, the same account that later
-closes or merges the proposal 90.9\%, and a recorded formal reviewer of it only
-37.3\%. The delegator screens privately and then decides.
+Merging a change whose checks report failure is a directly observable lapse. GitHub
+reports a rollup failure if any check on the head commit concluded badly, and makes
+no distinction between a broken test suite and a coverage bot, so we collected the
+name of every failing check on all 15,647 failing pull requests. Only 56.4\% carry
+a hard, non-advisory failure; the rest are coverage thresholds, linters,
+pull-request-title validators, deploy previews, or runs merely cancelled by a later
+push.
 
-\section{Quality}
-\label{sec:quality}
+Restricting to genuine test and build failures barely moves the result.
+\textbf{71.5\%} of machine-authored PRs with a substantive failing check are merged
+anyway, against 74.8\% unrestricted and 67.5\% for human-authored work. Within
+repository-months carrying both, machine work faces a marginally \emph{tighter}
+gate ($-0.084$, interval $[-0.168, +0.001]$). This is not leniency toward machines.
+It is how these organizations treat failing tests.
 
-For every merged PR in the adopting repositories we collected post-merge
-cross-references: when a later pull request references a merged change and its
-title carries fix semantics, that is corrective work attributable to the change.
-Pooled rates mislead, because one organization supplies 67.3\% of the machine arm.
-Within the 278 repository-months containing both arms across 80 repositories,
-corrective follow-up is 4.5\% for machine-authored and 4.5\% for human-authored
-merges, a difference of $-0.02$ points with a 95\% interval of $[-2.49,+2.29]$;
-any post-merge reference differs by $-3.39$ points $([-8.66,+2.52])$.
-Machine-authored merges attract no more corrective work than comparable human
-merges, bounded to roughly $\pm 2.5$ points on a 4.5\% base.
-
-Whether the additional review that follows governance adoption reduces corrective
-work is not identified. The event study on corrective work shows $+0.106$ with a
-passing pre-trend, but post-merge references of all kinds rise after adoption
-($+0.666$) and that measure fails its pre-trend ($p=0.016$); conditioning on having
-attracted any reference also fails ($p=0.005$). The apparent increase is a
-referencing-volume artefact and we decline to interpret it. The measure is in any
-case a lower bound: silent fixes leave no cross-reference, and machine-authored PRs
-attract more references of every kind, so it partly tracks visibility.
-
-Two other available proxies are bounded nulls. Among 1,169 matched pairs with
-completed continuous-integration contexts observed before termination, failure
-flags differ by $-0.7$ points $([-4.3,2.9])$; among 170 pairs where both reference
-a closing issue, 90-day issue closure differs by $-1.2$ points $([-9.1,6.7])$.
-
-\subsection{Does the additional review improve the gate?}
-\label{sec:gate}
-
-A measure independent of referencing answers this directly. Merging a change whose
-continuous-integration checks are failing is an observable lapse of the gate. We
-collected the status-check rollup for every agent PR; 17,151 across 503
-repositories have one.
-
-The descriptive baseline is itself notable. The gate reports failure on 29.9\% of
-agent PRs, 73.4\% of agent PRs merge, and 22.3\% merge while the gate reports
-failure. Among the 5,121 agent PRs with a failing gate, \textbf{71.5\% merge
-anyway}. Failing checks are not, in this population, a binding constraint on
-machine-authored work.
+\subsection{Why the gate cannot gate}
 
 Automated checks were not designed to be what they have become. Continuous
 integration was proposed to end ``integration hell'', the multi-day reconciliation
 that followed weeks of isolated work \citep{booch1994ooad}, and the practice that
 operationalised it set a deliberately austere target: a ten-minute build, a small
-number of fast and trustworthy signals run constantly \citep{beck2000xp}. What we
-observe is that design inverted. The median repository in our corpus runs 26 checks
-on a pull request, and among repositories with enough failures to characterise, the
-single worst-behaving check accounts for 29.3\% of all substantive failures and the
-worst three for 64.8\%. That check fails on a median 11.5\% of the repository's
-pull requests, and on more than a fifth of them in 28\% of repositories. A signal
-that fires on a fifth of all work cannot function as a gate: making every
-substantive check required would block more than one pull request in five in 28\%
-of these projects, and fewer than one in twenty in only 31\%.
+number of fast and trustworthy signals run constantly \citep{beck2000xp}.
 
-That figure is the substantive one. GitHub's rollup reports failure if any check
-on the head commit concluded badly, and it does not distinguish a broken test suite
-from a coverage bot, so we collected the names of every failing check on all 15,647
-failing pull requests. Only 56.4\% carry a hard, non-advisory failure: the rest are
-coverage thresholds, linters, pull-request-title validators, deploy previews, or
-runs merely cancelled by a later push. Restricting to genuine test and build
-failures barely moves the override rate --- 71.5\% for machine-authored work
-against 74.8\% unrestricted, and 67.5\% for human-authored work. Within
-repository-months carrying both, machine-authored work faces a marginally
-\emph{tighter} gate ($-0.084$, interval $[-0.168, +0.001]$), so this is not
-leniency toward machines. It is how these organizations treat failing tests.
+That design inverted. The median repository runs 26 checks on a pull request.
+Among repositories with enough failures to characterise, the single worst-behaving
+check accounts for 29.3\% of all substantive failures and the worst three for
+64.8\%. That check fails on a median 11.5\% of the repository's pull requests, and
+on more than a fifth of them in 28\% of repositories. A signal that fires on a
+fifth of all work cannot function as a gate: making every substantive check
+required would block more than one pull request in five in 28\% of these projects,
+and fewer than one in twenty in only 31\%. The override is forced by precision
+rather than chosen by laxity.
+
+\subsection{Governance does not reach it}
+
+Governance adoption does not change the override rate. The rate of merging with a
+failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$
+under equal-repository weighting, and $-0.013$ when the largest owners are dropped.
+
+We report the interval rather than leave it to the reader. The post-minus-pre
+contrast clustered by repository is $-0.014$ with an interval of $[-0.119, +0.091]$
+on the agent stream. Enforcement is a repository-wide policy rather than a property
+of the machine-authored stream, so human-authored PRs give a better-powered test of
+the same claim: there the contrast is $+0.001$ with an interval of
+$[-0.042, +0.045]$ across 280 adopting repositories, ruling out reductions larger
+than a quarter of the base rate. Section~\ref{ec:power} reports what we did to
+tighten that bound --- widening the repository sample, instrumenting review with
+adoption, and lengthening the pre-adoption window --- and why each bought less than
+the last.
+
+Nor is the pattern specific to this instrument. Across the 386 repositories with at
+least six failing-gate PRs, regressing the override rate on the number of
+monitoring artefacts a project maintains --- agent-instruction files,
+\texttt{CLAUDE.md}, \texttt{CODEOWNERS}, agent setup steps --- gives $+0.022$ per
+artefact (standard error $0.013$) with controls for PR volume, machine-authored
+volume, audience and failing-gate count. The gradient runs the same way: projects
+maintaining no monitoring artefacts override at $0.546$, those maintaining five at
+$0.626$. The interval $[-0.004, +0.048]$ bounds any protective association at
+$0.023$ against a mean override rate of $0.558$. Monitoring investment and
+enforcement are independent margins.
+
+\subsection{What ignoring the signal costs}
 
 Whether the practice is costly is a separate question, and across every channel
-these traces support we cannot show that it is. Within repository-months
-containing both kinds of merge, pull requests merged over a substantive failing
-check attract no more corrective work than those merged green ($-0.005$, interval
+these traces support we cannot show that it is. Within repository-months containing
+both kinds of merge, pull requests merged over a substantive failing check attract
+no more corrective work than those merged green ($-0.005$, interval
 $[-0.045, +0.035]$) and no more bug reports, measured as issues opened referencing
-the merge within ninety days ($-0.017$, $[-0.057, +0.023]$). At the repository
-level, across 3,101 consecutive month pairs, a month with a higher share of
-overridden merges is followed by no loss of contributors ($-0.022$,
-$[-0.124, +0.081]$) and no fall in throughput ($-0.051$, $[-0.218, +0.116]$). A
-contagion channel --- overriding degrading the gate for later work --- is $+0.36$
-on 33 repository-month pairs and falls to $+0.01$ at 471 pairs across 191
-repositories, so it is a small-sample artefact.
+the merge within ninety days ($-0.017$, $[-0.057, +0.023]$). Across 3,101
+consecutive repository-month pairs, a month with a higher share of overridden
+merges is followed by no loss of contributors ($-0.022$) and no fall in throughput
+($-0.051$). Pooled contrasts point the other way --- corrective work at 18.4\%
+against 9.0\% --- and are composition: projects that override more have higher
+baseline rates of nearly everything.
 
-Pooled contrasts point the other way and are composition. Merged over a failing
-check, corrective work runs at 18.4\% against 9.0\% for green merges; the gap
-disappears within repository-months because projects that override more have
-higher baseline rates of nearly everything. This is the error the comparative
-literature on machine-authored contributions most often makes, and it is the same
-error that inflates the raw override rate itself.
-
-None of this proves the practice harmless, and we are explicit about the division
-of labour. What these traces can establish is that the signal is noisy, that it is
-overridden, and that no consequence is visible. What they cannot establish is
-whether a consequence exists, and the sharpest available proxy shows why: a later
-revert referencing the merge occurs for 0.39\% of merged pull requests, 42 cases in
-all, which supports a minimum detectable effect of 140\% of the base rate. The
-pooled contrast looks alarming --- 1.02\% after a broken merge against 0.24\% after
-a green one --- and dissolves within repository-months like every other pooled
-contrast here. We could not detect a real effect if one existed.
+We are explicit about the division of labour. These traces establish that the
+signal is noisy, that it is overridden, and that no consequence is visible. They
+cannot establish whether a consequence exists, and the sharpest available proxy
+shows why: a later revert referencing the merge occurs for 0.39\% of merged pull
+requests, 42 cases in all, supporting a minimum detectable effect of 140\% of the
+base rate. We could not detect a real effect if one existed.
 
 Evidence that the consequence is real comes from settings with ground truth we do
 not have. In Google's Chromium continuous-integration system, false alerts account
 for roughly four fifths of observed failures, and yet ignoring every failure of a
 test known to be flaky would have missed about three quarters of true regression
-faults, with flaky tests revealing more than a third of all regressions
-\citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it affects
-a sixth of Google's test corpus and appears in roughly a quarter of Microsoft
-builds, and a majority of developers report ignoring continuous-integration
-failures because of flaky history \citep{parry2021survey}.
+faults \citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it
+affects a sixth of Google's test corpus and appears in roughly a quarter of
+Microsoft builds, and a majority of developers report ignoring
+continuous-integration failures because of flaky history \citep{parry2021survey}.
 
 Placing those findings beside ours gives the mechanism, and it is a learning
 failure rather than a discipline failure. The signal is mostly noise, so overriding
@@ -750,235 +506,93 @@ it is individually rational. The harm it conceals is real but arrives later, in 
 different artifact, and never attributes back to the merge that caused it --- which
 is why it is absent from our traces and, more importantly, from the traces
 available to the organizations themselves. Nothing in the feedback loop informs a
-project that its gate is failing to gate. The practice therefore persists, the
-checks are never repaired, and the margin stays non-binding.
+project that its gate has stopped gating. The practice persists, the checks are
+never repaired, and the margin stays non-binding.
 
-That is what makes the governance result more than a null. The instruments
-organizations adopt when they begin delegating to machines all add signal to a
-system whose existing signal already cannot be acted upon. The binding constraint
-was never how much is observed. It is that almost none of it is trustworthy enough
-to block on, and no instrument on offer changes that.
-
-Governance adoption does not visibly change that. The rate of merging with a
-failing gate moves by $-0.014$ (pre-trend $p=0.324$, joint $p=0.199$), $-0.022$
-under equal-repository weighting, and $-0.013$ when the largest owners are dropped:
-directionally favourable and indistinguishable from zero at every specification.
-
-How much that null establishes is a question of power, and we report the interval
-rather than leave it to the reader. The post-minus-pre contrast, clustered by
-repository, is $-0.014$ with an interval of $[-0.119, +0.091]$ on the agent stream.
-Enforcement is a repository-wide policy rather than a property of the
-machine-authored stream, so human-authored pull requests give a better-powered test
-of the same claim: there the contrast is $+0.001$ with an interval of
-$[-0.042, +0.045]$ across 280 adopting repositories, ruling out reductions larger
-than a quarter of the base rate. Section~\ref{ec:power} reports what we did to
-tighten that bound --- widening the repository sample from 848 of 8,976 screened
-projects to 471 adopting repositories, instrumenting review with adoption, and
-lengthening the pre-adoption window --- and why each bought less than the last. The
-decomposition there matters for how the null reads: the median adopting repository
-changes its lapse rate by exactly zero, and the width of the pooled interval is
-contributed by a small number of small projects rather than by genuine
-heterogeneity that cancels.
-
-\subsection{Monitoring rose; enforcement did not}
-\label{sec:enforcement}
-
-Two readings of a null consequence are available, and they are separable. Under
-\emph{ceremonial adoption}, the organization adopts a visible practice to signal
-conformity and decouples it from operations; the review increase would then track
-audience rather than operational need, and would not be expected to change
-outcomes. Under \emph{substantive adoption}, the organization genuinely reallocates
-attention where machine-authored work is heaviest, and the failure to improve
-outcomes requires a different explanation.
-
-The data reject the ceremonial reading. Splitting adopting repositories at the
-median of pre-adoption agent PR volume --- a measure of operational need, fixed
-before treatment --- the review effect is concentrated where need is high:
-reviewers per agent PR rise by $+0.170$ in high-volume repositories against
-$-0.123$ in low-volume ones, a difference of $+0.293$, with pre-trends passing in
-both strata ($p=0.786$ and $p=0.991$). Splitting instead at the median of
-repository stars, a measure of audience, gives $-0.048$ for review coverage, the
-wrong sign for a signalling account, and the low-star stratum fails its pre-trend
-so the reviewer comparison is uninterpretable. Projects that handle more
-machine-authored work get more review from writing instructions; projects with
-larger audiences do not.
-
-That leaves a sharper explanation for the null. The constraint on this gate is not
-the quantity of inspection. Recall that 71.5\% of agent PRs whose checks are
-failing are merged anyway. A control system in which the sanction is withheld
-three times out of four does not improve when monitoring intensity rises 9 to 14
-percent, because monitoring was never the binding margin. Governance adoption
-increased the observation of machine-authored work substantively and in the right
-places, and left untouched the willingness to reject it.
-
-The pooled null invites a direct test of the enforcement margin, and we report two
-attempts at it because both fail, in ways that are informative about what public
-traces can support. For both, enforcement is determined from the \emph{human}
-stream and every outcome is measured on the \emph{agent} stream, so classification
-and outcome come from disjoint pull requests. Collecting check state for a bounded
-per-repository sample of human PRs makes 280 repositories classifiable, against 17
-using agent PRs alone.
-
-The first splits repositories at the median share of failing-gate human PRs that
-merge anyway. PR-weighted, it gives what the theory predicts: the agent lapse rate
-falls $-0.067$ after adoption where enforcement is tight and rises $+0.068$ where
-it is lax, a difference of $-0.135$ with both pre-trends passing. The result does
-not survive equal-repository weighting. Both arms collapse toward zero ($+0.004$
-and $-0.006$, a difference of $+0.010$), because one organization supplies 46.3\%
-of machine-authored PRs in the enforcing arm and 86.5\% in the lax arm. The
-contrast is composition, not enforcement. We record it because the PR-weighted
-version passes every pre-trend, placebo and volume check we apply elsewhere, and
-would have been reported as a finding by a design that stopped there.
-
-The second would have been a dated treatment: a repository that \emph{stops}
-merging failing-gate human PRs has adopted enforcement on an identifiable date.
-That rule does not survive its own placebo. Applying it to within-repository
-shuffles of the same series --- destroying real timing while preserving each
-repository's month structure and its override rate --- yields as many detected
-breaks as the real data: 31 against a shuffled mean of 26.7 at a drop threshold of
-0.4, and 51 against 53.0 at 0.3. At the depth available, a median of five
-failing-gate PRs per repository, the rule selects the maximum of a noisy statistic
-across split points. Only the most extreme threshold shows an excess, and reporting
-that one after seeing these numbers would be selection on the outcome.
-
-The margin does, however, admit a general test in the cross-section, and that test
-is a bound rather than a point null. Across the 386 repositories with at least six
-failing-gate PRs, we regress the override rate --- the share of failing-gate PRs
-merged anyway --- on how many monitoring artefacts the project maintains:
-agent-instruction files, \texttt{CLAUDE.md}, \texttt{CODEOWNERS}, agent setup
-steps. If documenting more went with gating more, the coefficient would be
-negative. It is $+0.022$ per artefact (standard error $0.013$, $p=0.094$) with
-controls for PR volume, machine-authored volume, audience and the number of
-failing-gate PRs, and the gradient runs the same way: projects maintaining no
-monitoring artefacts override at $0.546$, those maintaining five at $0.626$.
-Projects that have adopted an instruction file override at $0.585$ against $0.529$
-for those that have not.
-
-The interval is what matters. At $[-0.004, +0.048]$, adopting the full set of six
-monitoring artefacts could reduce the override rate by at most $0.023$ against a
-mean of $0.558$ --- four percent of it. A protective association is not merely
-absent; it is bounded away from anything consequential. This is cross-sectional and
-descriptive, and projects choose their machinery, so it is not a treatment effect.
-But it is the general form of the causal result: the instruments organizations
-reach for when they decide to govern a machine contributor operate on a margin
-that does not determine whether the machine's work is actually gated.
-
-What survives is therefore the descriptive fact that creates the puzzle --- three
-in four failing agent PRs merge regardless --- together with the causal fact that
-governance moves monitoring and not outcomes. Dating enforcement from public traces
-remains the open problem, and it is the reason the enforcement margin is the one
-this design cannot manipulate.
-
-This is the paper's central claim about organizational design, and it has a
-practical edge. The instruments currently offered for governing machine
-contributors --- instruction files, agent configuration, conventions documented for
-the agent to follow --- act on monitoring. The margin that determines whether
-delegated work is actually gated is enforcement: whether a failing signal blocks a
-merge. Our evidence is that organizations respond to the first and that the second
-does not follow, so tooling aimed at the first should not be expected to improve
-outcomes. Oversight effort and oversight efficacy are different things, and the
-gap between them is where delegated production is actually controlled.
 \section{Measurement and Identification}
 \label{sec:measurement}
 \label{sec:audit}
 
-Two bodies of supporting work sit behind the estimates and are reported in full in
-the Electronic Companion, because what they establish is methodological rather than
-substantive.
+Two bodies of supporting work sit behind these estimates and are reported in full
+in the Electronic Companion, because what they establish is methodological.
 
-The first (Section~\ref{ec:measurement}) reports what five construction choices are
-worth on these data. Each is current practice in at least one published study of
-machine-authored contributions, and each on its own produces an estimate that does
-not survive: pooling human controls who can merge their own work with those who
-cannot moves an acceptance contrast by 25.7 points; counting bot comments as review
-moves a scrutiny contrast by 10.5; ignoring draft state moves a closure contrast by
-21.2; weighting by pull request rather than by repository reverses several
-candidate effects outright; and reading repository aggregates rather than the
-machine-authored stream guarantees a null, because machine-authored PRs are 2.7\%
-of the mean repository-month and zero percent of the median. The common thread is
-that machine participants reuse human interfaces, so trace fields keep their names
-and change their referents.
+Section~\ref{ec:measurement} reports what five construction choices are worth. Each
+is current practice in at least one published study of machine-authored
+contributions, and each on its own produces an estimate that does not survive:
+pooling human controls who can merge their own work with those who cannot moves an
+acceptance contrast by 25.7 points; counting bot comments as review moves a
+scrutiny contrast by 10.5; ignoring draft state moves a closure contrast by 21.2;
+weighting by pull request rather than by repository reverses several candidate
+effects outright; and reading repository aggregates rather than the
+machine-authored stream guarantees a null. The common thread is that machine
+participants reuse human interfaces, so trace fields keep their names and change
+their referents.
 
-The second (Section~\ref{ec:audit}) records the twenty-three designs we specified
-and estimated, of which one survived. Relevance was never the binding constraint:
-a shift-share instrument on predetermined primary language has a first-stage $F$ of
-685 and is still indefensible on exclusion. Exclusion, parallel trends and
-composition were binding, and composition was the most lethal --- several
-candidates passed every pre-trend, placebo and volume check and reversed under
-equal-repository weighting. Two structural obstacles recur and are worth stating
-here. Person-level events are confounded with project dormancy: reviewer-departure
-months show PR arrivals falling 88 log points, so an apparent 25.7-point decline in
-review coverage is a dying repository. And treatments that look organizational are
-often product bundling: AI review-bot adoption appears to displace human review of
-machine-authored PRs by 14.2 points, but only when the platform's own reviewer
-counts as the treatment, vanishing ($+0.019$, $p=0.10$) for independent third-party
-reviewers.
+One such referent shift is consequential enough to state here, because it corrects
+what the published record appears to say about machine-authored work. Delegated
+production passes through two organizational stages that public traces collapse
+into one. A coding agent opens its proposal as a \emph{draft}, which cannot be
+merged; the stage ends when a human either promotes it into review or abandons it,
+and both endings are recorded identically, as a pull request closed by someone
+other than its author. Pooled, we reproduce the literature: agent proposals are
+34.8 points more likely to end in a recorded human-nonauthor closure. The 39.6\%
+abandoned before review account for all of it. Among proposals that actually
+entered review, compared with human contributors who likewise cannot merge their
+own work, agent proposals are 17.3 points \emph{more} likely to be accepted.
+Reading the pooled record as evidence that machine-authored work meets a harder
+gate inverts the relationship holding among proposals submitted for evaluation.
 
-The deeper obstacle is that the comparative contrast has no manipulable treatment.
-Machine authorship is a property of a proposal, not a condition assignable to one.
-The identifying experiment --- randomizing whether a task is written by a person or
-an agent, holding repository, reviewer pool and period fixed --- is a field
-experiment, which is why the one causally identified result in this literature
-studied 2021 code completions, where the platform excluded one language ecosystem
-for business reasons and created an arbitrary documented partition
-\citep{yeverechyahu2024impact}. No comparable exclusion exists for coding agents.
+Section~\ref{ec:audit} records the twenty-three designs we specified and estimated,
+of which one survived. Relevance was never the binding constraint: a shift-share
+instrument on predetermined primary language has a first-stage $F$ of 685 and is
+still indefensible on exclusion. Exclusion, parallel trends and composition were
+binding, and composition was the most lethal --- several candidates passed every
+pre-trend, placebo and volume check and reversed under equal-repository weighting.
+The deeper obstacle is that the comparative contrast has no manipulable treatment:
+machine authorship is a property of a proposal, not a condition assignable to one.
 
-\section{Discussion and Limitations}
+\section{Discussion}
 \label{sec:discussion}
 
 Written governance of a machine contributor complements human oversight rather than
-replacing it, and it operates on reviewers rather than on the agent. For practice,
-this reverses the implicit case for AI-governance tooling: adopting instructions
-should be expected to raise review effort, not reduce it. An organization adopting
-such tooling to economize on review will be disappointed; one adopting it to direct
-attention toward machine output will not.
+replacing it, and it operates on reviewers rather than on the agent. For practice
+this reverses the implicit case for AI-governance tooling. An organization adopting
+instruction files to economize on review will be disappointed; one adopting them to
+direct attention toward machine output will not. The attention is real, correctly
+targeted, and obtains revisions to the work.
 
-Delegated production is meanwhile screened twice --- privately, by the human who
-dispatched the agent and who discards roughly a fifth of its drafts, and publicly,
-in a queue that the same person usually controls. The public record contains only
-the second stage and labels both stages' failures identically, so reading the pooled
-record as evidence that machine-authored work meets a harder gate inverts the
-relationship holding among proposals actually submitted for evaluation.
+It will not improve what the organization accepts, and the reason is not that
+oversight is futile. It is that the instruments on offer all act on a margin that
+was never binding. Seven in ten pull requests with a genuine failing test are
+merged regardless of author, because a check that fires on a fifth of all work
+cannot be made required. Adding instruction files, ownership rules and agent
+configuration to that system adds signal to a system whose existing signal already
+cannot be acted upon. The intervention a practitioner should want is not another
+document: it is making three checks per repository reliable enough to be required,
+and no tool in this market does that.
 
-The limitations are substantial. Adoption of an instruction file is self-selected:
-a project that writes agent instructions is already attending to agents. Restricting
-controls to not-yet-adopting repositories removes selection into ever-adopting, and
-the estimate survives and grows; what remains is selection into adopting early,
-which no design on observational adoption removes. The effect emerges from month
-four rather than immediately, consistent with written rules taking time to bind but
-equally consistent with a slow-moving trajectory. Removing repository-specific
-linear trends, which absorbs that trajectory, leaves coverage jointly significant
-and reviewers at $p=0.082$: the direction survives, the magnitude does not, and we
-do not claim the late-window figures. The comparative estimates are conditional associations on populations we
-argue are comparable, not causal effects, and conditioning on promotion selects on
-a post-opening decision. The standing measure is behavioral and leaves 22.5\% of
-its outsiders closing their own PRs. The draft stage is a design feature of one
-vendor. The review effect appears only where the instruction file is
-subsequently maintained, and that split conditions on a post-treatment variable, so
-we cannot say whether maintenance causes the effect or marks projects that would
-have increased review regardless. Reviewer identities span repositories, so repository clusters are not
-independent and all intervals are too narrow by an unknown amount. The analysis was
-specified after extensive exploratory work on these data and multiplicity is
-controlled within declared families only.
-
-We do not observe why a particular draft was abandoned, private deliberation,
-evaluation effort, or validated code quality. The enforcement margin, which our
-interpretation makes central, is identified descriptively rather than causally. Two
-attempts to do better both failed and are reported: a regime split that reverses
+The limitations are substantial. Adoption of an instruction file is self-selected;
+restricting controls to not-yet-adopting repositories removes selection into
+ever-adopting and the estimate survives, but selection into adopting \emph{early}
+remains, and no design on observational adoption removes it. The effect emerges
+from month four, and removing repository-specific linear trends leaves coverage
+jointly significant and reviewers at $p=0.082$: the direction survives, the
+magnitude does not, and we do not claim the late-window figures. The review effect
+appears only where the instruction file is subsequently maintained, which
+conditions on a post-treatment variable. Reviewer identities span repositories, so
+clusters are not independent and all intervals are too narrow by an unknown amount.
+The enforcement margin is identified as a moderator and not as a treatment: two
+attempts to do better both failed and are reported --- a regime split that reverses
 under equal-repository weighting, and a dated break rule that does not beat its own
-shuffle placebo.
-Establishing that acting on enforcement \emph{would} improve outcomes requires
-variation in enforcement itself --- a documented change in branch-protection
-policy, or a setting where required checks are imposed rather than chosen. GitHub
-exposes branch protection only as current state, which is why that variation is
-unavailable to us and why the asymmetry we describe --- every governance instrument
-acting on monitoring, none on enforcement --- is also an asymmetry in what public
-traces can date. That is the natural next study, and it is the claim a practitioner
-most needs.
+shuffle placebo. GitHub exposes branch protection only as current state, which is
+why that variation is unavailable to us, and why the asymmetry we describe is also
+an asymmetry in what public traces can date. Establishing that acting on
+enforcement \emph{would} improve outcomes requires variation in enforcement itself.
+That is the natural next study, and it is the claim a practitioner most needs.
+
 
 \bibliographystyle{informs2014}
 \bibliography{references}
-
 
 \ECSwitch
 \ECDisclaimer
