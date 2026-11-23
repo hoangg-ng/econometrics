@@ -26,6 +26,7 @@ Inputs: pr_level_agent.csv, pr_lifecycle.csv, governance_files.csv
 import csv
 import importlib.util
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -132,6 +133,47 @@ def report(frame, adopt, label, by_repo=False):
             'event_times': b['coefficients']}
 
 
+def bootstrap(frame, adopt, draws=200, seed=99):
+    """Resample repositories to get a p-value that respects the clustering.
+
+    The Wald tests reported alongside treat the set of repositories as fixed. One
+    organization supplies 59.6% of treated observations here, so the quantity that
+    matters is how the estimate behaves when a different draw of repositories is
+    taken. This is the test that eliminated two earlier claims in this project.
+    """
+    def contrast(f, ad):
+        s = f.dropna(subset=['indep']).copy()
+        s['g'] = s.repo.map(ad)
+        try:
+            b = _ia.event_study(s, 'indep')
+            return b['post_mean'] - b['pre_mean']
+        except Exception:
+            return np.nan
+    point = contrast(frame, adopt)
+    groups = {r: g for r, g in frame.groupby('repo')}
+    repos = sorted(groups)
+    rng = random.Random(seed)
+    out = []
+    for _ in range(draws):
+        sample = [rng.choice(repos) for _ in repos]
+        parts, ad = [], {}
+        for i, r in enumerate(sample):
+            g = groups[r].copy()
+            name = f'{r}#{i}'
+            g['repo'] = name
+            parts.append(g)
+            if r in adopt:
+                ad[name] = adopt[r]
+        v = contrast(pd.concat(parts, ignore_index=True), ad)
+        if v == v:
+            out.append(v)
+    a = np.array(out)
+    return {'point': float(point), 'se': float(a.std(ddof=1)),
+            'p': float((np.abs(a - a.mean()) >= abs(point)).mean()),
+            'ci': [float(np.percentile(a, 2.5)), float(np.percentile(a, 97.5))],
+            'share_positive': float((a > 0).mean()), 'draws': len(a)}
+
+
 def main():
     selftest()
     d = load()
@@ -185,6 +227,13 @@ def main():
             f"dispatcher's monopoly over an acceptance decision that is otherwise "
             f"made by one person end to end.")
         print(f"\n  READING: {results['reading']}")
+
+    print('\n  bootstrap over repositories (the strict test)')
+    bs = bootstrap(d, adopt)
+    results['bootstrap'] = bs
+    print(f"    point {bs['point']:+.4f}  se {bs['se']:.4f}  p={bs['p']:.4f}  "
+          f"CI [{bs['ci'][0]:+.4f},{bs['ci'][1]:+.4f}]  "
+          f"{bs['share_positive']:.1%} of draws positive")
 
     results['notes'] = [
         'The outcome is defined only for pull requests that were promoted out of '

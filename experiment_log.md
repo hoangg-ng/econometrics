@@ -2196,3 +2196,50 @@ not a discipline failure, and it is why adding more signal cannot fix it.
 Division of labour stated explicitly in the paper: ours that the signal is noisy,
 that it is overridden, and that no consequence is visible; borrowed that a
 consequence exists.
+
+## 2026-11-23 — Searching for an effect large enough to matter
+
+Five candidates tested, four killed, one survivor that is larger and better
+identified than anything previously in the paper.
+
+**Killed.** CODEOWNERS adoption gives +0.731 reviewers on agent PRs (joint
+p=4.5e-18) and the estimate *collapses* to +0.281 under equal-repository
+weighting, with one owner supplying 55.6% of the treated arm. Reviewer workload
+rises +0.089 per reviewer (p=0.0089) but is mostly mechanical: excluding agent
+PRs it falls to +0.054, p=0.164. A shrinking reviewer pool (-0.056, p=0.028) is
+post-treatment conditioning -- the sign flips from +0.029 unrestricted once
+review activity is conditioned on, and the flip is visible across five
+thresholds. Task reallocation to humans is null throughout (log size -0.125,
+p=0.447).
+
+**The survivor measures who inspects, not how much.** Delegating to a machine
+collapses separation of duties, because the agent cannot merge and the human who
+acts for it is usually the one who dispatched it. Across 16,473 agent PRs with a
+recorded promoter the promoter is also the closer 90.8% of the time, and only
+16.0% carry a review from anyone else.
+
+Committing an agent-instruction file raises independent review by +0.109 on that
+0.160 baseline, a 68% relative increase. The point estimate holds between +0.086
+and +0.113 across equal-repository weighting and exclusions to the ten largest
+owners. Non-AI configuration files move it the other way (-0.103, joint
+p=0.0016), so the treatment-side placebo that fails for review coverage holds
+here. A repository bootstrap returns p=0.030 with a percentile interval of
+[+0.011, +0.204] and 99.0% of 200 draws positive -- the same test that returned
+p=0.242 for the substantive moderator and p=0.450 for the coverage placebo.
+
+**Why this one survives where CODEOWNERS did not.** Under equal-repository
+weighting CODEOWNERS loses 60% of its magnitude; this loses 2% and only widens
+its interval. A stable estimate with lower precision is an underpowered subsample;
+a collapsing estimate is composition.
+
+**Caveats carried into the paper rather than buried.** The full-sample pre-trend
+fails at p=0.013 because one organization supplies 59.6% of treated observations;
+every exclusion and the equal-repository specification pass, and they raise the
+estimate. Significance varies from p=0.0026 to p=0.42 across cuts while the
+magnitude does not. The outcome is defined only for drafts that were promoted, so
+it conditions on the private screen having occurred.
+
+The mechanism is access rather than effort. Before the convention is written only
+the dispatcher knows what the agent was asked to do, so nobody else is equipped to
+review it; writing it down moves that private knowledge into the repository.
+Abstract and introduction now lead with this.

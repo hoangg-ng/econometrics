@@ -117,6 +117,17 @@ def main():
         check(report, 'human-stream CI upper (+0.045)', 0.045,
               human['ci'][1], tol=1e-3)
 
+    ind = load('independent_review')
+    if ind:
+        check(report, 'independent review estimate (+0.109)',
+              0.109, ind['blocks']['all']['post_minus_pre'], tol=1e-3)
+        check(report, 'independent review baseline (0.160)',
+              0.160, ind['baseline_independent_review'], tol=1e-3)
+        check(report, 'promoter is also closer (0.908)',
+              0.908, ind['baseline_promoter_is_closer'], tol=1e-3)
+        check(report, 'placebo, non-AI files (-0.103)',
+              -0.103, ind['blocks']['placebo_non_ai']['post_minus_pre'], tol=1e-3)
+
     cm = load('check_mechanism')
     if cm:
         check(report, 'per-check failure probability (1.48%)',
@@ -155,6 +166,8 @@ def main():
         ('335 adopting projects', '335'),
         ('71.5% override quoted in text', '71.5'),
         ('contrast 5.7 quoted in text', '5.7 percentage points'),
+        ('90.8% concentration quoted', '90.8'),
+        ('68% relative increase quoted', '68'),
     ]
     for label, needle in textual:
         report.append(('OK' if present(text, needle) else 'MISSING', label, needle, None))

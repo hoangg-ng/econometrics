@@ -26,7 +26,7 @@
 }
 \MANUSCRIPTNO{MNSC-0001-2026.00}
 \ABSTRACT{%
-Organizations delegating work to AI contributors govern it with instruments that act on \emph{monitoring}: writing down how the machine should work, configuring what it may do, documenting conventions for it to follow. We show the response is real and competent, and that it cannot change what gets accepted, because the surface these instruments add to was built as a notice rather than a control. GitHub's status check was introduced in 2012 as an advisory signal whose meaning was delegated to third parties, whose count was uncapped, and which explicitly did not block a merge; blocking arrived later and opt-in. Studying 468,402 pull requests from 848 repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Human review of machine-authored work rises by 5.7 percentage points in coverage and 0.120 reviewers, with every pre-trend passing, no movement in human-authored review, and a sign reversal when non-AI configuration files are the treatment. The agent's delivered output is unchanged, so the channel is inspection rather than production, and ex ante rules and ex post inspection are complements rather than the substitutes agency theory assumes. The response is substantive, scaling with machine-authored volume rather than visibility, and consequential, obtaining more revision on identical deliverables. Acceptance does not move. A median project runs 32 checks, each passing 98.5\% of the time, so the conjunction turns red often and on the least diagnostic grounds; 71.5\% of pull requests with a genuine failing test are merged regardless of author, and only 7\% of projects could enforce without blocking one change in twenty. Adding instruments to an advisory surface cannot produce control.
+Delegating work to an AI contributor collapses the separation of duties that delegating to a person preserves. A coding agent cannot merge, so a human must act for it, and in practice one person dispatches the agent, promotes its output into review, and approves it: across 16,473 machine-authored pull requests the promoter is also the closer 90.8\% of the time, and only 16.0\% carry a review from anyone else. That concentration matters because the automated gate is not a substitute control. GitHub's status check was introduced in 2012 as an advisory signal whose meaning was delegated to third parties, whose count was uncapped, and which explicitly did not block a merge; a median project now runs 32 such checks, each passing 98.5\% of the time, so 71.5\% of pull requests with a genuine failing test are merged regardless of author and only 7\% of projects could require their checks without blocking one change in twenty. Studying 468,402 pull requests from 848 repositories that adopted coding agents, we exploit a dated organizational act: committing an agent-instruction file, which 335 projects do and git history dates to the day. Adoption raises independent review of machine-authored work by 10.9 percentage points against a 16.0\% baseline, a 68\% relative increase, stable from $+0.086$ to $+0.113$ across equal-repository weighting and owner exclusions, significant under a repository bootstrap, and reversed in sign when non-AI configuration files are used as the treatment. The agent's delivered output is unchanged, so the mechanism is access rather than effort: before a convention is written down, only the person who dispatched the agent knows what correct work looks like, and nobody else can review it. Written rules do not make the machine comply or make any reviewer look harder. They restore the second human.
 }
 
 
@@ -58,8 +58,21 @@ Organizations delegating work to AI contributors govern it with instruments that
 \maketitle
 \section{Introduction}
 
-Organizations are delegating production to artificial intelligence faster than they
-can evaluate the result, and the instruments offered for governing it all act on
+Delegating work to a person preserves a division of labour that delegating to a
+machine destroys. When a colleague opens a pull request, a second person reviews
+and accepts it; the roles are separate because the author cannot approve their own
+work. A coding agent cannot approve its own work either, but it also cannot
+approve anything, so a human must act on its behalf, and that human is almost
+always the person who dispatched it. Across 16,473 machine-authored pull requests
+with a recorded promoter, the person who moves the agent's draft into review is
+also the person who closes or merges it 90.8\% of the time, and only 16.0\% carry a
+review from anyone else. One individual holds the entire acceptance decision,
+which is the condition separation of duties exists to prevent.
+
+That would matter less if the automated gate were a control. It is not, and
+Section~\ref{sec:warnings} shows why. Organizations are delegating production to
+artificial intelligence faster than they can evaluate the result, and the
+instruments offered for governing it all act on
 one margin. Write down how the machine should work, configure what it may do,
 document the conventions it should follow: each is an instrument of
 \emph{monitoring}. This paper shows that organizations adopt them substantively,
@@ -428,7 +441,9 @@ baseline of $0.160$, a 68\% relative increase. Table~\ref{tab:independent} repor
 the robustness. The point estimate sits between $+0.086$ and $+0.113$ across
 equal-repository weighting and exclusions up to the ten largest owners, and non-AI
 configuration files move the same outcome in the opposite direction ($-0.103$,
-joint $p=0.0016$).
+joint $p=0.0016$). Resampling repositories with replacement, which is the test
+that respects the clustering, returns $p=0.030$ with a percentile interval of
+$[+0.011, +0.204]$.
 
 \begin{table}[t]
 \caption{Independent review of machine-authored work after instruction-file adoption}
@@ -444,7 +459,8 @@ Excluding the largest owner & $+0.105$ & 0.022 & 0.014 & 214 \\
 Excluding the three largest & $+0.099$ & 0.136 & 0.0026 & 212 \\
 Excluding the five largest & $+0.086$ & 0.722 & 0.092 & 194 \\
 Excluding the ten largest & $+0.113$ & 0.738 & 0.216 & 188 \\[3pt]
-\emph{Placebo:} non-AI configuration files & $-0.103$ & 0.385 & 0.0016 & 67 \\
+\emph{Placebo:} non-AI configuration files & $-0.103$ & 0.385 & 0.0016 & 67 \\[3pt]
+\emph{Bootstrap over repositories} & $+0.109$ & --- & \textbf{0.030} & 216 \\
 \bottomrule
 \end{tabular}
 \par\vspace{2pt}
@@ -453,7 +469,10 @@ who is not the person who promoted it out of draft. Baseline 0.160. One
 organization supplies 59.6\% of treated observations, which is why the full-sample
 pre-trend fails while every exclusion and the equal-repository specification pass;
 the exclusions raise rather than lower the estimate. Significance varies across
-cuts; the magnitude does not.
+cuts; the magnitude does not. The final row resamples repositories with
+replacement, which respects the clustering the Wald tests take as given: the
+estimate is $+0.109$ with a percentile interval of $[+0.011, +0.204]$ and 99.0\%
+of 200 draws positive. That test eliminated two other claims we had entertained.
 \end{table}
 
 This is the sharper statement of what governance does. It does not make the
