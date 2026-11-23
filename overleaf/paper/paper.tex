@@ -719,6 +719,30 @@ referencing the merge occurs for 0.39\% of merged pull requests, supporting a
 minimum detectable effect of 140\% of the base rate. Section~\ref{ec:consequences}
 reports all four.
 
+Two points frame what this absence means. The first is that the outcome this paper
+reports is not a proxy for a consequence but a control property with standing of
+its own. Separation of duties is required by auditing standards and by securities
+regulation, and no one asks for evidence that it reduces loss before treating its
+absence as a defect. A workflow in which one person initiates, screens and
+approves is recognised as deficient on its face. We document that machine
+delegation produces exactly that configuration in 90.8\% of cases and that a
+written convention reduces it, and the normative weight of that finding does not
+rest on our measuring downstream harm.
+
+The second is that the harm, were we to look for it, is not recoverable here, and
+we can show why rather than assert it. Conditioning on independent review and
+comparing adverse follow-up within repository-months, reviewed pull requests show
+\emph{more} adverse follow-up, not less ($+0.069$, interval $[+0.015, +0.123]$ on
+a 29\% base). That is the signature of reviewers being assigned to risky work, not
+of review causing harm, and it is what any correlational comparison on these
+traces will recover. The reduced form avoids that selection, since the treatment
+is the dated file commit rather than the review, and it points the predicted way
+without reaching significance: adverse follow-up moves $-0.050$ against a base of
+$0.291$, $-0.018$ under equal-repository weighting and $-0.055$ excluding the
+three largest owners, joint $p$ between 0.20 and 0.77. Eight of nine estimates
+across outcomes and weightings are negative. We report the direction and decline
+to claim it.
+
 Evidence that the consequence is real comes from a setting with ground truth we do
 not have. In Google's Chromium continuous-integration system false alerts account
 for roughly four fifths of observed failures, and yet ignoring every failure of a
