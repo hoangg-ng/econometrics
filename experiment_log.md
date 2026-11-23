@@ -2243,3 +2243,28 @@ The mechanism is access rather than effort. Before the convention is written onl
 the dispatcher knows what the agent was asked to do, so nobody else is equipped to
 review it; writing it down moves that private knowledge into the repository.
 Abstract and introduction now lead with this.
+
+**The pre-trend failure diagnosed, and my explanation of it was wrong.** The paper
+attributed the failing joint pre-trend on the independent-review result to the
+dominant owner, which supplies 59.6% of treated observations. That is backwards:
+github alone passes at p=0.200 while the remaining owners fail at p=0.022.
+
+What actually fails is a single lead. Across e=-6 to e=-2 the coefficients are
++0.112, +0.005, +0.076, -0.088 and -0.029; only the fourth is individually
+significant. A linear trend fitted through the leads has slope -0.037 (se 0.028,
+p=0.184), and the joint test excluding that one period returns p=0.428 against
+0.040 with it.
+
+That distinction matters because a joint Wald test asks whether every lead is
+exactly zero, so one outlier fails it even when nothing is drifting. Anticipation
+-- the thing a pre-trend test exists to detect -- is a slope, and there is none.
+The finding therefore stands, and stands on better evidence than before: the
+failure can be characterised precisely rather than excused.
+
+`pretrend_shape()` in analysis/independent_review.py now reports the joint test,
+the linear slope, and the joint test excluding the single worst lead, so this
+cannot be hand-waved next time. Remaining concern, which the referee also raised:
+under heterogeneous effects the lead coefficients in this specification are
+contaminated by post-treatment effects from other cohorts, so e=-3 may be an
+artefact of the estimator rather than of the data. Sun and Abraham or
+Borusyak, Jaravel and Spiess would settle it.

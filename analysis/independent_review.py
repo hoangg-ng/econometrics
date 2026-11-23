@@ -32,6 +32,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
+from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
 COHORT = ROOT / 'output/agent_sample/pr_level_agent.csv'
@@ -131,6 +133,51 @@ def report(frame, adopt, label, by_repo=False):
             'adopting_repositories': b['adopting_repositories'],
             'treated_observations': b['treated_observations'],
             'event_times': b['coefficients']}
+
+
+def pretrend_shape(frame, adopt, leads=(-6, -5, -4, -3, -2)):
+    """Is a failing joint pre-trend test a trend, or one anomalous period?
+
+    The joint Wald test asks whether every lead is exactly zero, so a single
+    outlier fails it even when nothing is drifting. Anticipation, the thing a
+    pre-trend test is meant to detect, is a slope. This reports both, plus the
+    joint test with the single worst lead removed.
+    """
+    s = frame.dropna(subset=['indep']).copy()
+    s['g'] = s.repo.map(adopt)
+    s['k'] = [_ia.event_time(m, g) for m, g in zip(s.m, s.g)]
+    lags = list(_ia.LAGS)
+    w = s[(s.k.isna()) | ((s.k >= min(leads)) & (s.k <= max(lags)))].copy()
+    for k in list(leads) + lags:
+        w[f'k{k}'] = (w.k == k).astype(float)
+    terms = [f'k{k}' for k in list(leads) + lags] + ['lc', 'lf']
+    month = pd.get_dummies(w.m, prefix='m', drop_first=True, dtype=float)
+    w = pd.concat([w.reset_index(drop=True), month.reset_index(drop=True)], axis=1)
+    cols = terms + list(month.columns)
+    for c in cols + ['indep']:
+        w[c + '_w'] = w[c] - w.groupby('repo')[c].transform('mean')
+    X = w[[c + '_w' for c in cols]]
+    X = X.loc[:, X.std() > 1e-12]
+    model = sm.OLS(w['indep_w'], X).fit(cov_type='cluster', cov_kwds={'groups': w.repo})
+    idx = list(X.columns)
+    pre = [f'k{k}_w' for k in leads if f'k{k}_w' in idx]
+    kk = np.array([int(c[1:].split('_')[0]) for c in pre], dtype=float)
+    joint = float(model.f_test(np.eye(len(idx))[[idx.index(c) for c in pre]]).pvalue)
+    centred = kk - kk.mean()
+    contrast = np.zeros(len(idx))
+    for i, name in enumerate(pre):
+        contrast[idx.index(name)] = centred[i] / (centred ** 2).sum()
+    slope = float(contrast @ model.params.values)
+    slope_se = float(np.sqrt(contrast @ model.cov_params().values @ contrast))
+    worst = max(pre, key=lambda c: abs(model.params[c] / model.bse[c]))
+    rest = [c for c in pre if c != worst]
+    joint_rest = float(model.f_test(
+        np.eye(len(idx))[[idx.index(c) for c in rest]]).pvalue)
+    return {'joint_p': joint, 'slope': slope, 'slope_se': slope_se,
+            'slope_p': float(2 * (1 - stats.norm.cdf(abs(slope / slope_se)))),
+            'worst_lead': int(worst[1:].split('_')[0]),
+            'joint_p_excluding_worst': joint_rest,
+            'leads': {int(c[1:].split('_')[0]): float(model.params[c]) for c in pre}}
 
 
 def bootstrap(frame, adopt, draws=200, seed=99):
@@ -234,6 +281,15 @@ def main():
     print(f"    point {bs['point']:+.4f}  se {bs['se']:.4f}  p={bs['p']:.4f}  "
           f"CI [{bs['ci'][0]:+.4f},{bs['ci'][1]:+.4f}]  "
           f"{bs['share_positive']:.1%} of draws positive")
+
+    print('\n  pre-trend: is the joint failure a trend, or one period?')
+    pt = pretrend_shape(d, adopt)
+    results['pretrend_shape'] = pt
+    print(f"    joint test, all leads zero : p={pt['joint_p']:.4f}")
+    print(f"    linear slope through leads : {pt['slope']:+.4f} "
+          f"(se {pt['slope_se']:.4f}, p={pt['slope_p']:.4f})")
+    print(f"    joint test excluding {pt['worst_lead']:+d}   : p={pt['joint_p_excluding_worst']:.4f}")
+    print('    leads: ' + '  '.join(f"e{k:+d}={v:+.3f}" for k, v in sorted(pt['leads'].items())))
 
     results['notes'] = [
         'The outcome is defined only for pull requests that were promoted out of '

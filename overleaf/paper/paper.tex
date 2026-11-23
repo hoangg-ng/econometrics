@@ -465,10 +465,15 @@ Excluding the ten largest & $+0.113$ & 0.738 & 0.216 & 188 \\[3pt]
 \end{tabular}
 \par\vspace{2pt}
 \footnotesize Outcome: the pull request carries a review from at least one human
-who is not the person who promoted it out of draft. Baseline 0.160. One
-organization supplies 59.6\% of treated observations, which is why the full-sample
-pre-trend fails while every exclusion and the equal-repository specification pass;
-the exclusions raise rather than lower the estimate. Significance varies across
+who is not the person who promoted it out of draft. Baseline 0.160. The
+full-sample joint pre-trend test fails on a single lead rather than on a trend:
+coefficients at $e=-6$ through $e=-2$ are $+0.112$, $+0.005$, $+0.076$, $-0.088$
+and $-0.029$, only the fourth is individually significant, a linear trend fitted
+through them has slope $-0.037$ ($p=0.184$), and excluding that one period the
+joint test returns $p=0.428$. Anticipation would show as leads rising toward
+adoption; these have no direction. The failure is not attributable to the
+dominant owner, whose own pre-trend passes at $p=0.200$ while the remaining
+owners fail at $p=0.022$. Significance varies across
 cuts; the magnitude does not. The final row resamples repositories with
 replacement, which respects the clustering the Wald tests take as given: the
 estimate is $+0.109$ with a percentile interval of $[+0.011, +0.204]$ and 99.0\%
