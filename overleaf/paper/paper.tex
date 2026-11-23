@@ -747,7 +747,7 @@ Evidence that the consequence is real comes from a setting with ground truth we 
 not have. In Google's Chromium continuous-integration system false alerts account
 for roughly four fifths of observed failures, and yet ignoring every failure of a
 test known to be flaky would have missed about three quarters of true regression
-faults \citep{rwemalika2023discerning}. The harm is real, arrives later, in a
+faults \citep{haben2023chromium}. The harm is real, arrives later, in a
 different artifact, and never attributes back to the merge that caused it --- which
 is why it is absent from our traces and from the organization's own. Nothing in the
 feedback loop tells a project that its gate has stopped gating.
@@ -811,6 +811,21 @@ configuration to that system adds signal to a system whose existing signal alrea
 cannot be acted upon. The intervention a practitioner should want is not another
 document: it is making three checks per repository reliable enough to be required,
 and no tool in this market does that.
+
+One boundary deserves stating because it shapes what the paper can argue. Our
+window opens in March 2025, after coding agents were already available, so every
+estimate is measured inside the period we study rather than against a world
+without machine contributors. We attempted to construct that baseline by
+collecting the same repositories' pull requests from 2023 and 2024, which exist in
+quantity: a probe found roughly 96 per repository per year, about 0.71 times the
+volume of our window. The attempt fails for a reason worth recording, because it
+constrains anyone who tries the same thing. Status-check state is not retained for
+old commits. Across the pre-period pull requests we collected, under 1\% carry a
+status-check rollup, against 58\% in our main window. Whether the gate was already
+advisory in practice before machine contributors arrived, or became so afterwards,
+is therefore not answerable from GitHub's traces, and our claim that the signal was
+advisory by design rests on the platform's documentation and on the current
+cross-section rather than on a before-and-after comparison.
 
 The limitations are substantial. Adoption of an instruction file is self-selected;
 restricting controls to not-yet-adopting repositories removes selection into
@@ -892,7 +907,7 @@ Evidence that the consequence is real comes from settings with ground truth we d
 not have. In Google's Chromium continuous-integration system, false alerts account
 for roughly four fifths of observed failures, and yet ignoring every failure of a
 test known to be flaky would have missed about three quarters of true regression
-faults \citep{rwemalika2023discerning}. Flakiness at that scale is not unusual: it
+faults \citep{haben2023chromium}. Flakiness at that scale is not unusual: it
 affects a sixth of Google's test corpus and appears in roughly a quarter of
 Microsoft builds, and a majority of developers report ignoring
 continuous-integration failures because of flaky history \citep{parry2021survey}.
