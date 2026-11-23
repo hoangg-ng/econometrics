@@ -2268,3 +2268,22 @@ under heterogeneous effects the lead coefficients in this specification are
 contaminated by post-treatment effects from other cohorts, so e=-3 may be an
 artefact of the estimator rather than of the data. Sun and Abraham or
 Borusyak, Jaravel and Spiess would settle it.
+
+**Cohort-robust estimator on the independent-review result: agrees on magnitude,
+cannot assess the pre-trend.** Under heterogeneous effects a dynamic TWFE lead
+coefficient is a weighted sum including post-treatment effects from other cohorts
+(Sun and Abraham), so a failing pre-trend can be manufactured by the estimator
+rather than caused by anticipation. Re-estimating with group-time ATTs comparing
+each cohort only with never-treated and not-yet-treated units gives a post-period
+mean of +0.101 with quarterly cohorts against +0.109 from the event study, and
+every estimable post-period coefficient is positive under monthly cohorts.
+
+It cannot settle the pre-trend. Too few repositories adopt per cohort for a
+pre-adoption cell to clear even a two-unit threshold; across four thresholds
+(5, 4, 3, 2) the only estimable lead is the mechanically zero reference period.
+The threshold was not lowered further to manufacture one.
+
+So the position is: two estimators agree on direction and approximately on
+magnitude, the event-study leads show no slope (-0.037, p=0.184), and whether the
+single anomalous lead at e=-3 is anticipation or estimator contamination cannot be
+determined with this panel. Stated in the paper rather than resolved.

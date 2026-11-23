@@ -480,6 +480,26 @@ estimate is $+0.109$ with a percentile interval of $[+0.011, +0.204]$ and 99.0\%
 of 200 draws positive. That test eliminated two other claims we had entertained.
 \end{table}
 
+Two further points bear on whether the lead at $e=-3$ reflects anticipation. In a
+dynamic two-way fixed effects specification with staggered timing, the coefficient
+on a lead is a weighted sum that includes post-treatment effects from other
+cohorts, sometimes with negative weights \citep{sun2021estimating}, so a pre-trend
+can be produced by the estimator out of genuine treatment effects with no
+anticipation present. We therefore re-estimate with a group-time estimator in
+which each cohort is compared only with never-treated and not-yet-treated units
+\citep{callaway2021difference}. It agrees on the result: the post-period mean is
+$+0.101$ with quarterly cohorts against $+0.109$ from the event study, and every
+estimable post-period coefficient is positive under monthly cohorts across cell
+thresholds from five down to two.
+
+It cannot, however, adjudicate the pre-trend. Too few repositories adopt in any
+one cohort for a pre-adoption cell to clear even a two-unit threshold, so no lead
+other than the mechanically zero reference period is estimable at any threshold we
+tried. The honest statement is therefore that two estimators agree on direction
+and approximately on magnitude, that the event-study leads show no slope, and that
+the single anomalous lead cannot be attributed to anticipation or to estimator
+contamination with the data available.
+
 This is the sharper statement of what governance does. It does not make the
 machine comply, and it does not mainly make any one reviewer look harder. It
 widens the set of people who look at machine-authored work beyond the person who
