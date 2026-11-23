@@ -463,6 +463,41 @@ anyway, against 74.8\% unrestricted and 67.5\% for human-authored work. Within
 repository-months carrying both, machine work faces a marginally \emph{tighter}
 gate ($-0.084$, interval $[-0.168, +0.001]$). This is not leniency toward machines. It is how these organizations treat failing tests.
 
+\subsection{Where the gate came from}
+\label{sec:origin}
+
+The mechanism organizations now rely on to control machine-authored work was not
+built to control anything. When GitHub shipped the Commit Status API in September
+2012, it described the purpose as allowing services ``to color the discussion on
+pull requests'', and said the feature ``can be used for just about anything, like
+design reviews or ensuring contributor license agreements are filed''
+\citep{github2012status}. Three design decisions in that announcement explain most
+of what we measure.
+
+First, meaning was delegated. ``The API allows the service to determine the meaning
+of whether a commit is successful or not.'' GitHub supplied a channel and a colour,
+not a definition, which is why a pull-request-title validator and a failing test
+suite arrive today as the same red mark.
+
+Second, the surface was uncapped: ``any number of statuses may be attached to a
+single commit.'' Nothing in the design limits how many assertions a project
+accumulates, and nothing prices them, so the count grows with whatever tooling a
+project adopts.
+
+Third, and decisively, it did not block. The merge button would ``take status into
+account'' and warn, but ``the pull request can still be merged if the status is not
+successful though, we just warn you about it.'' Blocking arrived three years later,
+as \emph{required} status checks under protected branches, and it arrived opt-in
+\citep{github2015protected}.
+
+So the artefact began as a notification surface for third parties, acquired an
+optional gate afterwards, and later acquired a native runner that made adding
+another check nearly free. Each step was locally sensible. Together they produce a
+signal that is uncapped in number, undefined in meaning, and non-blocking by
+default, which is the object organizations are now asked to govern a machine
+contributor with. The override rate we report is not a departure from how this
+mechanism was designed to work. It is how it was designed to work.
+
 \subsection{What a check asserts, and why the gate fires}
 \label{sec:mechanism}
 
